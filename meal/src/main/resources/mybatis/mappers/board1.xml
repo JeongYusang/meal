@@ -91,7 +91,7 @@ update board_1 set content = #{content}, secret = #{secret} where b_1_id = #{b_1
 	]]>
 	</delete>
 	
-	QNDQNDQND
+
 </mapper>
 
    
