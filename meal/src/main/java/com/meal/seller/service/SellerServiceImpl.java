@@ -19,9 +19,9 @@ import com.meal.seller.vo.SellerVO;
 public class SellerServiceImpl implements SellerService {
 	@Autowired
 	private SellerDAO SellerDAO;
-@Autowired
-private AdminDAO AdminDAO;
-	
+	@Autowired
+	private AdminDAO AdminDAO;
+
 	@Override
 	public SellerVO login(Map loginMap) throws Exception {
 		return SellerDAO.login(loginMap);
@@ -35,26 +35,34 @@ private AdminDAO AdminDAO;
 	@Override
 	public void updateSeller(HashMap<String, Object> newSellerMap) throws Exception {
 		SellerDAO.updateSeller(newSellerMap);
-		
+
 	}
+
 	@Override
-	public void addSellerImg(HashMap<String, Object> map) throws Exception{
+	public void addSellerImg(HashMap<String, Object> map) throws Exception {
 		SellerDAO.addSellerImg(map);
 	}
+
 	@Override
-	public SellerVO decode(String s_id) throws Exception{
-		return (SellerVO)SellerDAO.decode(s_id);
+	public SellerVO decode(String s_id) throws Exception {
+		return (SellerVO) SellerDAO.decode(s_id);
 	}
-	
+
 	@Override
-	public void deleteSeller(SellerVO sellerVO) throws Exception{
-		//셀러 정보 딜리트.
+	public void deleteSeller(SellerVO sellerVO) throws Exception {
+		// 셀러 정보 딜리트.
 		SellerDAO.deleteSeller(sellerVO);
 	}
+
 	@Override
-	public List<Img_sVO> selectSellerImg(String s_id) throws Exception{
-		List<Img_sVO> listImg=SellerDAO.selectSellerImg(s_id);
+	public List<Img_sVO> selectSellerImg(String s_id) throws Exception {
+		List<Img_sVO> listImg = SellerDAO.selectSellerImg(s_id);
 		return listImg;
+	}
+
+	@Override
+	public void updateSellerImg(HashMap<String, Object> map) throws Exception {
+		SellerDAO.updateSellerImg(map);
 	}
 
 }

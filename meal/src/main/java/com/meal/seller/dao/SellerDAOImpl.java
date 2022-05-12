@@ -65,5 +65,10 @@ public class SellerDAOImpl implements SellerDAO {
 			List<Img_sVO> listImg= (List<Img_sVO>) sqlSession.selectList("mapper.seller.selectSellerImg", s_id);
 			return listImg;
 		}
+		@Override
+		public void updateSellerImg(HashMap<String,Object> map) throws DataAccessException{
+			sqlSession.update("mapper.seller.updateSellerImg", map);
+			
+		}
 
 }
