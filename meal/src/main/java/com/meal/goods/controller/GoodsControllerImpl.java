@@ -60,19 +60,6 @@ public class GoodsControllerImpl extends BaseController implements GoodsControll
 	}
 	
 
-@RequestMapping(value="/goodsDetail.do" ,method = RequestMethod.GET)
-	public ModelAndView goodsDetail(@RequestParam("g_id") int g_id,
-			                       HttpServletRequest request, HttpServletResponse response) throws Exception {
-		String viewName=(String)request.getAttribute("viewName");
-		HttpSession session=request.getSession();
-		HashMap<String, Object> goodsMap=(HashMap<String, Object>)goodsService.goodsDetail(g_id);
-		ModelAndView mav = new ModelAndView(viewName);
-		mav.addObject("goodsMap", goodsMap);
-		GoodsVO goodsVO=(GoodsVO)goodsMap.get("goodsVO");
-		/* addGoodsInQuick(goods_id,goodsVO,session); */
-		return mav;
-	}
-	
 	
 	@RequestMapping(value = "/addNewGoods.do", method = {RequestMethod.POST, RequestMethod.GET})
 	   public ModelAndView addNewGoods(MultipartHttpServletRequest multipartRequest, HttpServletResponse response) throws Exception {
@@ -105,9 +92,9 @@ public class GoodsControllerImpl extends BaseController implements GoodsControll
 	      // 파일이 아닌것들에 대하여 맵에 집어넣음 추후 판매자INFO로 들어감
 		
 			 
+
 			  GoodsVO goodsInfo = (GoodsVO)goodsService.findg_id(g_name);
 			  int g_id = (Integer) goodsInfo.getG_id();
-	      
 	      
 	      // 베이스 컨트롤러로 이동하여 파일에 대하여 C\Meal\Image\temp로 저장시켜줌
 	      List<HashMap<String, Object>> imageFileList = (List<HashMap<String, Object>>) upload(multipartRequest);
@@ -115,8 +102,10 @@ public class GoodsControllerImpl extends BaseController implements GoodsControll
 	      // 이미지 이동을 위한 메소드
 	      try {
 	         if (imageFileList != null && imageFileList.size() != 0) {
+
 	        	 //HashMap을 해석해주는 구문
 	            for (HashMap<String, Object> item : imageFileList) {
+	
 	            	item.put("g_id", g_id);	            	
 	            	goodsService.addGoodsImg(item);
 	               imageFileName = (String)item.get("fileName");
@@ -166,5 +155,21 @@ public class GoodsControllerImpl extends BaseController implements GoodsControll
 		resEntity = new ResponseEntity(result, HttpStatus.OK);
 		return resEntity;
 	}
+	
+	@RequestMapping(value="/goodsDetail.do" ,method = RequestMethod.GET)
+	public ModelAndView goodsDetail(@RequestParam("g_id") int g_id,
+			                       HttpServletRequest request, HttpServletResponse response) throws Exception {
+		String viewName=(String)request.getAttribute("viewName");
+		HttpSession session=request.getSession();
+		HashMap<String, Object> goodsMap=(HashMap<String, Object>)goodsService.goodsDetail(g_id);
+		ModelAndView mav = new ModelAndView(viewName);
+		mav.addObject("goodsMap", goodsMap);
+		GoodsVO goodsVO=(GoodsVO)goodsMap.get("goodsVO");
+		/* addGoodsInQuick(goods_id,goodsVO,session); */
+		return mav;
+	}
+	
+
+
 	
 }
