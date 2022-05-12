@@ -56,5 +56,9 @@ private AdminDAO AdminDAO;
 		List<Img_sVO> listImg=SellerDAO.selectSellerImg(s_id);
 		return listImg;
 	}
+	@Override
+	public void updateSellerImg(HashMap<String, Object> map) throws Exception {
+		SellerDAO.updateSellerImg(map);
+	}
 
 }

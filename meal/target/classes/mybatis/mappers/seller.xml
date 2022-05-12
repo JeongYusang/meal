@@ -130,10 +130,15 @@ insert into img_s(fileName,s_id, cate) values (#{fileName}, #{s_id}, #{cate})
 
 
 
-<select id = "selectSellerImg" parameterType="String" resultMap="img_sResult" >
-select * from img_s where s_id = #{s_id}
-</select>
-	
+	<select id="selectSellerImg" parameterType="String"
+		resultMap="img_sResult">
+		select * from img_s where s_id = #{s_id}
+	</select>
+	<update id="updateSellerImg" parameterType="Map">
+<![CDATA[
+update img_s set fileName = #{fileName}  where s_id=#{s_id} and cate=#{cate}
+]]>
+	</update>
 
 </mapper>
 
