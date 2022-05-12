@@ -47,25 +47,21 @@ public class GoodsServiceImpl implements GoodsService {
 		return result;
 	}
 	
-	public Map<String,List<GoodsVO>> listGoods() throws Exception {
-		Map<String,List<GoodsVO>> goodsMap=new HashMap<String,List<GoodsVO>>();
-		List<GoodsVO> goodsList=goodsDAO.selectGoodsList("NewGoods");
-		goodsMap.put("bestseller",goodsList);
-		goodsList=goodsDAO.selectGoodsList("newbook");
-		goodsMap.put("newbook",goodsList);
-		
-		goodsList=goodsDAO.selectGoodsList("steadyseller");
-		goodsMap.put("steadyseller",goodsList);
-		return goodsMap;
-	}
-
-	@Override
-	public HashMap<String, Object> goodsDetail(int g_id) throws Exception {
-		HashMap<String, Object> goodsMap=new HashMap<String, Object>();
-		GoodsVO goodsVO = goodsDAO.selectGoodsDetail(g_id);
-		goodsMap.put("goodsVO", goodsVO);
-		List<Img_gVO> imageList =goodsDAO.selectGoodsDetailImage(g_id);
-		goodsMap.put("imageList", imageList);
-		return goodsMap;
-	}
+	/*
+	 * public Map<String,List<GoodsVO>> listGoods() throws Exception {
+	 * Map<String,List<GoodsVO>> goodsMap=new HashMap<String,List<GoodsVO>>();
+	 * List<GoodsVO> goodsList=goodsDAO.selectGoodsList("NewGoods");
+	 * goodsMap.put("bestseller",goodsList);
+	 * goodsList=goodsDAO.selectGoodsList("newbook");
+	 * goodsMap.put("newbook",goodsList);
+	 * 
+	 * goodsList=goodsDAO.selectGoodsList("steadyseller");
+	 * goodsMap.put("steadyseller",goodsList); return goodsMap; }
+	 * 
+	 * @Override public HashMap<String, Object> goodsDetail(int g_id) throws
+	 * Exception { HashMap<String, Object> goodsMap=new HashMap<String, Object>();
+	 * GoodsVO goodsVO = goodsDAO.selectGoodsDetail(g_id); goodsMap.put("goodsVO",
+	 * goodsVO); List<Img_gVO> imageList =goodsDAO.selectGoodsDetailImage(g_id);
+	 * goodsMap.put("imageList", imageList); return goodsMap; }
+	 */
 }
