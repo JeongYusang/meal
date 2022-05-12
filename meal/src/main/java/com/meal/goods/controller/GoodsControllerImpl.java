@@ -153,16 +153,5 @@ public class GoodsControllerImpl extends BaseController implements GoodsControll
 		return resEntity;
 	}
 
-	/*
-	 * @RequestMapping(value="/goodsDetail.do" ,method = RequestMethod.GET) public
-	 * ModelAndView goodsDetail(@RequestParam("g_id") int g_id, HttpServletRequest
-	 * request, HttpServletResponse response) throws Exception { String
-	 * viewName=(String)request.getAttribute("viewName"); HttpSession
-	 * session=request.getSession(); HashMap<String, Object>
-	 * goodsMap=(HashMap<String, Object>)goodsService.goodsDetail(g_id);
-	 * ModelAndView mav = new ModelAndView(viewName); mav.addObject("goodsMap",
-	 * goodsMap); GoodsVO goodsVO=(GoodsVO)goodsMap.get("goodsVO");
-	 * addGoodsInQuick(goods_id,goodsVO,session); return mav; }
-	 */
 
 }
