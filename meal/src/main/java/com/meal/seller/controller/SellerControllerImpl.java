@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -136,14 +137,13 @@ public class SellerControllerImpl extends BaseController implements SellerContro
 			throws Exception {
 
 		HttpSession session = multipartRequest.getSession();
+		String imageFileName = null;
+
 		HashMap<String, Object> newSellerMap = new HashMap<String, Object>();
 		Enumeration enu = multipartRequest.getParameterNames();
 		while (enu.hasMoreElements()) {
 			String name = (String) enu.nextElement();
 			String value = multipartRequest.getParameter(name);
-			if(value == null) {
-				continue;
-			}
 			System.out.println("name + value = " + name + " : " + value);
 			newSellerMap.put(name, value);
 			// 파일이 아닌것들에 대하여 맵에 집어넣음 추후 판매자INFO로 들어감
@@ -154,70 +154,20 @@ public class SellerControllerImpl extends BaseController implements SellerContro
 		HttpHeaders responseHeaders = new HttpHeaders();
 		responseHeaders.add("Content-Type", "text/html; charset=utf-8");
 		try {
-			//회원정보에 대하여 불러오기  id = 이미지위해 추출 pw = 암호화를 위해 추출
 			String s_id = (String) newSellerMap.get("s_id");
 			String s_pw = (String) newSellerMap.get("s_pw");
 			String encodeS_pw = passwordEncode.encode(s_pw);
 			newSellerMap.put("s_pw", encodeS_pw);
-			//현재 저장되어있는 이미지리스트를 불러옴
-			List<Img_sVO> OldImgList = (List<Img_sVO>)sellerService.selectSellerImg(s_id);
-			//업로드한 이미지에 대하여 불러옴
-			List<HashMap<String, Object>> imageFileList = (List<HashMap<String, Object>>) upload(multipartRequest);
-			
-			for(Img_sVO oldI: OldImgList) {
-				for(HashMap<String,Object> newI: imageFileList) {
-					String oldCate = oldI.getCate();
-					String newCate = (String) newI.get("cate");
-					String newImgFileName= (String) newI.get("fileName");
-					String oldImgFileName= oldI.getFileName();
-					newI.put("s_id", s_id);
-					// 기존 이미지목록과 새로운 이미지 목록에 관한 비교문
-					if (oldCate.equals(newCate)){
-						
-						//기존에 이미지가 있고 신규 이미지등록을 하였을경우
-						if(oldImgFileName !=null && newImgFileName != null) {
-						String oldpath = CURR_IMAGE_UPLOAD_PATH + "\\" + "seller" + "\\" + s_id +"\\" +oldCate;
-						deleteFolder(oldpath);
-						//등록할 이미지 경로설정(upload)메소드로 path내부에 이미 존재함
-						File srcFile = new File(CURR_IMAGE_UPLOAD_PATH + "\\" + "temp" + "\\" + newImgFileName);
-						// 이동하고자 하는 이미지 파일경로 설정
-						File destDir = new File(CURR_IMAGE_UPLOAD_PATH + "\\" + "seller" + "\\" + s_id + "\\" + newCate);
-						// 이동
-						FileUtils.moveFileToDirectory(srcFile, destDir, true);
-						// db에 있는 이미지 정보 변경해주기
-						sellerService.updateSellerImg(newI);
-						
-						//신규 이미지 등록일 경우에
-						}else if(oldImgFileName == null && newImgFileName != null) {
-							//등록할 이미지 경로설정(upload)메소드로 path내부에 이미 존재함
-							File srcFile = new File(CURR_IMAGE_UPLOAD_PATH + "\\" + "temp" + "\\" + newImgFileName);
-							// 이동하고자 하는 이미지 파일경로 설정
-							File destDir = new File(CURR_IMAGE_UPLOAD_PATH + "\\" + "seller" + "\\" + s_id + "\\" + newCate);
-							// 이동
-							FileUtils.moveFileToDirectory(srcFile, destDir, true);
-							//DB에 저장
-							sellerService.addSellerImg(newI);
-						
-							
-						}						
-						
-					}
-				}
-			}
-			
-			
 			sellerService.updateSeller(newSellerMap);
-			
+
 			message = "<script>";
 			message += " alert('회원수정이 완료되었습니다..');";
 			message += " location.href='" + multipartRequest.getContextPath() + "/member/memberResult.do';";
 			message += " </script>";
 			SellerVO sellerInfo = (SellerVO) sellerService.decode(s_id);
 			sellerInfo.setS_id(s_id);
-			sellerInfo.setS_pw(s_pw);
 			session.setAttribute("sellerInfo", sellerInfo);
 		} catch (Exception e) {
-			
 			message = "<script>";
 			message += " alert('다시 내용을 입력해주세요');";
 			message += " location.href='" + multipartRequest.getContextPath() + "/seller/sellerForm.do';";
@@ -244,7 +194,6 @@ public class SellerControllerImpl extends BaseController implements SellerContro
 				deleteFolder(path);
 				//seller에 대한 정보 삭제
 				sellerService.deleteSeller(sellerInfo);
-				//탈퇴사유 db저장
 				adminService.insertReason(map);
 				session.setAttribute("isLogOn", false);
 				session.removeAttribute("memberInfo");
