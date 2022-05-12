@@ -209,7 +209,7 @@ function fn_overlapped(){
 						</div></td>
 				</tr>
 				<tr class="box">
-					<th>알러지 유발 성분*</th>
+					<th>알러지 유발 분*</th>
 					<td colspan="3"><textarea id="allergy" name="g_allergy"
 							cols="30" rows="10"></textarea></td>
 				</tr>
