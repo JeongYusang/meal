@@ -1,6 +1,6 @@
 package com.meal.goods.controller;
 
-zkzkzkzkzkzkzkzzkzkzkzkadadaasd
+
 
 import java.io.File;
 import java.util.Enumeration;
@@ -59,6 +59,20 @@ public class GoodsControllerImpl extends BaseController implements GoodsControll
         return mav;
 	}
 	
+
+@RequestMapping(value="/goodsDetail.do" ,method = RequestMethod.GET)
+	public ModelAndView goodsDetail(@RequestParam("g_id") int g_id,
+			                       HttpServletRequest request, HttpServletResponse response) throws Exception {
+		String viewName=(String)request.getAttribute("viewName");
+		HttpSession session=request.getSession();
+		HashMap<String, Object> goodsMap=(HashMap<String, Object>)goodsService.goodsDetail(g_id);
+		ModelAndView mav = new ModelAndView(viewName);
+		mav.addObject("goodsMap", goodsMap);
+		GoodsVO goodsVO=(GoodsVO)goodsMap.get("goodsVO");
+		/* addGoodsInQuick(goods_id,goodsVO,session); */
+		return mav;
+	}
+	
 	
 	@RequestMapping(value = "/addNewGoods.do", method = {RequestMethod.POST, RequestMethod.GET})
 	   public ModelAndView addNewGoods(MultipartHttpServletRequest multipartRequest, HttpServletResponse response) throws Exception {
@@ -71,14 +85,20 @@ public class GoodsControllerImpl extends BaseController implements GoodsControll
 	      while (enu.hasMoreElements()) {
 	         String name = (String) enu.nextElement();
 	         String value = multipartRequest.getParameter(name);
+	         System.out.println("name + value : " + name + value);
 	         newGoodsMap.put(name, value);
 	         
 	      }	     
 	      
 	      HttpSession session = multipartRequest.getSession();
+	      //세션에 저장되어있던 sellerInfo를 꺼내옴
 	      SellerVO sellerVO = (SellerVO)session.getAttribute("sellerInfo");
-	      String g_name = sellerVO.getS_Wname() + " " + newGoodsMap.get("g_name");
+	      //newGoodsMap내부에 키g_name을 이용하여 A에 바인딩
+	      String A = (String)newGoodsMap.get("g_name");
+	      //바인딩된 A에 sellerInfo에 등러있던 s_Wname을 더하여 g_name에 바인딩 
+	      String g_name = sellerVO.getS_Wname() + " " + A;
 	      System.out.println("g_name : " + g_name);
+	      //바인딩한 g_name 값을 키g_name에 바인딩하여 newGoodsMap에 저장함
 	      newGoodsMap.put("g_name", g_name);
 	      //굿즈에 대한 정보들 = 서비스메소드삽입
 	      goodsService.addNewGoods(newGoodsMap);
@@ -95,6 +115,7 @@ public class GoodsControllerImpl extends BaseController implements GoodsControll
 	      // 이미지 이동을 위한 메소드
 	      try {
 	         if (imageFileList != null && imageFileList.size() != 0) {
+	        	 //HashMap을 해석해주는 구문
 	            for (HashMap<String, Object> item : imageFileList) {
 	            	item.put("g_id", g_id);	            	
 	            	goodsService.addGoodsImg(item);
@@ -131,21 +152,19 @@ public class GoodsControllerImpl extends BaseController implements GoodsControll
 	         return mav;
 	      }
 	}
-	   //G_NAME을 통해서 유효성평가 진행(중복되면 상품등록 X)
-	   @Override
-	   @RequestMapping(value = "/goodsoverlapped.do", method = RequestMethod.POST)
-	   public ResponseEntity goodsoverlapped(@RequestParam("g_name") String g_name, HttpServletRequest request, HttpServletResponse response) throws Exception {
-	      String message = null;
-	      ResponseEntity resEntity = null;
-	      HttpSession session = request.getSession();
-	      SellerVO sellerVO = (SellerVO)session.getAttribute("sellerInfo");
-	      
-	      String g_name1 = sellerVO.getS_Wname() + g_name;
-	      String result = goodsService.goodsoverlapped(g_name1);
-	      
-	      resEntity = new ResponseEntity(message, HttpStatus.OK);
-	      return resEntity;
-	   }
-
+	//G_NAME을 통해서 유효성평가 진행(중복되면 상품등록 X)
+	@Override
+	@RequestMapping(value = "/goodsoverlapped.do", method = RequestMethod.POST)
+	public ResponseEntity goodsoverlapped(@RequestParam("g_name") String g_name, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		ResponseEntity resEntity = null;
+		HttpSession session = request.getSession();
+		SellerVO sellerVO = (SellerVO)session.getAttribute("sellerInfo");
+		
+		String g_name1 = sellerVO.getS_Wname()+ " " + g_name;
+		String result = goodsService.goodsoverlapped(g_name1);
+		
+		resEntity = new ResponseEntity(result, HttpStatus.OK);
+		return resEntity;
+	}
 	
 }
