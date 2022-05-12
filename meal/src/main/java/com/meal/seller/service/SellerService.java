@@ -1,3 +1,4 @@
+
 package com.meal.seller.service;
 
 import java.util.HashMap;
@@ -10,12 +11,20 @@ import com.meal.seller.vo.Img_sVO;
 import com.meal.seller.vo.SellerVO;
 
 public interface SellerService {
-		public SellerVO login(Map loginMap) throws Exception;
-		public String addSeller(HashMap<String, Object> newSellerMap) throws Exception;
+	public SellerVO login(Map loginMap) throws Exception;
 
-		public void updateSeller(HashMap<String, Object> newSellerMap) throws Exception;
-		public void addSellerImg(HashMap<String, Object> map) throws Exception;
-		public SellerVO decode(String s_id) throws Exception;
-		public void deleteSeller(SellerVO sellerVO) throws Exception;
-		public List<Img_sVO> selectSellerImg(String s_id) throws Exception;
+	public String addSeller(HashMap<String, Object> newSellerMap) throws Exception;
+
+	public void updateSeller(HashMap<String, Object> newSellerMap) throws Exception;
+
+	public void addSellerImg(HashMap<String, Object> map) throws Exception;
+
+	public SellerVO decode(String s_id) throws Exception;
+
+	public void deleteSeller(SellerVO sellerVO) throws Exception;
+
+	public List<Img_sVO> selectSellerImg(String s_id) throws Exception;
+
+	public void updateSellerImg(HashMap<String, Object> map) throws Exception;
+
 }

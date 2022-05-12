@@ -1,3 +1,5 @@
+
+
 package com.meal.seller.dao;
 
 import java.util.HashMap;
@@ -64,6 +66,12 @@ public class SellerDAOImpl implements SellerDAO {
 		public List<Img_sVO> selectSellerImg(String s_id) throws DataAccessException{
 			List<Img_sVO> listImg= (List<Img_sVO>) sqlSession.selectList("mapper.seller.selectSellerImg", s_id);
 			return listImg;
+		}
+
+		@Override
+		public void updateSellerImg(HashMap<String,Object> map) throws DataAccessException{
+			sqlSession.update("mapper.seller.updateSellerImg", map);
+			
 		}
 
 }
