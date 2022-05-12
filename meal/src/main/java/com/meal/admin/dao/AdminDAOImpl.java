@@ -27,24 +27,24 @@ public class AdminDAOImpl implements AdminDAO {
 			sqlSession.insert("mapper.admin.insertNewAdmin",adminVO);
 		}
 
-		@Override
-		public String checkpw(String id) throws DataAccessException {
-			String pw = (String) sqlSession.selectOne("mapper.admin.checkpw",id);
-			return pw;
-		}
+
 		@Override
 		public List<MemberVO> selectAllMembers(HashMap<String, Object> pagingMap) throws DataAccessException {
-			List<MemberVO> memberInfo = (List<MemberVO>)sqlSession.selectList("mapper.admin.userPage", pagingMap);
+			List<MemberVO> memberInfo = (List<MemberVO>)sqlSession.selectList("mapper.adminM.userPage", pagingMap);
 			return memberInfo;
 		}
 		@Override
 		public List<SellerVO> selectAllSellers(HashMap<String, Object> pagingMap) throws DataAccessException {
-			List<SellerVO> memberInfo = (List<SellerVO>)sqlSession.selectList("mapper.admin.sellerPage", pagingMap);
+			List<SellerVO> memberInfo = (List<SellerVO>)sqlSession.selectList("mapper.adminM.sellerPage", pagingMap);
 			return memberInfo;
 		}
 		@Override
 		public void insertReason(HashMap<String, Object> map) throws DataAccessException{
 			sqlSession.insert("mapper.admin.insertReason",map); 
 		}
-
+		@Override
+		public String selectOverlappedId(String pw) throws DataAccessException{
+		    String result = (String)sqlSession.selectOne("mapper.admin.selectOverlappedId", pw);
+		    return result;
+		}
 }

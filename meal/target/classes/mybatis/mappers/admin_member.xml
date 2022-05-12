@@ -3,16 +3,9 @@
 	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="mapper.admin">
+<mapper namespace="mapper.adminM">
 
-	<resultMap id="adminResult" type="AdminVO">
-		<result property="a_id" column="a_id" />
-		<result property="a_pw" column="a_pw" />
-		<result property="a_name" column="a_name" />
-		<result property="a_hp" column="a_hp" />
-		<result property="a_email1" column="a_email1" />
-		<result property="a_email2" column="a_email2" />
-	</resultMap>
+
 
 	<!-- 리절트 맵 정의 -->
 	<resultMap id="uResult" type="MemberVO">
@@ -67,34 +60,9 @@
 		<result property="cate" column="cate" />
 	</resultMap>
 
-	<select id="decode" resultType="adminVO"
-		parameterType="java.util.Map">
-	    <![CDATA[
-			select * from admin_tb
-			 where a_id=#{a_id}
-		]]>
-	</select>
-	<insert id="insertNewAdmin" parameterType="adminVO">
-  <![CDATA[
-    	insert into admin_tb(a_id,
-				 					 a_pw,
-                                     a_name,
-                                     a_hp,
-                                     a_email1,
-                                     a_email2)
-							 values(#{a_id},
-									#{a_pw},
-									#{a_name},
-									#{a_hp},
-                                    #{a_email1},
-                                    #{a_email2})                                 
-   ]]>
-	</insert>
-	<select id="checkpw" resultType="String" parameterType="String">
-  <![CDATA[
-		select a_pw from admin_tb where a_id = #{id};
-			]]>
-	</select>
+
+
+
 	<select id="userPage" resultMap="uResult" parameterType="Map">
    <![CDATA[
 	   select R1.* from (select * from user_tb order by u_name) R1 order by u_name asc limit #{start} , #{end} 
