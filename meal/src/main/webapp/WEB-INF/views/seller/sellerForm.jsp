@@ -342,6 +342,7 @@ tr.box {
 #frmSel td#filetext {
     font-size: small;
     color: #6666664d;
+    padding-left: 0px;
 }
 
 /* 이용약관에 관한 모달 */
