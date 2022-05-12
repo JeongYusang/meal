@@ -12,7 +12,7 @@
 <script>
 	function sortTable(n) {
 		var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
-		table = document.getElementById("stable-striped");
+		table = document.getElementById("stable-striped"); //테이블 명
 		switching = true;
 		//Set the sorting direction to ascending:
 		dir = "asc";
