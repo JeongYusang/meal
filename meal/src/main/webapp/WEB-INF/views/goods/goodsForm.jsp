@@ -130,19 +130,19 @@ margin: 10px;
 			<th>카테고리 설정*</th>
 			<td>
 			<div id = "form-div">
-					<input type="radio" class="formtext1" id="g_cate2" name="g_cate2" value="찌개/탕/찜" checked>
+					<input type="radio" class="g_cate2" id="formtext1" name="g_cate2" value="찌개/탕/찜" checked>
 					 <label for="formtext1">찌개/탕/찜</label> 
-					 <input type="radio" class="formtext2" id="g_cate2" name="g_cate2" value="식사/안주" checked>
+					 <input type="radio" class="g_cate2" id="formtext2" name="g_cate2" value="식사/안주" checked>
 					 <label for="formtext2">식사/안주</label> 
-					 <input type="radio" class="formtext3" id="g_cate2" name="g_cate2" value="죽" checked> 
+					 <input type="radio" class="g_cate2" id="formtext3" name="g_cate2" value="죽" checked> 
 					 <label for="formtext3">죽</label>
 				</div>
 					<div id = "form-div">
-					<input type="radio" class="formtext4" id="g_cate2" name="g_cate2" value="간편식" checked>
+					<input type="radio" class="g_cate2" id="formtext4" name="g_cate2" value="간편식" checked>
 					 <label for="formtext4">간편식</label> 
-					 <input type="radio" class="formtext5" id="g_cate2" name="g_cate2" value="고기"checked>
+					 <input type="radio" class="g_cate2" id="formtext5" name="g_cate2" value="고기"checked>
 					 <label for="formtext5">고기</label> 
-					 <input type="radio" class="formtext6" id="g_cate2" name="g_cate2" value="기타" checked> 
+					 <input type="radio" class="g_cate2" id="formtext6" name="g_cate2" value="기타" checked> 
 					 <label for="formtext6">기타</label>
 				</div>
 				</td>
@@ -150,11 +150,11 @@ margin: 10px;
 		<tr class="box">
 			<th>난이도*</th>
 			<td><div id = "form-div">
-					<input type="radio" class="formtext7" id="g_nan" name="g_nan" checked>
+					<input type="radio" class="g_nan" id="formtext7" name="g_nan" value="상" checked>
 					 <label for="formtext7">상</label> 
-					 <input type="radio" class="formtext8" id="g_nan" name="g_nan" checked>
+					 <input type="radio" class="g_nan" id="formtext8" name="g_nan" value="중" checked>
 					 <label for="formtext8">중</label> 
-					  <input type="radio" class="formtext9" id="g_nan" name="g_nan" checked>
+					  <input type="radio" class="g_nan" id="formtext9" name="g_nan" value="하" checked>
 					 <label for="formtext9">하</label> 
 				</div>
 				</td>
@@ -162,13 +162,13 @@ margin: 10px;
 		<tr class="box">
 			<th>모범음식점 여부*</th>
 			<td><div id = "form-div">
-					<input type="radio" class="formtext10" id="g_cate3" name="g_cate3" value="HACCP" checked>
+					<input type="radio" id="formtext10" name="g_cate3" value="HACCP" checked>
 					 <label for="formtext10">HACCP</label> 
-					 <input type="radio" class="formtext11" id="g_cate3" name="g_cate3" value="모범음식점" checked>
+					 <input type="radio" id="formtext11" name="g_cate3" value="모범음식점" checked>
 					 <label for="formtext11">모범음식점</label>
-					 <input type="radio" class="formtext12" id="g_cate3" name="g_cate3" value="HACCP/모범음식점" checked>
+					 <input type="radio" id="formtext12" name="g_cate3" value="HACCP/모범음식점" checked>
 					 <label for="formtext12">HACCP/모범음식점</label> 
-					 <input type="radio" class="formtext13" id="g_cate3" name="g_cate3" value="X" checked>
+					 <input type="radio" id="formtext13" name="g_cate3" value="X" checked>
 					 <label for="formtext13">X</label> 
 				</div>
 				</td>
@@ -181,11 +181,11 @@ margin: 10px;
 		<tr class="box">
 			<th>보관방법*</th>
 			<td><div id = "form-div"> 
-			<input type="radio" id="formradio" name="g_bang" checked>
+			<input type="radio" id="formradio" name="g_bang" value="냉동" checked>
 					 <label for="formradio">냉동</label> 
-					 <input type="radio" id="formradio" name="g_bang" checked> 
+					 <input type="radio" id="formradio" name="g_bang" value="냉장" checked> 
 					 <label for="formradio">냉장</label>
-					  <input type="radio" id="formradio" name="g_bang" checked> 
+					  <input type="radio" id="formradio" name="g_bang" value="실온" checked> 
 					 <label for="formradio">실온</label>
 					 </div>
 					 </td>
@@ -193,11 +193,11 @@ margin: 10px;
 		<tr class="box">
 			<th>인분수*</th>
 			<td><div id = "form-div"> 
-			<input type="radio" id="formradio" name="g_inbun" checked>
+			<input type="radio" id="formradio" name="g_inbun" value="1~2인분"checked>
 					 <label for="formradio">1~2인분</label> 
-					 <input type="radio" id="formradio" name="g_inbun" checked> 
+					 <input type="radio" id="formradio" name="g_inbun" value="2~3인분"checked> 
 					 <label for="formradio">2~3인분</label>
-					  <input type="radio" id="formradio" name="g_inbun" checked> 
+					  <input type="radio" id="formradio" name="g_inbun" value="3~4인분"checked> 
 					 <label for="formradio">3~4인분</label>
 					 </div></td>
 		</tr>
