@@ -17,4 +17,5 @@ public interface GoodsService {
 	public void addGoodsImg(HashMap<String, Object> map) throws Exception;
 	public GoodsVO findg_id (String g_name) throws Exception;
 	public String goodsoverlapped(@RequestParam("g_name") String g_name) throws Exception;
+	public HashMap<String, Object> goodsDetail(int g_id) throws Exception;
 }
