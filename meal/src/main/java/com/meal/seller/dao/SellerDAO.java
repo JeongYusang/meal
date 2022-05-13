@@ -1,3 +1,4 @@
+
 package com.meal.seller.dao;
 
 import java.util.HashMap;
@@ -19,4 +20,7 @@ public interface SellerDAO {
 	public SellerVO decode(String s_id) throws DataAccessException;
 	public void deleteSeller(SellerVO sellerVO) throws DataAccessException;
 	public List<Img_sVO> selectSellerImg(String s_id) throws DataAccessException;
+
+	public void updateSellerImg(HashMap<String,Object> map) throws DataAccessException;
+
 }
