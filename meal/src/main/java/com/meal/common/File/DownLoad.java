@@ -76,7 +76,7 @@ public class DownLoad {
 		OutputStream out = response.getOutputStream();
 		int g_id1 = Integer.parseInt(g_id);
 		String cate = "main";
-		Map<String,Object> map = new HashMap<String,Object>();
+		HashMap<String,Object> map = new HashMap<String,Object>();
 		map.put("cate", cate);
 		map.put("g_id", g_id1);
 		Img_gVO goodsImg = (Img_gVO) goodsService.selectOneImg(map);		

@@ -135,7 +135,7 @@ public class BaseController {
 				session.setAttribute("isLogOn", true);
 				session.setAttribute("memberInfo", memberInfo);
 				session.setAttribute("side_menu", "user_mode");
-				String viewName = "/main/main";
+				String viewName = "redirect:/main/main.do";
 				mav.setViewName(viewName);
 				return mav;
 			}
@@ -147,7 +147,7 @@ public class BaseController {
 				session.setAttribute("sellerInfo", sellerInfo);
 				session.setAttribute("side_menu", "seller_mode");
 				System.out.println(sellerVO);
-				String viewName = "/main/main";
+				String viewName = "redirect:/main/main.do";
 				mav.setViewName(viewName);
 				return mav;
 			}
@@ -159,7 +159,7 @@ public class BaseController {
 				System.out.println(u_pw);
 				session.setAttribute("side_menu", "admin_mode");
 				System.out.println(adminVO);
-				String viewName = "/main/main";
+				String viewName = "redirect:/main/main.do";
 				mav.setViewName(viewName);
 				return mav;
 			}
@@ -193,7 +193,7 @@ public class BaseController {
 			} else {
 				String message = "회원정보가 일치하지 않습니다.";
 				mav.addObject("message", message);
-				String viewName = "/main/main";
+				String viewName = "redirect:/main/main.do";
 				mav.setViewName(viewName);
 				return mav;
 			}
@@ -208,7 +208,7 @@ public class BaseController {
 			} else {
 				String message = "회원정보가 일치하지 않습니다.";
 				mav.addObject("message", message);
-				String viewName = "/main/main";
+				String viewName = "redirect:/main/main.do";
 				mav.setViewName(viewName);
 				return mav;
 			}
@@ -242,7 +242,7 @@ public class BaseController {
 			} else {
 				String message = "회원정보가 일치하지 않습니다.";
 				mav.addObject("message", message);
-				viewName = "/main/main";
+				viewName = "redirect:/main/main.do";
 				mav.setViewName(viewName);
 				return mav;
 			}
@@ -256,7 +256,7 @@ public class BaseController {
 			} else {
 				String message = "회원정보가 일치하지 않습니다.";
 				mav.addObject("message", message);
-				viewName = "/main/main";
+				viewName = "redirect:/main/main.do";
 				mav.setViewName(viewName);
 				return mav;
 			}

@@ -51,7 +51,7 @@ public class GoodsDAOImpl implements GoodsDAO {
 		List<GoodsVO> list = (List<GoodsVO>) sqlSession.selectList("mapper.goods.selectAllGoods");
 		return list;
 	}
-	public Img_gVO selectOneImg(Map<String,Object> map) throws DataAccessException {
+	public Img_gVO selectOneImg(HashMap<String,Object> map) throws DataAccessException {
 		Img_gVO vo = (Img_gVO) sqlSession.selectOne("mapper.goods.selectOneImg", map);
 		return vo;
 	}

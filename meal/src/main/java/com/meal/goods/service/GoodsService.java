@@ -16,5 +16,6 @@ public interface GoodsService {
 	public String goodsoverlapped(@RequestParam("g_name") String g_name) throws Exception;
 	public List<Img_gVO> selectImgList(int g_id)throws Exception;
 	public List<GoodsVO> selectAllGoods() throws Exception;
-	public Img_gVO selectOneImg(Map<String, Object> map) throws Exception;
+	public Img_gVO selectOneImg(HashMap<String, Object> map) throws Exception;
+
 }
