@@ -102,6 +102,11 @@
  <select id="selectGoodsImg" parameterType="int" resultMap="img_GResult">
  select * from img_g where g_id =#{g_id}
  </select>
+ <select id="selectOneImg" parameterType="Map" resultType="img_gVO">
+ <![CDATA[
+ select * from img_g where g_id =#{g_id} and cate = #{cate}
+ ]]>
+ </select>
 
 </mapper>
  

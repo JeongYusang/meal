@@ -56,4 +56,8 @@ public class GoodsServiceImpl implements GoodsService {
 		List<GoodsVO> list = (List<GoodsVO>) goodsDAO.selectAllGoods();
 		return list;
 	}
+	public Img_gVO selectOneImg(Map<String,Object> map) throws Exception{
+		Img_gVO vo = (Img_gVO)goodsDAO.selectOneImg(map);
+		return vo;
+	}
 }

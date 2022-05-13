@@ -109,7 +109,7 @@ public class GoodsControllerImpl extends BaseController implements GoodsControll
 						File srcFile = new File(CURR_IMAGE_UPLOAD_PATH + "\\" + "temp" + "\\" + imageFileName);
 						// 이동하고자 하는 이미지 파일경로 설정
 						File destDir = new File(
-								CURR_IMAGE_UPLOAD_PATH + "\\" + "goods" + "\\" + g_id + "\\" + cate+ "\\" + imageFileName);
+								CURR_IMAGE_UPLOAD_PATH + "\\" + "goods" + "\\" + g_id + "\\" + cate);
 						// 경로 추가? 해야할 것
 						// 이동
 						FileUtils.moveFileToDirectory(srcFile, destDir, true);
@@ -118,7 +118,7 @@ public class GoodsControllerImpl extends BaseController implements GoodsControll
 			}
 			// 결과창에 출력해주기 위해 판매자 정보를 저장해줌
 			mav.addObject("goodsInfo", goodsInfo);
-			String viewName = (String) multipartRequest.getAttribute("viewName");
+			String viewName= "redirect:/main/main.do";
 			mav.setViewName(viewName);
 			return mav;
 		} catch (Exception e) {

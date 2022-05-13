@@ -114,13 +114,7 @@ delete from seller_tb where s_id = #{s_id} and s_name = #{s_name}
 
 	</delete>
 
-	<delete id="deleteSellerImg" parameterType="sellerVO">
 
-<![CDATA[
-delete from img_s where s_id = #{s_id} and  cate=#{cate}
-]]>
-
-	</delete>
 
 	<insert id="insertNewSellerImg" parameterType="Map">
 <![CDATA[
@@ -128,23 +122,24 @@ insert into img_s(fileName,s_id, cate) values (#{fileName}, #{s_id}, #{cate})
 ]]>
 	</insert>
 
-
-
 	<select id="selectSellerImg" parameterType="String"
 		resultMap="img_sResult">
+		<![CDATA[
 		select * from img_s where s_id = #{s_id}
+		]]>
 	</select>
 
 
-	<select id="selectSellerImg" parameterType="String"
-		resultMap="img_sResult">
-		select * from img_s where s_id = #{s_id}
-	</select>
 	<update id="updateSellerImg" parameterType="Map">
 <![CDATA[
 update img_s set fileName = #{fileName}  where s_id=#{s_id} and cate=#{cate}
 ]]>
 	</update>
+	<delete id="deleteSellerImg" parameterType="sellerVO">
+<![CDATA[
+delete from img_s where s_id = #{s_id} and  cate=#{cate}
+]]>
 
+	</delete>
 
 </mapper>

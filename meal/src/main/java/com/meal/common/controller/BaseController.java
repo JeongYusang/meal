@@ -66,7 +66,13 @@ public class BaseController {
 		return mav;
 	}
 
-
+	   @RequestMapping(value = "/*/*.do", method = { RequestMethod.POST, RequestMethod.GET })
+	   protected ModelAndView viewForm(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	      String viewName = (String) request.getAttribute("viewName");// 인터셉터있을때 없으면주석
+	      /* String viewName = (String)request.getAttribute("viewName"); 인터셉터없을때 */
+	      ModelAndView mav = new ModelAndView(viewName);
+	      return mav;
+	   }
 
 	@RequestMapping(value = "/err/error.do", method = { RequestMethod.POST, RequestMethod.GET })
 	protected ModelAndView errForm(HttpServletRequest request, HttpServletResponse response) throws Exception {

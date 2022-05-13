@@ -34,6 +34,7 @@
 		<result property="fileName" column="fileName" />
 		<result property="g_id" column="g_id" />
 		<result property="cate" column="cate" />
+		<result property="ig_id" column="ig_id"/>
 	</resultMap>
 
 	<insert id="insertNewGoods" parameterType="Map">
@@ -77,6 +78,13 @@
 		]]>
 	</insert>
 
+	<select id="selectAllGoods" parameterType="String" resultType="GoodsVO">
+	<![CDATA[
+		   select * from goods_tb
+		]]>
+	</select>
+
+
 	<select id="findg_id" parameterType="String" resultType="GoodsVO">
 	<![CDATA[
 		   select * from goods_tb
@@ -91,7 +99,14 @@
 		where g_name = #{g_name}
 	</select>
 	
-
+ <select id="selectGoodsImg" parameterType="int" resultMap="img_GResult">
+ select * from img_g where g_id =#{g_id}
+ </select>
+ <select id="selectOneImg" parameterType="Map" resultType="img_gVO">
+ <![CDATA[
+ select * from img_g where g_id =#{g_id} and cate = #{cate}
+ ]]>
+ </select>
 
 </mapper>
  

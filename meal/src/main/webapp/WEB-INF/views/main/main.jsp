@@ -118,39 +118,34 @@
 
 				</ul>
 			</div>
-			<c:forEach var="item" items="${goodsList}">
-				<ul class="ul">
-				<li>1</li>
-					<li><a href="${contextPath }/main/goodsDetail.do"><img
-							src="${contextPath}/download1.do?g_id=${item.g_id}&cate=main"
-							width="250px" height="250px"><br>서울식 소불고기 전골<br>19800월</a></li>
-				</ul>
-			</c:forEach>
+
 
 
 			<div class="maingoodslist">
 				<b class="b" style="font-size: 32px">신상품</b>
 				<div class="maingList">
-			<c:forEach var="item" items="${goodsList}">
-				<ul class="ul">
-				<li>1</li>
-					<li><a href="${contextPath }/main/goodsDetail.do"><img
-							src="${contextPath}/download1.do?g_id=${item.g_id}&cate=main"
-							width="250px" height="250px"><br>서울식 소불고기 전골<br>19800월</a></li>
-				</ul>
-			</c:forEach>
+					<!-- 다운로드 메소드를 통해서 한것 -->
+					<c:forEach var="item" items="${goodsList}">
+						<ul class="ul">
+							<li>1</li>
+							<li><a href="${contextPath }/main/goodsDetail.do"><img
+									src="${contextPath}/download1.do?g_id=${item.g_id}&cate=main"
+									width="250px" height="250px"><br>서울식 소불고기 전골<br>19800월</a></li>
+						</ul>
+					</c:forEach>
 
 				</div>
 				<b class="b" style="font-size: 32px">지역맛집</b>
 				<div class="maingList">
-						<c:forEach var="item" items="${goodsList}">
-				<ul class="ul">
-				<li>1</li>
-					<li><a href="${contextPath }/main/goodsDetail.do"><img
-							src="${contextPath}/download1.do?g_id=${item.g_id}&cate=main"
-							width="250px" height="250px"><br>서울식 소불고기 전골<br>19800월</a></li>
-				</ul>
-			</c:forEach>
+				<!--썸네일 메소드를 이용한것  -->
+					<c:forEach var="item" items="${goodsList}">
+						<ul class="ul">
+							<li>1</li>
+							<li><a href="${contextPath }/main/goodsDetail.do"><img
+									src="${contextPath}/thumbnails.do?g_id=${item.g_id}"
+									width="250px" height="250px"><br>서울식 소불고기 전골<br>19800월</a></li>
+						</ul>
+					</c:forEach>
 				</div>
 				<b class="b" style="font-size: 32px">베스트셀러</b>
 				<div class="maingList">
