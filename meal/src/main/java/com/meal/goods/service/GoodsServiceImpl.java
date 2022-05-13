@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -46,6 +47,13 @@ public class GoodsServiceImpl implements GoodsService {
 		String result = goodsDAO.selectOverlappedG_NAME(g_name);
 		return result;
 	}
-	
-
+	@Override
+	public List<Img_gVO> selectImgList(int g_id)throws Exception{
+		List<Img_gVO> list = (List<Img_gVO>)goodsDAO.selectImgList(g_id);
+		return list;
+	}
+	public List<GoodsVO> selectAllGoods() throws Exception{
+		List<GoodsVO> list = (List<GoodsVO>) goodsDAO.selectAllGoods();
+		return list;
+	}
 }

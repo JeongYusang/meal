@@ -16,4 +16,6 @@ public interface GoodsDAO {
 	public void addGoodsImg(HashMap<String, Object> map) throws DataAccessException;
 	public GoodsVO findg_id (String g_name) throws DataAccessException;
 	public String selectOverlappedG_NAME(String g_name) throws DataAccessException;
+	public List<Img_gVO> selectImgList(int g_id)throws DataAccessException;
+	public List<GoodsVO> selectAllGoods() throws DataAccessException ;
 }

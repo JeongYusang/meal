@@ -1,9 +1,7 @@
 package com.meal.goods.dao;
 
 import java.util.HashMap;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +9,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
 
 import com.meal.goods.vo.GoodsVO;
+import com.meal.goods.vo.Img_gVO;
 
 @Repository("goodsDAO")
 public class GoodsDAOImpl implements GoodsDAO {
@@ -39,6 +38,17 @@ public class GoodsDAOImpl implements GoodsDAO {
 	public String selectOverlappedG_NAME(String g_name) throws DataAccessException {
 		String result = (String)sqlSession.selectOne("mapper.goods.selectOverlappedG_NAME", g_name);
 		return result;
+	}
+	
+	@Override
+	public List<Img_gVO> selectImgList(int g_id)throws DataAccessException{
+		List<Img_gVO> list = (List<Img_gVO>)sqlSession.selectList("mapper.goods.selectGoodsImg", g_id);
+		return list;
+	}
+	@Override
+	public List<GoodsVO> selectAllGoods() throws DataAccessException {
+		List<GoodsVO> list = (List<GoodsVO>) sqlSession.selectList("mapper.goods.selectAllGoods");
+		return list;
 	}
 
 }

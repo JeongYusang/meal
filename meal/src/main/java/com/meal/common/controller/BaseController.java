@@ -25,6 +25,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.meal.admin.service.AdminService;
 import com.meal.admin.vo.AdminVO;
+import com.meal.goods.service.GoodsService;
+import com.meal.goods.vo.GoodsVO;
 import com.meal.member.service.MemberService;
 import com.meal.member.vo.MemberVO;
 import com.meal.seller.service.SellerService;
@@ -42,6 +44,8 @@ public class BaseController {
 	@Autowired
 	private AdminService adminService;
 	@Autowired
+	private GoodsService goodsService;
+	@Autowired
 	private MemberVO memberVO;
 	@Autowired
 	private SellerVO sellerVO;
@@ -52,20 +56,17 @@ public class BaseController {
 
 	@RequestMapping(value = "/main/main.do", method = { RequestMethod.POST, RequestMethod.GET })
 	public ModelAndView main(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		/* String viewName = (String)request.getAttribute("viewName"); */
 		String viewName = (String) request.getAttribute("viewName");
-
-		ModelAndView mav = new ModelAndView(viewName);
+		//메인창에 띄워줄 상품 정보를 저장 추후 쿼리를 바꿔줄 예정이긴함
+		List<GoodsVO> goodsList = (List<GoodsVO>) goodsService.selectAllGoods();
+		System.out.println("베이스컨트롤러 메인 메소드");
+		ModelAndView mav = new ModelAndView();
+		mav.addObject("goodsList", goodsList);
+		mav.setViewName(viewName);
 		return mav;
 	}
 
-	@RequestMapping(value = "/*/*.do", method = { RequestMethod.POST, RequestMethod.GET })
-	protected ModelAndView viewForm(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		String viewName = (String) request.getAttribute("viewName");// 인터셉터있을때 없으면주석
-		/* String viewName = (String)request.getAttribute("viewName"); 인터셉터없을때 */
-		ModelAndView mav = new ModelAndView(viewName);
-		return mav;
-	}
+
 
 	@RequestMapping(value = "/err/error.do", method = { RequestMethod.POST, RequestMethod.GET })
 	protected ModelAndView errForm(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -127,7 +128,7 @@ public class BaseController {
 				session = request.getSession();
 				session.setAttribute("isLogOn", true);
 				session.setAttribute("memberInfo", memberInfo);
-				session.setAttribute("side_menu","user_mode");
+				session.setAttribute("side_menu", "user_mode");
 				String viewName = "/main/main";
 				mav.setViewName(viewName);
 				return mav;
@@ -146,24 +147,23 @@ public class BaseController {
 			}
 		}
 		if (adminInfo != null) {
-				if (passwordEncode.matches(u_pw, adminInfo.getA_pw())) {
-					session.setAttribute("isLogOn", true);
-					session.setAttribute("adminInfo", adminInfo);
-					System.out.println(u_pw);
-					session.setAttribute("side_menu", "admin_mode");
-					System.out.println(adminVO);
-					String viewName = "/main/main";
-					mav.setViewName(viewName);
-					return mav;
+			if (passwordEncode.matches(u_pw, adminInfo.getA_pw())) {
+				session.setAttribute("isLogOn", true);
+				session.setAttribute("adminInfo", adminInfo);
+				System.out.println(u_pw);
+				session.setAttribute("side_menu", "admin_mode");
+				System.out.println(adminVO);
+				String viewName = "/main/main";
+				mav.setViewName(viewName);
+				return mav;
 			}
-		}
-		else {
+		} else {
 			String message = "로그인정보가 일치하지 않습니다.";
 			mav.addObject("message", message);
 			mav.setViewName("/main/loginForm");
 			return mav;
 		}
-		
+
 		return mav;
 	}
 
@@ -290,13 +290,12 @@ public class BaseController {
 		}
 	}
 
-	
-	//페이징에 관한 컨트롤러
-	protected Map<String,Object> paging (Map<String,Object> map){
-		
-		String pageNum= (String)map.get("pageNum");
-		String section= (String)map.get("section");
-		
+	// 페이징에 관한 컨트롤러
+	protected Map<String, Object> paging(Map<String, Object> map) {
+
+		String pageNum = (String) map.get("pageNum");
+		String section = (String) map.get("section");
+
 		HashMap<String, Object> pagingMap = new HashMap<String, Object>();
 		Integer page = 1;
 		Integer index = 0;
@@ -309,7 +308,7 @@ public class BaseController {
 				System.out.println("인덱스" + index);
 				Integer start = (page1 - 1) * 10 + index1 * 100;
 				Integer end = 10;
-				//Integer end = (page1) * 10 + index1 * 100; 출력개수를 정함.
+				// Integer end = (page1) * 10 + index1 * 100; 출력개수를 정함.
 				pagingMap.put("start", start);
 				pagingMap.put("end", end);
 				System.out.println(start);
@@ -331,5 +330,5 @@ public class BaseController {
 		}
 		return pagingMap;
 	}
-	
+
 }
