@@ -102,13 +102,14 @@ public class GoodsControllerImpl extends BaseController implements GoodsControll
 					item.put("g_id", g_id);
 					goodsService.addGoodsImg(item);
 					imageFileName = (String) item.get("fileName");
+					String cate = (String) item.get("cate");
 					if (!(imageFileName.equals("fileName") || imageFileName == null)) {
 						// 이미지에 해당하는 정보를 DB에 저장 s_id | cate = fileName |fileName = originalfileName
 						// temp에 있는 이미지파일경로 설정
 						File srcFile = new File(CURR_IMAGE_UPLOAD_PATH + "\\" + "temp" + "\\" + imageFileName);
 						// 이동하고자 하는 이미지 파일경로 설정
 						File destDir = new File(
-								CURR_IMAGE_UPLOAD_PATH + "\\" + "goods" + "\\" + g_id + "\\" + imageFileName);
+								CURR_IMAGE_UPLOAD_PATH + "\\" + "goods" + "\\" + g_id + "\\" + cate+ "\\" + imageFileName);
 						// 경로 추가? 해야할 것
 						// 이동
 						FileUtils.moveFileToDirectory(srcFile, destDir, true);
@@ -152,6 +153,7 @@ public class GoodsControllerImpl extends BaseController implements GoodsControll
 		resEntity = new ResponseEntity(result, HttpStatus.OK);
 		return resEntity;
 	}
+
 
 
 }

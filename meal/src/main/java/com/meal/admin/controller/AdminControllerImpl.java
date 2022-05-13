@@ -80,38 +80,10 @@ public class AdminControllerImpl extends BaseController implements AdminControll
 			HttpServletResponse response) throws Exception {
 		String viewName = (String) request.getAttribute("viewName");
 		ModelAndView mav = new ModelAndView(viewName);
-		HashMap<String, Object> pagingMap = new HashMap<String, Object>();
-		Integer page = 1;
-		Integer index = 0;
-		if (pageNum != null) {
-
-			if (section != null) {
-				Integer page1 = Integer.parseInt((String) pageNum);
-				Integer index1 = Integer.parseInt((String) section);
-
-				System.out.println("인덱스" + index);
-				Integer start = (page1 - 1) * 10 + index1 * 100;
-				Integer end = 10;
-				//Integer end = (page1) * 10 + index1 * 100; 출력개수를 정함.
-				pagingMap.put("start", start);
-				pagingMap.put("end", end);
-				System.out.println(start);
-				System.out.println(end);
-				System.out.println(pagingMap);
-			} else {
-				Integer page1 = Integer.parseInt((String) pageNum);
-
-				Integer start = (page1 - 1) * 10 + index * 100;
-				Integer end = (page1) * 10 + index * 100;
-				pagingMap.put("start", start);
-				pagingMap.put("end", end);
-			}
-		} else {
-			Integer start = (page - 1) * 10 + index * 100;
-			Integer end = (page) * 10 + index * 100;
-			pagingMap.put("start", start);
-			pagingMap.put("end", end);
-		}
+		HashMap<String, Object> pagingInfo = new HashMap<String, Object>();
+		pagingInfo.put("section", section);
+		pagingInfo.put("pageNum", pageNum);
+		HashMap<String, Object> pagingMap = (HashMap<String, Object>) paging(pagingInfo);
 		List<MemberVO> memberVO = adminService.selectAllMembers(pagingMap);
 		mav.addObject("memberlist", memberVO);
 		
@@ -124,38 +96,10 @@ public class AdminControllerImpl extends BaseController implements AdminControll
 			HttpServletResponse response) throws Exception {
 		String viewName = (String) request.getAttribute("viewName");
 		ModelAndView mav = new ModelAndView(viewName);
-		HashMap<String, Object> pagingMap = new HashMap<String, Object>();
-		Integer page = 1;
-		Integer index = 0;
-		if (pageNum != null) {
-
-			if (section != null) {
-				Integer page1 = Integer.parseInt((String) pageNum);
-				Integer index1 = Integer.parseInt((String) section);
-
-				System.out.println("인덱스" + index);
-				Integer start = (page1 - 1) * 10 + index1 * 100;
-				Integer end = 10;
-				//Integer end = (page1) * 10 + index1 * 100; 출력개수를 정함.
-				pagingMap.put("start", start);
-				pagingMap.put("end", end);
-				System.out.println(start);
-				System.out.println(end);
-				System.out.println(pagingMap);
-			} else {
-				Integer page1 = Integer.parseInt((String) pageNum);
-
-				Integer start = (page1 - 1) * 10 + index * 100;
-				Integer end = (page1) * 10 + index * 100;
-				pagingMap.put("start", start);
-				pagingMap.put("end", end);
-			}
-		} else {
-			Integer start = (page - 1) * 10 + index * 100;
-			Integer end = (page) * 10 + index * 100;
-			pagingMap.put("start", start);
-			pagingMap.put("end", end);
-		}
+		HashMap<String, Object> pagingInfo = new HashMap<String, Object>();
+		pagingInfo.put("section", section);
+		pagingInfo.put("pageNum", pageNum);
+		HashMap<String, Object> pagingMap = (HashMap<String, Object>) paging(pagingInfo);
 		List<SellerVO> sellerVO = adminService.selectAllSellers(pagingMap);
 		mav.addObject("sellerlist", sellerVO);
 		
