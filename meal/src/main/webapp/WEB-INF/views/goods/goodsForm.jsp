@@ -8,6 +8,8 @@
 <meta charset="UTF-8">
 <title>상품등록페이지</title>
 </head>
+<
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
 <script type="text/javascript">
 	var cnt = 0;
 	function fn_addFile() {
@@ -47,45 +49,37 @@
 		});
 	})
 
-//추후 변경할 예정
-function fn_overlapped(){
-    var g_name=$("#g_name").val();
-    $.ajax({
-       type:"post",
-       async:false,  
-       url:"${contextPath}/goods/goodsoverlapped.do",
-       dataType:"text",
-       data: {g_name:g_name},
-       success:function (data,textStatus){
-          if(data=='false'){
-              alert("사용할 수 있는 상품명입니다.");
-              $('#btnOverlapped').prop("disabled", true);
-              $('#g_name').prop("disabled", true);
-              $('#g_name').val(g_name);
-          }else{
-             alert("사용할 수 없는 상품명입니다.");
-          }
-       },
-       error:function(data,textStatus){
-          alert("에러가 발생했습니다.");
-       },
-       complete:function(data,textStatus){
-          //alert("작업을완료 했습니다");
-       }
-    });  //end ajax    
- }   
-</script>
-<c:if test='${not empty message }'>
-	<script>
-		window.onload = function() {
-			result();
-		}
+	//추후 변경할 예정
+	function fn_overlapped() {
+		var _g_name = $("#_g_name").val();
+		$.ajax({
+			type : "post",
+			async : false,
+			url : "${contextPath}/goods/goodsoverlapped.do",
+			dataType : "text",
+			data : {
+				g_name : _g_name
+			},
+			success : function(data, textStatus) {
+				if (data == 'false') {
+					alert("사용할 수 있는 상품명입니다.");
+					$('#btnOverlapped').prop("disabled", true);
+					$('#g_name').val(_g_name);
 
-		function result() {
-			alert('${message}');
-		}
-	</script>
-</c:if>
+				} else {
+					alert("사용할 수 없는 상품명입니다.");
+				}
+			},
+			error : function(data, textStatus) {
+				alert("에러가 발생했습니다.");
+			},
+			complete : function(data, textStatus) {
+				//alert("작업을완료 했습니다");
+			}
+		}); //end ajax	 
+	}
+</script>
+
 <style>
 .goodsform textarea {
 	height: 6.25em;
@@ -123,95 +117,77 @@ function fn_overlapped(){
 				<tr class="box">
 					<th>상품사진*</th>
 					<td><input type="file" name="main" /></td>
-
 				</tr>
 				<tr class="box">
 					<th>상품명*</th>
-					<td><input type="text" name="g_name" id="g_id"
-						placeholder="상품명" required="required" /></td>
-					<td><input type="button" value="중복확인"
-						onclick="fn_overlapped()" id="btnOverlapped"></td>
+					<td><input type="text" name="g_name" id="_g_name" placeholder="상품명" required="required" /></td>
+					<td><input type="button" value="중복확인" onclick="fn_overlapped()" id="btnOverlapped"></td>
 				</tr>
 				<tr class="box">
 					<th>상품가격*</th>
-					<td><input type="text" name="g_price" id="g_id"
-						placeholder="00000원" required="required" /></td>
+					<td><input type="text" name="g_price" id="g_price" placeholder="00000원" required="required" /></td>
 				</tr>
 				<tr class="box">
 					<th>수량*</th>
-					<td><input type="text" name="g_amount" id="g_id"
-						placeholder="재고 수량을 입력해주세요" required="required" /></td>
+					<td><input type="text" name="g_amount" id="g_amount" placeholder="재고 수량을 입력해주세요" required="required" /></td>
 				</tr>
 				<tr class="box">
 					<th>카테고리 설정*</th>
 					<td>
 						<div id="form-div">
-							<input type="radio" id="formradio" name="g_cate2" checked>
-							<label for="g_cate2">찌개/탕/찜</label> <input type="radio"
-								id="formradio" name="g_cate2" checked> <label
-								for="g_cate2">식사/안주</label> <input type="radio" id="formradio"
-								name="g_cate2" checked> <label for="g_cate2">죽</label>
+							<input type="radio" class="g_cate2" id="formtext1" name="g_cate2" value="찌개/탕/찜" checked> <label for="formtext1">찌개/탕/찜</label>
+							<input type="radio" class="g_cate2" id="formtext2" name="g_cate2" value="식사/안주" checked> <label for="formtext2">식사/안주</label>
+							<input type="radio" class="g_cate2" id="formtext3" name="g_cate2" value="죽" checked> <label for="formtext3">죽</label>
 						</div>
 						<div id="form-div">
-							<input type="radio" id="formradio" name="g_cate2" checked>
-							<label for="g_cate2">간편식</label> <input type="radio"
-								id="formradio" name="g_cate2" checked> <label
-								for="g_cate2">고기</label> <input type="radio" id="formradio"
-								name="g_cate2" checked> <label for="g_cate2">기타</label>
+							<input type="radio" class="g_cate2" id="formtext4" name="g_cate2" value="간편식" checked> <label for="formtext4">간편식</label>
+							<input type="radio" class="g_cate2" id="formtext5" name="g_cate2" value="고기" checked> <label for="formtext5">고기</label> 
+							<input type="radio" class="g_cate2" id="formtext6" name="g_cate2" value="기타" checked> <label for="formtext6">기타</label>
 						</div>
 					</td>
 				</tr>
 				<tr class="box">
 					<th>난이도*</th>
 					<td><div id="form-div">
-							<input type="radio" id="formradio" name="g_nan" checked>
-							<label for="formradio">상</label> <input type="radio"
-								id="formradio" name="g_nan" checked> <label
-								for="formradio">중</label> <input type="radio" id="formradio"
-								name="g_nan" checked> <label for="formradio">하</label>
+							<input type="radio" class="g_nan" id="formtext7" name="g_nan" value="상" checked> <label for="formtext7">상</label> 
+							<input type="radio" class="g_nan" id="formtext8" name="g_nan" value="중" checked> <label for="formtext8">중</label> 
+							<input type="radio" class="g_nan" id="formtext9" name="g_nan" value="하" checked> <label for="formtext9">하</label>
 						</div></td>
 				</tr>
 				<tr class="box">
 					<th>모범음식점 여부*</th>
 					<td><div id="form-div">
-							<input type="radio" id="formradio" name="g_cate3" checked>
-							<label for="formradio">HACCP</label> <input type="radio"
-								id="formradio" name="g_cate3" checked> <label
-								for="formradio">모범음식점</label> <input type="radio" id="formradio"
-								name="g_cate3" checked> <label for="formradio">HACCP/모범음식점</label>
-							<input type="radio" id="formradio" name="g_cate3" checked>
-							<label for="formradio">X</label>
+							<input type="radio" id="formtext10" name="g_cate3" value="HACCP" checked> <label for="formtext10">HACCP</label> 
+							<input type="radio" id="formtext11" name="g_cate3" value="모범음식점" checked> <label for="formtext11">모범음식점</label> 
+							<input type="radio" id="formtext12" name="g_cate3" value="HACCP/모범음식점" checked>  <label for="formtext12">HACCP/모범음식점</label> 
+						</div>
+						<td><div>
+							<input type="radio" id="formtext13" name="g_cate3" value="X" checked> <label for="formtext13">X</label>
 						</div></td>
 				</tr>
 				<tr class="box">
 					<th>조리 시간*</th>
-					<td><input type="text" name="g_time" id="g_time"
-						placeholder="조리시간(분)" required="required" /></td>
+					<td><input type="text" name="g_time" id="g_time" placeholder="조리시간(분)" required="required" /></td>
 				</tr>
 				<tr class="box">
 					<th>보관방법*</th>
 					<td><div id="form-div">
-							<input type="radio" id="formradio" name="g_bang" checked>
-							<label for="formradio">냉동</label> <input type="radio"
-								id="formradio" name="g_bang" checked> <label
-								for="formradio">냉장</label> <input type="radio" id="formradio"
-								name="g_bang" checked> <label for="formradio">실온</label>
+							<input type="radio" id="formradio" name="g_bang" value="냉동" checked> <label for="formradio">냉동</label> 
+							<input type="radio" id="formradio" name="g_bang" value="냉장" checked> <label for="formradio">냉장</label> 
+							<input type="radio" id="formradio" name="g_bang" value="실온" checked> <label for="formradio">실온</label>
 						</div></td>
 				</tr>
 				<tr class="box">
 					<th>인분수*</th>
 					<td><div id="form-div">
-							<input type="radio" id="formradio" name="g_inbun" checked>
-							<label for="formradio">1~2인분</label> <input type="radio"
-								id="formradio" name="g_inbun" checked> <label
-								for="formradio">2~3인분</label> <input type="radio" id="formradio"
-								name="g_inbun" checked> <label for="formradio">3~4인분</label>
+							<input type="radio" id="formradio" name="g_inbun" value="1~2인분" checked> <label for="formradio">1~2인분</label> 
+								<input type="radio" id="formradio" name="g_inbun" value="2~3인분" checked> <label for="formradio">2~3인분</label> 
+							<input type="radio" id="formradio" name="g_inbun" value="3~4인분" checked> <label for="formradio">3~4인분</label>
 						</div></td>
 				</tr>
 				<tr class="box">
 					<th>알러지 유발 분*</th>
-					<td colspan="3"><textarea id="allergy" name="g_allergy"
-							cols="30" rows="10"></textarea></td>
+					<td colspan="3"><textarea id="allergy" name="g_allergy" cols="30" rows="10"></textarea></td>
 				</tr>
 				<tr class="box">
 					<th>상세이미지*</th>
@@ -222,12 +198,8 @@ function fn_overlapped(){
 					<td><textarea id="test" name="g_detail1" cols="30" rows="10"></textarea>
 						<div id="test_cnt">(0 / 2000)</div></td>
 				</tr>
-
-
 			</table>
-
-			<input type="submit" id="" value="상품등록" onclick="function result()">
-
+			<input type="submit" id="addgoods" value="상품등록">
 		</form>
 	</div>
 </html>

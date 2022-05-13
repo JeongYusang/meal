@@ -338,6 +338,12 @@ tr.box {
 #frmSel input.cheche {
 	height: 20px;
 }
+
+#frmSel td#filetext {
+    font-size: small;
+    color: #6666664d;
+    padding-left: 0px;
+}
 </style>
 </head>
 
@@ -417,11 +423,12 @@ tr.box {
 							placeholder="모범음식점등록번호"></td>
 					</tr>
 					<tr class="box">
-						<th rowspan="2">증빙 서류</th>
 						<td id="HACCP"><input type="file" name="s_HACCP" id="s_HACCP"></td>
+						<td id="filetext">HACCP</td>
 					</tr>
 					<tr class="box">
 						<td id="GRNum"><input type="file" name="s_GR" id="s_GRNum"></td>
+						<td id="filetext">모범음식점</td>
 					</tr>
 					<tr class="box">
 						<th rowspan="3">사업장 소재지*</th>

@@ -339,6 +339,12 @@ tr.box {
 	height: 20px;
 }
 
+#frmSel td#filetext {
+    font-size: small;
+    color: #6666664d;
+    padding-left: 0px;
+}
+
 /* 이용약관에 관한 모달 */
 /*약관동의1  */
 .agree-context {
@@ -586,12 +592,15 @@ tr.box {
 					<tr class="box">
 						<th rowspan="3">증빙 서류</th>
 						<td id="BLNum"><input type="file" name="s_BL" id="s_BLNum"></td>
+						<td id="filetext">사업자 등록증</td>
 					</tr>
 					<tr class="box">
 						<td id="HACCP"><input type="file" name="s_HACCP" id="s_HACCP"></td>
+						<td id="filetext">HACCP</td>
 					</tr>
 					<tr class="box">
 						<td id="GRNum"><input type="file" name="s_GR" id="s_GRNum"></td>
+						<td id="filetext">모범음식점</td>
 					</tr>
 					<tr class="box">
 						<th rowspan="3">사업장 소재지*</th>
