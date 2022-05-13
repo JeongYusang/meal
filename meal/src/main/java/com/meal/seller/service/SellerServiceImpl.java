@@ -1,3 +1,5 @@
+
+
 package com.meal.seller.service;
 
 import java.util.HashMap;
@@ -57,4 +59,11 @@ private AdminDAO AdminDAO;
 		return listImg;
 	}
 
+	@Override
+	public void updateSellerImg(HashMap<String, Object> map) throws Exception {
+		SellerDAO.updateSellerImg(map);
+	}
+
+
 }
+
