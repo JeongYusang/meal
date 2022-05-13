@@ -108,10 +108,11 @@ update board_gr set content = #{content}, secret = #{secret} where b_gr_id = #{b
 	</select>
 	<select id="selectBoardGrDetail" resultMap="boardGrResult"   parameterType="Integer"  >
 	    <![CDATA[
-		     select b.*,d.fileName from board_gr b, img_b_gr d
-	        where b.b_gr_id=d.b_gr_id
-	        and b.b_gr_id=#{b_gr_id}
-	        order by b_gr_id
+		    SELECT g.g_name, g.s_id, gr.*,d.fileName
+FROM board_gr gr
+	LEFT OUTER JOIN goods_tb g ON g.g_id = gr.g_id
+	LEFT OUTER JOIN img_b_gr d ON d.b_gr_id = gr.b_gr_id
+    where #{b_gr_id}= gr.b_gr_id
     	]]>
 	</select>
 	<select id="selectBoardGrDetailImage" resultMap="img_grResult"   parameterType="String"  >
