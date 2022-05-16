@@ -50,7 +50,11 @@
 	</definition>
 	<definition name="boardGr/boardGrReviewform" extends="baseLayout2">
 	<put-attribute name="title" value="리뷰게시판 답글" />
-	<put-attribute name="body" value="/WEB-INF/views/board_gr/reviewReview.jsp" />
+	<put-attribute name="body" value="/WEB-INF/views/board_gr/GrReview.jsp" />
+	</definition>
+		<definition name="/boardGr/selectMyBoardGrList" extends="baseLayout2">
+	<put-attribute name="title" value="리뷰게시판" />
+	<put-attribute name="body" value="/WEB-INF/views/board_gr/gr_search.jsp" />
 	</definition>
    
 </tiles-definitions>
