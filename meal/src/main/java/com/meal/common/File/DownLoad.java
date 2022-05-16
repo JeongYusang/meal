@@ -34,6 +34,7 @@ public class DownLoad {
 	// 경로 C:\\Meal\\Image\\goods\\ g_id\\b_gr_id\\fileName(게시판기준)
 
 	// 이미지 다운로드 상황은 3가지 (어드민 공지이미지 /이벤트이미지 | 상품에대한 이미지 | 상품후기에 관한 이미지 |
+
 	// download1 = 상품페이지에 관한 다운르도
 	@RequestMapping("/download1.do")
 	protected void download1(@RequestParam("cate") String cate, @RequestParam("g_id") String g_id,
@@ -50,7 +51,6 @@ public class DownLoad {
 				String filePath = CURR_IMAGE_PATH + "\\" + "goods" + "\\" + g_id + "\\" + goodsImg.getCate() + "\\" + goodsImg.getFileName();
 				System.out.println(filePath);
 				File image = new File(filePath);
-
 				response.setHeader("Cache-Control", "no-cache");
 				response.addHeader("Content-disposition", "attachment; fileName=" + goodsImg.getFileName());
 				FileInputStream in = new FileInputStream(image);
@@ -68,8 +68,32 @@ public class DownLoad {
 		}
 	}
 	
+	//상품후기에 관한 이미지 경로
+	@RequestMapping("/download2")
+	   protected void download(@RequestParam("fileName") String fileName, @RequestParam("b_gr_id") int b_gr_id, @RequestParam("g_id") int g_id,
+	         HttpServletResponse response) throws Exception {
+	      OutputStream out = response.getOutputStream();
+	      
+	      String filePath = CURR_IMAGE_PATH  + "\\"+ "goods" + "\\"+ g_id + "\\" + "Gr" + "\\" + b_gr_id + "\\" + fileName;
+	      File image = new File(filePath);
+	      response.setHeader("Cache-Control", "no-cache");
+	      response.addHeader("Content-disposition", "attachment; fileName=" + fileName);
+	      FileInputStream in = new FileInputStream(image);
+	      byte[] buffer = new byte[1024 * 8];
+	      while (true) {
+	         int count = in.read(buffer);
+	         if (count == -1)
+	            break;
+	         out.write(buffer, 0, count);
+	      }
+	      in.close();
+	      out.close();
+	   }
+
 	
 
+	
+//썸네일에 관한 다운로드
 	@RequestMapping("/thumbnails.do")
 	protected void thumbnails(@RequestParam("g_id") String g_id,
 			HttpServletResponse response) throws Exception {
