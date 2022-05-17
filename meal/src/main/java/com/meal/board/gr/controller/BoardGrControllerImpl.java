@@ -121,7 +121,9 @@ public class BoardGrControllerImpl extends BaseController implements BoardGrCont
 			HttpServletResponse response) throws Exception {
 		ModelAndView mav = new ModelAndView();
 		String viewName = request.getParameter("viewName");
+		//이미지 + 게시판
 		Map boardGrMap = boardGrService.boardGrView(b_gr_id);
+		
 		BoardGrVO boardGrVO = (BoardGrVO)boardGrMap.get("boardGrVO");
 		HttpSession session = request.getSession();
 		MemberVO memberVO = (MemberVO) session.getAttribute("memberInfo");
@@ -130,6 +132,7 @@ public class BoardGrControllerImpl extends BaseController implements BoardGrCont
 		String u_id1 = boardGrVO.getU_id();
 		System.out.println(u_id);
 		System.out.println(u_id1);
+		//추후 어드민추가
 		try {
 			if (memberVO.getU_id().equals(boardGrVO.getU_id())) {
 				mav.addObject("boardGrVO", boardGrVO);
