@@ -35,15 +35,6 @@
 	</select>
 
 
-	<select id="login" resultType="memberVO"
-		parameterType="String">
-	    <![CDATA[
-			select * from user_tb
-			 where u_id=#{u_id}
-			 and u_pw=#{u_pw}			
-			 
-		]]>
-	</select>
 
 	<select id="selectOverlappedID" parameterType="String"
 		resultType="String">

@@ -142,7 +142,8 @@
 						<tr>
 							<th><h1>비밀번호</h1></th>
 							<td><input type="password" name="pw1" class="pw"
-								style="height: 22px; margin-top: 10px; margin-left: 10px;" /></td>
+								style="height: 22px; margin-top: 10px; margin-left: 10px;" />
+								</td>
 						</tr>
 					</table>
 					<center>

@@ -23,8 +23,9 @@ public class MemberServiceImpl implements MemberService {
 	private AdminDAO adminDAO;
 	
 	@Override
-	public MemberVO login(Map loginMap) throws Exception {
-		return memberDAO.login(loginMap);
+	public MemberVO decode(String u_id) throws Exception{
+		MemberVO mem =(MemberVO)memberDAO.decode(u_id);
+		return mem;
 	}
 
 	@Override
@@ -58,19 +59,11 @@ public class MemberServiceImpl implements MemberService {
 	public void delMember(MemberVO memberVO) throws Exception {
 		memberDAO.delMember(memberVO);
 	}
-	@Override
-	public MemberVO decode(String u_id) throws Exception{
-		MemberVO mem =(MemberVO)memberDAO.decode(u_id);
-		return mem;
-	}
+
 
 	@Override
 	public void logout(String u_id) throws Exception {
 		memberDAO.logout(u_id);
 	}
-	@Override
-	public String checkpw(String id) throws Exception {
-		 String pw = memberDAO.checkpw(id);
-		 return pw;
-	}
+
 }

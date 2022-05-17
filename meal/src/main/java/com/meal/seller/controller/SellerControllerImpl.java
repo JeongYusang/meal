@@ -141,6 +141,7 @@ public class SellerControllerImpl extends BaseController implements SellerContro
 		while (enu.hasMoreElements()) {
 			String name = (String) enu.nextElement();
 			String value = multipartRequest.getParameter(name);
+			//정보기입을 하지 않을시 map에 넣어주지 않기위함
 			if(value == null) {
 				continue;
 			}

@@ -11,22 +11,20 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.meal.admin.dao.AdminDAO;
 import com.meal.seller.dao.SellerDAO;
 import com.meal.seller.vo.Img_sVO;
 import com.meal.seller.vo.SellerVO;
 
 @Service("sellerService")
 @Transactional(propagation = Propagation.REQUIRED)
+
 public class SellerServiceImpl implements SellerService {
 	@Autowired
 	private SellerDAO SellerDAO;
-@Autowired
-private AdminDAO AdminDAO;
 	
 	@Override
-	public SellerVO login(Map loginMap) throws Exception {
-		return SellerDAO.login(loginMap);
+	public SellerVO decode(String s_id) throws Exception{
+		return (SellerVO)SellerDAO.decode(s_id);
 	}
 
 	@Override
@@ -43,10 +41,7 @@ private AdminDAO AdminDAO;
 	public void addSellerImg(HashMap<String, Object> map) throws Exception{
 		SellerDAO.addSellerImg(map);
 	}
-	@Override
-	public SellerVO decode(String s_id) throws Exception{
-		return (SellerVO)SellerDAO.decode(s_id);
-	}
+
 	
 	@Override
 	public void deleteSeller(SellerVO sellerVO) throws Exception{

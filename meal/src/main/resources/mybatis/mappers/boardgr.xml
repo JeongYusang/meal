@@ -101,11 +101,13 @@ update board_gr set content = #{content}, secret = #{secret} where b_gr_id = #{b
 	insert into img_b_gr(fileName,b_gr_id,reg_id) values (#{fileName}, #{b_gr_id}, #{reg_id})
 	]]>
 	</insert>
-	<select id="findb_gr_id" resultMap="boardGrResult" parameterType="Integer">
+	<!-- 게시판 이미지 등록시 가져올 것 -->
+	<select id="findb_gr_id" resultMap="boardGrResult" >
        <![CDATA[
             SELECT * FROM board_gr WHERE b_gr_id = (SELECT max(b_gr_id) FROM board_gr);
       ]]>
 	</select>
+	
 	<select id="selectBoardGrDetail" resultMap="boardGrResult"   parameterType="Integer"  >
 	    <![CDATA[
 		    SELECT g.g_name, g.s_id, gr.*,d.fileName
@@ -115,6 +117,7 @@ FROM board_gr gr
     where #{b_gr_id}= gr.b_gr_id
     	]]>
 	</select>
+	
 	<select id="selectBoardGrDetailImage" resultMap="img_grResult"   parameterType="String"  >
 	    <![CDATA[
 		    	select * from  img_b_gr

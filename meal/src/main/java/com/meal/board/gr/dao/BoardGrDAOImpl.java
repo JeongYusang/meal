@@ -42,8 +42,8 @@ public class BoardGrDAOImpl implements BoardGrDAO {
 	}
 	@Override
 	public BoardGrVO selectBoardGrDetail(int b_gr_id) throws DataAccessException{
-		BoardGrVO goodsVO=(BoardGrVO)sqlSession.selectOne("mapper.boardGr.selectBoardGrDetail",b_gr_id);
-		return goodsVO;
+		BoardGrVO boardGrVO=(BoardGrVO)sqlSession.selectOne("mapper.boardGr.selectBoardGrDetail",b_gr_id);
+		return boardGrVO;
 	}
 	
 	@Override
