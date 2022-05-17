@@ -93,14 +93,31 @@ s_cate)
     	update  seller_tb set 
 s_pw = #{s_pw}, 
 s_name = #{s_name}, 
-s_hp1 = #{s_hp1},
-s_email1 = #{s_email1}, 
-s_GR_Num = #{s_GR_Num}, 
-s_HACCP_Num = #{s_HACCP_Num}, 
-s_Waddr1 = #{s_Waddr1},
-s_Waddr2 = #{s_Waddr2},
-s_Waddr3 = #{s_Waddr3}, 
-s_Wname = #{s_Wname}
+s_hp1 = #{s_hp1}
+<if test="s_email1 != null or s_email1 != ''">
+,s_email1 = #{s_email1}
+</if>
+
+<if test="s_GR_Num != null or s_GR_Num != ''">
+,s_GR_Num = #{s_GR_Num} 
+</if>
+<if test="s_HACCP_Num != null or s_HACCP_Num != ''">
+,s_HACCP_Num = #{s_HACCP_Num}
+</if>
+
+<if test="s_Waddr1 != null or s_Waddr1 != ''"> 
+,s_Waddr1 = #{s_Waddr1}
+</if>
+
+<if test="s_Waddr2 != null or s_Waddr2 != ''">
+,s_Waddr2 = #{s_Waddr2}
+</if>
+
+<if test="s_Waddr3 != null or s_Waddr3 !=''">
+,s_Waddr3 = #{s_Waddr3} 
+</if>
+,s_Wname = #{s_Wname} 
+
  where s_id =#{s_id}
 ]]>
 
