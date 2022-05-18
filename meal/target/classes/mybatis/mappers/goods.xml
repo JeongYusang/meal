@@ -80,7 +80,7 @@
 
 	<select id="selectGoods" parameterType="String" resultType="GoodsVO">
 	<![CDATA[
-		   select * from goods_tb where g_cate1=#{cate1}
+		   select * from goods_tb where g_cate1=#{cate1} order by g_creDate desc
 		]]>
 	</select>
 
