@@ -124,45 +124,46 @@
 			<div class="maingoodslist">
 				<b class="b" style="font-size: 32px">신상품</b>
 				<div class="maingList">
+
 					<!-- 다운로드 메소드를 통해서 한것 -->
-					<c:forEach var="item" items="${goodsList}">
+					<c:forEach var="item" items="${goodsMap.NewG}" begin="0" end ="3">
 						<ul class="ul">
-							<li>1</li>
+					
 							<li><a href="${contextPath }/main/goodsDetail.do"><img
 									src="${contextPath}/download1.do?g_id=${item.g_id}&cate=main"
-									width="250px" height="250px"><br>서울식 소불고기 전골<br>19800월</a></li>
+									width="250px" height="250px">
+									<br>${item.g_name }
+									<br>	${item.g_price}원</a></li>
 						</ul>
 					</c:forEach>
 
 				</div>
-				<b class="b" style="font-size: 32px">지역맛집</b>
+				<b class="b" style="font-size: 32px">일반상품</b>
 				<div class="maingList">
-				<!--썸네일 메소드를 이용한것  -->
-					<c:forEach var="item" items="${goodsList}">
+					<!--썸네일 메소드를 이용한것  -->
+					<c:forEach var="item" items="${goodsMap.NomalG}" begin="0" end ="3">
 						<ul class="ul">
-							<li>1</li>
+						
 							<li><a href="${contextPath }/main/goodsDetail.do"><img
-									src="${contextPath}/thumbnails.do?g_id=${item.g_id}"
-									width="250px" height="250px"><br>서울식 소불고기 전골<br>19800월</a></li>
+									src="${contextPath}/download1.do?g_id=${item.g_id}&cate=main"
+									width="250px" height="250px">
+									<br>${item.g_name }
+									<br>	${item.g_price}원</a></li>
 						</ul>
 					</c:forEach>
 				</div>
-				<b class="b" style="font-size: 32px">베스트셀러</b>
+				<b class="b" style="font-size: 32px">인기상품</b>
 				<div class="maingList">
-					<ul class="ul">
-						<li><a href="#"><img
-								src="${contextPath}/resources/image/new1.png" width="250px"
-								height="250px"><br>서울식 소불고기 전골<br>19800월</a></li>
-						<li><a href="#"><img
-								src="${contextPath}/resources/image/new2.png" width="250px"
-								height="250px"><br>볼케이노순두부전골<br>18900원</a></li>
-						<li><a href="#"><img
-								src="${contextPath}/resources/image/new3.png" width="250px"
-								height="250px"><br>피스타<br>10000원</a></li>
-						<li><a href="${contextPath}/main/goodsDetail.do"><img
-								src="${contextPath}/resources/image/new4.PNG" width="250px"
-								height="250px"><br>포크찹 스테이크<br>30000월</a></li>
-					</ul>
+					<c:forEach var="item" items="${goodsMap.bestG}" begin="0" end ="3">
+						<ul class="ul">
+							<li><a href="${contextPath }/main/goodsDetail.do"><img
+									src="${contextPath}/download1.do?g_id=${item.g_id}&cate=main"
+									width="250px" height="250px">
+									<br>${item.g_name }
+									<br>	${item.g_price}원</a></li>
+						</ul>
+
+					</c:forEach>
 				</div>
 			</div>
 		</div>

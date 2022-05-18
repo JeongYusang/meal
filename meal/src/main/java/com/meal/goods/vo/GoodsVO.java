@@ -27,7 +27,19 @@ public class GoodsVO {
 	private String g_inbun;
 	private String g_bang;
 	private String fileName;
+	private String s_id;
 	
+	
+	public String getS_id() {
+		return s_id;
+	}
+
+
+	public void setS_id(String s_id) {
+		this.s_id = s_id;
+	}
+
+
 	public GoodsVO() {}
 
 	

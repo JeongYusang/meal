@@ -58,10 +58,10 @@ public class BaseController {
 	public ModelAndView main(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String viewName = (String) request.getAttribute("viewName");
 		//메인창에 띄워줄 상품 정보를 저장 추후 쿼리를 바꿔줄 예정이긴함
-		List<GoodsVO> goodsList = (List<GoodsVO>) goodsService.selectAllGoods();
+		Map<String,List<GoodsVO>> goodsMap = (Map<String,List<GoodsVO>>) goodsService.selectAllGoods();
 		System.out.println("베이스컨트롤러 메인 메소드");
 		ModelAndView mav = new ModelAndView();
-		mav.addObject("goodsList", goodsList);
+		mav.addObject("goodsMap", goodsMap);
 		mav.setViewName(viewName);
 		return mav;
 	}

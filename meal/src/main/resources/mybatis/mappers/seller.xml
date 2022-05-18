@@ -89,7 +89,7 @@ s_cate)
 	</insert>
 
 	<update id="updateSeller" parameterType="sellerVO">
-  <![CDATA[
+  
     	update  seller_tb set 
 s_pw = #{s_pw}, 
 s_name = #{s_name}, 
@@ -119,7 +119,7 @@ s_hp1 = #{s_hp1}
 ,s_Wname = #{s_Wname} 
 
  where s_id =#{s_id}
-]]>
+
 
 	</update>
 

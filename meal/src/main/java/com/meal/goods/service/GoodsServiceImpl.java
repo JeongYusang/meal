@@ -52,9 +52,21 @@ public class GoodsServiceImpl implements GoodsService {
 		List<Img_gVO> list = (List<Img_gVO>)goodsDAO.selectImgList(g_id);
 		return list;
 	}
-	public List<GoodsVO> selectAllGoods() throws Exception{
-		List<GoodsVO> list = (List<GoodsVO>) goodsDAO.selectAllGoods();
-		return list;
+	public Map<String, List<GoodsVO>> selectAllGoods() throws Exception{
+		Map <String, List<GoodsVO>> goodsCateMap = new HashMap<String, List<GoodsVO>>();
+		String cate1 = "NEW_GOODS";
+		List<GoodsVO> NewG = (List<GoodsVO>) goodsDAO.selectAllGoods(cate1);
+		goodsCateMap.put("NewG", NewG);
+		cate1 = "Nomal";
+		List<GoodsVO> NomalG = (List<GoodsVO>) goodsDAO.selectAllGoods(cate1);
+		goodsCateMap.put("NomalG", NomalG);
+		cate1 = "Best";
+		List<GoodsVO> bestG = (List<GoodsVO>) goodsDAO.selectAllGoods(cate1);
+		goodsCateMap.put("bestG", bestG);
+		
+		
+		
+		return goodsCateMap;
 	}
 	public Img_gVO selectOneImg(HashMap<String,Object> map) throws Exception{
 		Img_gVO vo = (Img_gVO)goodsDAO.selectOneImg(map);

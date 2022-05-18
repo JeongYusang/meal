@@ -38,8 +38,8 @@
 	</appender>
 
 	<!-- Application Loggers -->
-	<logger name="com.meal.meal">
-		<level value="console" />
+	<logger name="com.meal.meal" >
+		<level value="debug" />
 	</logger>
 
 	<!-- 3rdparty Loggers -->
@@ -47,15 +47,15 @@
 		<level value="debug" />
 	</logger>
 
-	<logger name="org.springframework.beans">
+	<logger name="org.springframework.beans" >
+		<level value="info" />
+	</logger>
+
+	<logger name="org.springframework.context" >
 		<level value="debug" />
 	</logger>
 
-	<logger name="org.springframework.context">
-		<level value="debug" />
-	</logger>
-
-	<logger name="org.springframework.web">
+	<logger name="org.springframework.web" >
 		<level value="debug" />
 	</logger>
 	<!-- sql -->
@@ -67,17 +67,17 @@
 	
 	</logger>
 	<logger name="jdbc.sqltiming" additivity="false">
-		<level value="warn" />
+		<level value="debug" />
 		<appender-ref ref="console" />
 	</logger>
 	<logger name="jdbc.audit" additivity="false">
-		<level value="warn" />
+		<level value="debug" />
 		<appender-ref ref="console" />
 		<appender-ref ref="DBAppender" />
 
 	</logger>
 	<logger name="jdbc.resultset" additivity="false">
-		<level value="debug" />
+		<level value="info" />
 		<appender-ref ref="console" />
 
 		<appender-ref ref="DBAppender" />
@@ -90,7 +90,7 @@
 	</logger>
 	<!-- Root Logger -->
 	<root>
-		<priority value="warn" />
+		<priority value="debug" />
 		<appender-ref ref="console" />
 		<appender-ref ref="dailyFileAppender" />
 	</root>

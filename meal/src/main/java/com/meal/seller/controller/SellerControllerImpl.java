@@ -142,6 +142,7 @@ public class SellerControllerImpl extends BaseController implements SellerContro
 			String name = (String) enu.nextElement();
 			String value = multipartRequest.getParameter(name);
 			//정보기입을 하지 않을시 map에 넣어주지 않기위함
+			//마이바티스도 변경해야함
 			if(value == null) {
 				continue;
 			}

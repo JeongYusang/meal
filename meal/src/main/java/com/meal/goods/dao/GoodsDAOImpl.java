@@ -2,7 +2,6 @@ package com.meal.goods.dao;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,13 +46,22 @@ public class GoodsDAOImpl implements GoodsDAO {
 		return list;
 	}
 	@Override
-	public List<GoodsVO> selectAllGoods() throws DataAccessException {
-		List<GoodsVO> list = (List<GoodsVO>) sqlSession.selectList("mapper.goods.selectAllGoods");
+	public List<GoodsVO> selectAllGoods(String cate1) throws DataAccessException {
+		List<GoodsVO> list = (List<GoodsVO>) sqlSession.selectList("mapper.goods.selectGoods",cate1);
 		return list;
 	}
 	public Img_gVO selectOneImg(HashMap<String,Object> map) throws DataAccessException {
 		Img_gVO vo = (Img_gVO) sqlSession.selectOne("mapper.goods.selectOneImg", map);
 		return vo;
 	}
+	public List<GoodsVO> selectNew_Goods()throws DataAccessException{
+		List<GoodsVO> list = sqlSession.selectList("mapper.goods.selectNew_Goods");
+		return list;
+	}
+	public void updateNomalGoods(GoodsVO newGoods) throws DataAccessException{
+		sqlSession.update("mapper.goods.updateNomalGoods", newGoods);
+		
+	}
+	
 
 }

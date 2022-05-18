@@ -1,494 +1,329 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
-	pageEncoding="utf-8" isELIgnored="false"%>
+   pageEncoding="utf-8" isELIgnored="false"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <c:set var="contextPath" value="${pageContext.request.contextPath}" />
-<c:if test='${not empty message  }'>
-	<script>
-		window.onload = function() {
-			result();
-		}
-
-		function result() {
-			alert(message);
-		}
-	</script>
-</c:if>
-<!DOCTYPE html >
+<c:set var="section" value="0" />
+<!DOCTYPE html>
 <html>
 <head>
-
-<meta charset="utf-8">
-<title>너도 요리할 수 있어!</title>
-<script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
+<meta charset="UTF-8">
+<title>상품 조회하기</title>
 <script>
-	function execDaumPostcode() {
-		new daum.Postcode(
-				{
-					oncomplete : function(data) {
-						// 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
-
-						// 도로명 주소의 노출 규칙에 따라 주소를 조합한다.
-						// 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
-						var ftrlRoadAddr = data.roadAddress; // 도로명 주소 변수
-						var extraRoadAddr = ''; // 도로명 조합형 주소 변수
-
-						// 법정동명이 있을 경우 추가한다. (법정리는 제외)
-						// 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
-						if (data.bname !== '' && /[동|로|가]$/g.test(data.bname)) {
-							extraRoadAddr += data.bname;
-						}
-						// 건물명이 있고, 공동주택일 경우 추가한다.
-						if (data.buildingName !== '' && data.apartment === 'Y') {
-							extraRoadAddr += (extraRoadAddr !== '' ? ', '
-									+ data.buildingName : data.buildingName);
-						}
-						// 도로명, 지번 조합형 주소가 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
-						if (extraRoadAddr !== '') {
-							extraRoadAddr = ' (' + extraRoadAddr + ')';
-						}
-						// 도로명, 지번 주소의 유무에 따라 해당 조합형 주소를 추가한다.
-						if (ftrlRoadAddr !== '') {
-							ftrlRoadAddr += extraRoadAddr;
-						}
-
-						// 우편번호와 주소 정보를 해당 필드에 넣는다.
-						document.getElementById('zipcode').value = data.zonecode; //5자리 새우편번호 사용
-						document.getElementById('roadAddress').value = ftrlRoadAddr;
-						document.getElementById('jibunAddress').value = data.jibunAddress;
-
-						// 사용자가 '선택 안함'을 클릭한 경우, 예상 주소라는 표시를 해준다.
-						if (data.autoRoadAddress) {
-							//예상되는 도로명 주소에 조합형 주소를 추가한다.
-							var expRoadAddr = data.autoRoadAddress
-									+ extraRoadAddr;
-							document.getElementById('guide').innerHTML = '(예상 도로명 주소 : '
-									+ expRoadAddr + ')';
-
-						} else if (data.autoJibunAddress) {
-							var expJibunAddr = data.autoJibunAddress;
-							document.getElementById('guide').innerHTML = '(예상 지번 주소 : '
-									+ expJibunAddr + ')';
-						} else {
-							document.getElementById('guide').innerHTML = '';
-						}
-
-					}
-				}).open();
-	}
-
-	function fn_overlapped() {
-		var _id = $("#_u_id").val();
-		if (_id == '') {
-			alert("ID를 입력하세요");
-			return;
-		}
-		$.ajax({
-			type : "post",
-			async : false,
-			url : "${contextPath}/member/overlapped.do",
-			dataType : "text",
-			data : {
-				id : _id
-			},
-			success : function(data, textStatus) {
-				if (data == 'false') {
-					alert("사용할 수 있는 ID입니다.");
-					$('#btnOverlapped').prop("disabled", true);
-					$('#_u_id').prop("disabled", true);
-					$('#addmember').prop("disabled", false);
-					$('#u_id').val(_id);
-				} else {
-					alert("사용할 수 없는 ID입니다.");
-				}
-			},
-			error : function(data, textStatus) {
-				alert("에러가 발생했습니다.");
-				ㅣ
-			},
-			complete : function(data, textStatus) {
-				//alert("작업을완료 했습니다");
-			}
-		}); //end ajax  	
-	}
-/* 
-	function chkPW() {
-
-		var pw = $("#pwd").val();
-		var id = $("#u_id").val();
-		var checkNumber = pw.search(/[0-9]/g);
-		var checkEnglish = pw.search(/[a-z]/ig);
-
-		if (!/^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,25}$/.test(pw)) {
-			alert('숫자+영문자+특수문자 조합으로 8자리 이상 사용해야 합니다.');
-			return false;
-		} else if (checkNumber < 0 || checkEnglish < 0) {
-			alert("숫자와 영문자를 혼용하여야 합니다.");
-			return false;
-		} else if (/(\w)\1\1\1/.test(pw)) {
-			alert('같은 문자를 4번 이상 사용하실 수 없습니다.');
-			return false;
-		} else if (pw.search(id) > -1) {
-			alert("비밀번호에 아이디가 포함되었습니다.");
-			return false;
-		} else {
-
-			console.log("통과");
-
-		}
-
-	} */
+   function sortTable(n) {
+      var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+      table = document.getElementById("stable-striped");
+      switching = true;
+      //Set the sorting direction to ascending:
+      dir = "asc";
+      /*Make a loop that will continue until
+      no switching has been done:*/
+      while (switching) {
+         //start by saying: no switching is done:
+         switching = false;
+         rows = table.rows;
+         /*Loop through all table rows (except the
+         first, which contains table headers):*/
+         for (i = 1; i < (rows.length - 1); i++) {
+            //start by saying there should be no switching:
+            shouldSwitch = false;
+            /*Get the two elements you want to compare,
+            one from current row and one from the next:*/
+            x = rows[i].getElementsByTagName("TD")[n];
+            y = rows[i + 1].getElementsByTagName("TD")[n];
+            /*check if the two rows should switch place,
+            based on the direction, asc or desc:*/
+            if (dir == "asc") {
+               if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                  //if so, mark as a switch and break the loop:
+                  shouldSwitch = true;
+                  break;
+               }
+            } else if (dir == "desc") {
+               if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                  //if so, mark as a switch and break the loop:
+                  shouldSwitch = true;
+                  break;
+               }
+            }
+         }
+         if (shouldSwitch) {
+            /*If a switch has been marked, make the switch
+            and mark that a switch has been done:*/
+            rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+            switching = true;
+            //Each time a switch is done, increase this count by 1:
+            switchcount++;
+         } else {
+            /*If no switching has been done AND the direction is "asc",
+            set the direction to "desc" and run the while loop again.*/
+            if (switchcount == 0 && dir == "asc") {
+               dir = "desc";
+               switching = true;
+            }
+         }
+      }
+   }
 </script>
 <style>
-#container {
-	display: flex;
-	clear: both;
-	max-width: 1280px;
-	height: 3000px;
-	align-items: flex-start;
-	width: 100%;
-	height: 100%;
-	flex-direction: row-reverse;
-	justify-content: space-around;
-	font-size: x-large;
+#stable-striped {
+   width: 100%;
+   margin: 0 auto; /* 가로로 중앙에 배치 */
+   text-align: center;
+   background-color: white;
+   font-size: 16px;
+   border-collapse: collapse;
+   color: black;
+   border: 1px solid;
 }
 
-.any {
-	border-collapse: collapse;
-	width: 800px;
-	font-size: inherit;
+#top-table {
+   color: black;
+   text-align: center;
+   border-collapse: collapse;
+   background-color: #FFF0F0s;
 }
 
-.any h1 {
-	text-align: center;
+#top-table tr, ths {
+   padding: 20px;
 }
 
-.any input {
-	border-collapse: collapse;
-	font-size: smaller;
-	border-radius: 4px;
-	font-size: smaller;
+#top-table {
+   border-bottom: 1px solid black;
 }
 
-tr.box {
-	border-bottom: 1px solid rgba(255, 192, 207, 1);
+}
+#body-table {
+   text-align: center;
 }
 
-.box td {
-	padding-left: 5%;
-	height: 50px;
+tr.border-bottom td {
+   border-bottom: 1px solid black;
+   padding: 0px;
 }
 
-.box th {
-	background-color: rgba(255, 192, 207, 0.7);
-	border: 1px solid rgba(255, 192, 207, 1);
-	border-left: none;
-	text-align: left;
+#tabletitle {
+   margin: 10px;
+   color: #FD6EB0;
+   font-size: 32px;
 }
 
-.box11 th {
-	background-color: #d7d7d7;
-	border: 1px solid #939393;
-	border-left: none;
-	border-right: none;
-	text-align: left;
+#pagination a {
+   font-size: 22px;
+   margin: 20px;
 }
 
-.box13 td {
-	text-align: center;
-	border: none;
-	height: 50px;
+#maintitle {
+   font-size: 48px;
+   background-color: #ffc0cf;
+   margin: 10px 0 10px 0;
 }
 
-.any td#zipcode {
-	border-bottom: none;
-	padding-top: 1%;
-	padding-left: 5%;
+.main-container {
+   margin-left: 10px;
 }
 
-.any td#road {
-	border: none;
-	padding-left: 5%;
-	padding-bottom: 1%;
+#pick {
+   display: flex;
+   margin-top: 20px;
+   margin-bottom: 20px;
 }
 
-.any td#detailzip {
-	padding-left: 5%;
-	padding-bottom: 1%;
+#pick-user {
+   width: 400px;
+   height: 100px;
+   background-color: #ffc0cf;
+   margin: 0 auto;
+   float: left;
+   font-size: 32px;
+   text-align: center;
+   line-height: 100px;
+}
+#pick-user a{
+color: white;
 }
 
-#frmMem h1 {
-	text-align: center;
-	color: #939393;
-	font-weight: bold;
+#pagination{
+margin: 30px;
+}
+   
+#pick-seller {
+   width: 400px;
+   height: 100px;
+   margin: 0 auto;
+   float: left;
+   font-size: 32px; text-align: center;
+   line-height: 100px;
+   border: 1px solid;
 }
 
-#frmMem input#btnOverlapped {
-	background-color: rgba(255, 192, 207, 0.7);
-	border: 1px solid rgba(255, 192, 207, 1);
-	border-radius: 3px;
-	font-size: 15px;
-	font-weight: bold;
-	color: black;
-	width: 100%;
-	height: 50px;
+.check-context3 {
+   position: fixed;
+   width: 100%;
+   height: 100%;
+   top: 0;
+   left: 0;
+   background: rgba(0, 0, 0, 0.7);
+   z-index: 500;
+   display: none;
 }
 
-#frmMem input#hp2 {
-	background-color: rgba(255, 192, 207, 0.7);
-	border: 1px solid rgba(255, 192, 207, 1);
-	border-radius: 3px;
-	font-size: 15px;
-	font-weight: bold;
-	color: black;
-	width: 100%;
-	height: 50px;
+.check-context3 .check-inner {
+   width: 80%;
+   height: 80%;
+   background: #ffc0cf;
+   top: 30px;
+   left: 50%;
+   transform: translateX(-50%);
+   position: absolute;
+   text-align: center;
+   box-sizing: border-box;
+   padding: 20px;
+   font-size: 20px;
 }
 
-#frmMem input#hpA1 {
-	background-color: rgba(255, 192, 207, 0.7);
-	border: 1px solid rgba(255, 192, 207, 1);
-	border-radius: 3px;
-	font-size: 15px;
-	font-weight: bold;
-	color: black;
-	width: 100%;
-	height: 50px;
+.check-context3 .check-inner {
+   width: 30px;
+   height: 27px;
+   border: 0;
+   position: absolute;
+   right: 35%;
+   top: 10px;
+   background: #ffc0cf;
+   /* 백그라운드는 이너와 맞춰줄것 */
 }
 
-#frmMem select#email3 {
-	width: 175px;
-	border-radius: 4px;
-	height: 26px;
-}
-
-#frmMem input#zipcode1 {
-	background-color: rgba(255, 192, 207, 0.7);
-	border: 1px solid rgba(255, 192, 207, 1);
-	border-radius: 3px;
-	font-size: 15px;
-	font-weight: bold;
-	color: black;
-	width: 100%;
-	height: 50px;
-}
-
-#frmMem select#email3 {
-	width: 170px;
-	border-radius: 4px;
-	font-size: smaller;
-}
-
-#frmMem input#addmember {
-	background-color: rgba(255, 192, 207, 0.7);
-	border: 1px solid rgba(255, 192, 207, 1);
-	border-radius: 3px;
-	height: 60px;
-	width: 250px;
-	font-size: 20px;
-	font-weight: bold;
-	color: #666666;
-	display: block;
-	margin-top: 15px;
-	margin-bottom: 15px;
-	font-size: x-large;
-}
-
-#frmMem input#back {
-	background-color: rgba(255, 192, 207, 0.7);
-	border: 1px solid rgba(255, 192, 207, 1);
-	border-radius: 3px;
-	height: 60px;
-	width: 250px;
-	font-size: 20px;
-	font-weight: bold;
-	color: #666666;
-	display: block;
-	margin-bottom: 15px;
-	font-size: x-large;
-}
-
-#frmMem td.righttd {
-	padding-left: 0;
-}
-
-#frmMem td#zipcode22 {
-	padding-left: 0;
-}
-
-#frmMem a#agree3 {
-	font-size: medium;
-}
-
-#frmMem a#agree2 {
-	font-size: medium;
-}
-
-#frmMem input#u_sex {
-	margin-left: 60px;
-}
-
-#frmMem input#roadAddress {
-	width: 400px;
-}
-
-#frmMem input.detail {
-	width: 400px;
-}
-
-/*약관동의1  */
-.agree-context {
-	position: fixed;
-	width: 100%;
-	height: 100%;
-	top: 0;
-	left: 0;
-	background: rgba(0, 0, 0, 0.7);
-	z-index: 500;
-	display: none;
-}
-
-.agree-context .agree-inner {
-	width: 80%;
-	height: 80%;
-	background: #ffc0cf;
-	top: 30px;
-	left: 50%;
-	transform: translateX(-50%);
-	position: absolute;
-	text-align: center;
-	box-sizing: border-box;
-	padding: 20px;
-	font-size: 20px;
-}
-
-.agree-context .agree-inner .agree-close {
-	width: 30px;
-	height: 27px;
-	border: 0;
-	position: absolute;
-	right: 35%;
-	top: 10px;
-	background: #ffc0cf;
-	/* 백그라운드는 이너와 맞춰줄것 */
-}
-
-.agree-context .agree-inner .agree-close img {
-	width: 100%;
-	height: 100%;
-	position: absolute;
-}
-
-.agree-context1 {
-	position: fixed;
-	width: 100%;
-	height: 100%;
-	top: 0;
-	left: 0;
-	background: rgba(0, 0, 0, 0.7);
-	z-index: 500;
-	display: none;
-}
-
-.agree-context1 .agree-inner1 {
-	width: 80%;
-	height: 80%;
-	background: #ffc0cf;
-	top: 30px;
-	left: 50%;
-	transform: translateX(-50%);
-	position: absolute;
-	text-align: center;
-	box-sizing: border-box;
-	padding: 20px;
-	font-size: 20px;
-}
-
-.agree-context1 .agree-inner1 .agree-close1 {
-	width: 30px;
-	height: 27px;
-	border: 0;
-	position: absolute;
-	right: 35%;
-	top: 10px;
-	background: #ffc0cf;
-	/* 백그라운드는 이너와 맞춰줄것 */
-}
-
-.agree-context1 .agree-inner1 .agree-close1 img {
-	width: 100%;
-	height: 100%;
-	position: absolute;
+.check-context3 .check-inner  {
+   width: 100%;
+   height: 100%;
+   position: absolute;
 }
 </style>
 </head>
-	
-	<section>
-		<div id="container">
-			<form id="frm" name="frmM"
-				action="${contextPath}/admin/addadmin.do" method="post">
-				<table class="any">
-					<h1 style="text-align: center">일반고객 회원가입</h1>
-					<tr class="box">
-						<th>아이디*</th>
-						<td><input type="text" name="_u_id" id="_u_id"
-							placeholder="아이디" required="required" /> <input type="hidden"
-							name="u_id" id="u_id" />
-						<td colspan="2" class="righttd"><input type="button"
-							id="btnOverlapped" value="중복확인" onClick="fn_overlapped()" /></td>
-					</tr>
-		<tr class="box">
-						<th>비밀번호*</th>
-						<td colspan="3"><input name="u_pw" id="pwd" type="password"
-							placeholder="비밀번호" required="required"  /></td>
-					</tr>
-					</tr>
-					<tr class="box">
-						<th>이름*</th>
-						<td colspan="3"><input name="u_name" id="name" type="text"
-							required="required" /></td>
-					</tr>
-					<tr class="box">
-						<th>생년월일*</th>
-						<td colspan="3"><input name="u_birth" id="YMD" type="date"
-							value="submit" required="required" /></td>
-					</tr>
-					<tr class="box">
-						<th>휴대폰*</th>
-						<td><input type="tel" name="u_hp1" id="hp1"
-							required="required" /></td>
-						<td colspan="2" class="righttd"><input type="button" id="hp2"
-							value="인증 전송" /></td>
-					</tr>
-					<tr class="box">
-						<th>email*</th>
-						<td><input type="text" name="u_email1" id="email"
-							required="required" /></td>
-						<td class="righttd"><select name="u_email2" id="email3"
-							onChange="" title="직접입력">
-								<option value="naver.com">선택하세요</option>
-								<option value="naver.com">@naver.com</option>
-								<option value="yahoo.co.kr">@yahoo.co.kr</option>
-								<option value="hotmail.com">@hotmail.com</option>
-								<option value="paran.com">@paran.com</option>
-								<option value="nate.com">@nate.com</option>
-								<option value="gmail.com">@gmail.com</option>
-						</select></td>
-					</tr>
-					<!-- 	이부분이 유효성검사가능
-		<tr class="box13">
-				<td colspan="4"><input type="submit" class="addmember" id="addmember" value="회원 가입"></td> colspan=3
-			</tr> -->
-				</table>
-				<center>
-					<input type="submit" value="회원가입" id="addmember" disabled="true">
-					<input type="button" value="뒤로가기" id="back">
-				</center>
-			</form>
-		</div>
-	</section>
-</body>
+<body>
+<!-- 모달시작 -->
+<div class="check-context3">
+<div class="check-inner">
+<div class="checkform">
+            <h1>비밀번호 재확인</h1>
+            <h3>회원의 정보를 안전하게 보호하기 위해 비밀번호를 다시 한번 확인해주세요</h3>
+            <hr>
+            <form id="checkForm" method='post' action="${contextPath}/goods/goodsUpdateForm.do">
+               <table class="pw">
+                  <tr>
+                     <th><h1>비밀번호</h1></th>
+                     <td><input type="password" name="pw1" class="pw" style="height: 22px; margin-top: 10px; margin-left: 10px;" />
+                        <input type="hidden" name="g_id" value="${goodsInfo.g_id }"/>
+                     </td>
+                  </tr>
+               </table>
+               <center>
+                  <button class="submit" type="submit">전송하기</button>
+                  <button class="check-close3" type="button">돌아가기</button>
+               </center>
+            </form>
+         </div>
+      </div>
+   </div>
+   <!-- 모달끝 -->
+         <div class="main-container">
+            <div id=maintitle>상품관리</div>
+            <div class="table-container">
+               <table id="stable-striped">
+                  <thead>
+                     <tr id="top-table">
+                        <th onclick="sortTable(0)" width="80px">상품ID</th>
+                        <th onclick="sortTable(1)" width="60px">상품명</th>
+                        <th onclick="sortTable(2)" width="40px">카테고리</th>
+                        <th onclick="sortTable(3)" width="100px">수량</th>
+                        <th onclick="sortTable(4)" width="100px">가격</th>
+                        <th onclick="sortTable(5)" width="120px">등록상태</th>
+                        <th onclick="sortTable(6)" width="70px">등록날짜</th>
+                        <th onclick="sortTable(7)" width="70px">할인유무</th>
+                        <th onclick="sortTable(8)" width="100px">인분수</th>
+                        <th onclick="sortTable(9)" width="100px">보관방법</th>
+                        <th>수정 및 삭제</th>
+                     </tr>
+                  </thead>
+                  <c:choose>
+                     <c:when test="${empty goodsList}">
+                        <tr>
+                           <td colspan=5 class="fixed"><strong>등록된 상품이 없습니다.</strong></td>
+                        </tr>
+                     </c:when>
+                     <c:when test="${not empty goodsList}">
+                        
+                        <c:forEach var="item" items="${goodsList}">
+                           <label for="border-bottom"></label>
+                           <tr class="border-bottom">
+                              <td>${item.g_id}</td>
+                              <td>${item.g_name}</td>
+                              <td>${item.g_cate2}</td>
+                              <td>${item.g_amount}</td>
+                              <td>${item.g_price}</td>
+                              <td>${item.g_state}</td>
+                              <td>${item.g_creDate}</td>
+                              <td>${item.g_sale}</td>
+                              <td>${item.g_inbun}</td>
+                              <td>${item.g_bang}</td>
+                              
+                              <td>
+                              <input type="hidden" value="${item.g_id }" name="g_id">
+                              <input type="button" value="수정하기" class="checkpw3" ><br><br><input type="button" value="삭제하기" ></td>
+                           </tr>
+                        </c:forEach>
+                     </c:when>
+                  </c:choose>
+               </table>
+               <center>
+                  <div class="" id="pagination">
+                     <c:forEach var="page" begin="1" end="9" step="1">
+                        <c:if test="${section >0 && page==1 }">
+                           <a
+                              href="${contextPath}/seller/selectGoodsPage.do?section=${section}-1&pageNum=${(section-1)*10+1 }">preview</a>
+                        </c:if>
+                        <a
+                           href="${contextPath}/seller/selectGoodsPage.do?section=${section}&pageNum=${page}">${(section)*10 +page}
+                        </a>
+                        <c:if test="${page ==10 }">
+                           <a
+                              href="${contextPath}/seller/selectGoodsPage.do?section=${section}+1&pageNum=${section*10}+1">next</a>
+                        </c:if>
+                     </c:forEach>
+                  </div>
+               </center>
+
+            </div>
+         </div>
 <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
-<script src="${contextPath }/resources/js/memberForm.js">
+<script src="${contextPath }/resources/js/viewGoods.js"></script>
+<script>
+
+// Get the modal
+var modal = document.getElementByClassName("myModal");
+
+// Get the button that opens the modal
+var btn = document.getElementByClassName("checkpw3");
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("check-close3")[0];
+
+// When the user clicks on the button, open the modal
+btn.onclick = function() {
+  modal.style.display = "block";
+}
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+  modal.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+}
 </script>
+</body>
 </html>
