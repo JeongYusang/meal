@@ -381,6 +381,7 @@ public class BoardGrControllerImpl extends BaseController implements BoardGrCont
 
 	}
 
+	/* 답글 form */
 	@RequestMapping(value = "/boardGrreviewForm.do", method = { RequestMethod.POST, RequestMethod.GET })
 	public ModelAndView reviewForm(@ModelAttribute("b_gr_id") Integer b_gr_id, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
