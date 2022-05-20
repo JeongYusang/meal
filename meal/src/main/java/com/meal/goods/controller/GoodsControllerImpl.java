@@ -154,6 +154,26 @@ public class GoodsControllerImpl extends BaseController implements GoodsControll
 		return resEntity;
 	}
 
+	@RequestMapping(value = "/goodsDetail.do", method = RequestMethod.POST)
+	public ModelAndView goodsDetail(@RequestParam("g_id") int g_id, HttpServletRequest request, HttpServletResponse response) throws Exception{
+		ModelAndView mav = new ModelAndView();
+
+		//int _g_id = Integer.parseInt(g_id);
+		String viewName = (String) request.getAttribute("viewName");
+		GoodsVO goodsInfo = (GoodsVO)goodsService.selectGoodsDetail(g_id);
+		System.out.println("goodsInfo" + goodsInfo);
+		List<Img_gVO> imgList = (List<Img_gVO>)goodsService.selectImgList(g_id);
+		mav.setViewName(viewName);
+		mav.addObject("goodsInfo", goodsInfo);
+		mav.addObject("ImgList", imgList);
+		
+		//상품 후기에 관한 게시판 조회또한 등록할 것
+		
+		return mav;
+		
+		
+	}
+	
 
 
 }

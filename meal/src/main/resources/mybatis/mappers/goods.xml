@@ -99,6 +99,7 @@
 		where g_name = #{g_name}
 	</select>
 	
+	<!--상품상세를 위한 출력  -->
  <select id="selectGoodsImg" parameterType="int" resultMap="img_GResult">
  select * from img_g where g_id =#{g_id}
  </select>
@@ -111,9 +112,18 @@
  <!-- 스케줄러 -->
  <select id="selectNew_Goods" resultMap="goodsResult">
  <![CDATA[
-  select * from goods_tb where g_cate1 = 'New_GOODS' and g_creDate < (date_sub(now(), interval 6 minute ))
+  select * from goods_tb where g_cate1 = 'New_GOODS' and g_creDate < (date_sub(now(), interval 1 day ))
 ]]>
  </select>
+ 
+ <select id="selectGoodsDetail" parameterType="int" resultType="GoodsVO">
+ 
+ select * from goods_tb where g_id =#{g_id}
+ </select>
+ 
+ 
+ 
+ 
 <!-- 스케줄러 -->
 <update id="updateNomalGoods" parameterType="GoodsVO">
  <![CDATA[

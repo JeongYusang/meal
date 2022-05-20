@@ -4,7 +4,7 @@
        "http://tiles.apache.org/dtds/tiles-config_2_0.dtd">
 <tiles-definitions>
 
-   <definition name="/main/goodsDetail" extends="baseLayout">
+   <definition name="/goods/goodsDetail" extends="baseLayout">
       <put-attribute name="title" value="상품페이지" />
       <put-attribute name="body"
          value="/WEB-INF/views/goods/goodsDetail.jsp" />

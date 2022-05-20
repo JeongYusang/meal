@@ -21,11 +21,12 @@ public class SchedulerController {
 	@Autowired
 	private GoodsDAO goodsDAO;
 
-	@Scheduled(cron="0/10 * * * * *")
+	@Scheduled(cron="* 10 * * * *")
 	public void goodsCateUpdate() {
 		// 신상품 검색
 		String batchResult = "성공";
 		try {
+			//해당 상품조회는 상품등록후 24시간이 지난상황의 상품을 검색해줌.
 			List<GoodsVO> newGoodsList = (List<GoodsVO>) goodsDAO.selectNew_Goods();
 			for (GoodsVO item : newGoodsList) {
 				goodsDAO.updateNomalGoods(item);

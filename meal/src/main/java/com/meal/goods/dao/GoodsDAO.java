@@ -22,4 +22,5 @@ public interface GoodsDAO {
 	public Img_gVO selectOneImg(HashMap<String, Object> map) throws DataAccessException;
 	public List<GoodsVO> selectNew_Goods() throws DataAccessException;
 	public void updateNomalGoods(GoodsVO item) throws DataAccessException;
+	public GoodsVO selectGoodsDetail(int g_id) throws DataAccessException;
 }

@@ -230,10 +230,11 @@ tr.border-bottom td {
    </script>
    <div id="main-wrap">
       <div class="container">
-         <img src="${contextPath}/resources/image/new4.PNG" width="500px"
+         <img src="${contextPath}/download1.do?g_id=${goodsInfo.g_id}&cate=main" width="500px"
             height="500px" />
          <div style="display: block; vertical-align: top;">
-            <br> <br> <br> <b style="font-size: 52px">포크찹스테이크</b>
+            <br> <br> <br> 
+            <b style="font-size: 52px">${goodsInfo.g_name}</b>
 
             <h1>10000원</h1>
             <br> <img src="${contextPath}/resources/image/mini1.PNG"

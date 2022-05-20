@@ -129,7 +129,7 @@
 					<c:forEach var="item" items="${goodsMap.NewG}" begin="0" end ="3">
 						<ul class="ul">
 					
-							<li><a href="${contextPath }/main/goodsDetail.do"><img
+							<li><a href="${contextPath }/goods/goodsDetail.do?g_id=${item.g_id}"><img
 									src="${contextPath}/download1.do?g_id=${item.g_id}&cate=main"
 									width="250px" height="250px">
 									<br>${item.g_name }
@@ -144,7 +144,7 @@
 					<c:forEach var="item" items="${goodsMap.NomalG}" begin="0" end ="3">
 						<ul class="ul">
 						
-							<li><a href="${contextPath }/main/goodsDetail.do"><img
+							<li><a href="${contextPath }/goods/goodsDetail.do?g_id=${item.g_id}""><img
 									src="${contextPath}/download1.do?g_id=${item.g_id}&cate=main"
 									width="250px" height="250px">
 									<br>${item.g_name }
@@ -156,7 +156,7 @@
 				<div class="maingList">
 					<c:forEach var="item" items="${goodsMap.bestG}" begin="0" end ="3">
 						<ul class="ul">
-							<li><a href="${contextPath }/main/goodsDetail.do"><img
+							<li><a href="${contextPath }/goods/goodsDetail.do?g_id=${item.g_id}""><img
 									src="${contextPath}/download1.do?g_id=${item.g_id}&cate=main"
 									width="250px" height="250px">
 									<br>${item.g_name }

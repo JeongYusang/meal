@@ -62,6 +62,9 @@ public class GoodsDAOImpl implements GoodsDAO {
 		sqlSession.update("mapper.goods.updateNomalGoods", newGoods);
 		
 	}
-	
+	public GoodsVO selectGoodsDetail(int g_id) throws DataAccessException{
+		GoodsVO goodsVO = (GoodsVO) sqlSession.selectOne("mapper.goods.selectGoodsDetail", g_id);
+		return goodsVO;
+	}
 
 }

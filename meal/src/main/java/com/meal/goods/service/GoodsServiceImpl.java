@@ -72,4 +72,10 @@ public class GoodsServiceImpl implements GoodsService {
 		Img_gVO vo = (Img_gVO)goodsDAO.selectOneImg(map);
 		return vo;
 	}
+	
+	
+	public GoodsVO selectGoodsDetail(int g_id) throws Exception{
+		GoodsVO goodsInfo = (GoodsVO)goodsDAO.selectGoodsDetail(g_id);
+		return goodsInfo;
+	}
 }

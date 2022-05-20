@@ -56,7 +56,7 @@
 	</logger>
 
 	<logger name="org.springframework.web" >
-		<level value="debug" />
+		<level value="info" />
 	</logger>
 	<!-- sql -->
 	<logger name="jdbc.sqlonly" additivity="false">
