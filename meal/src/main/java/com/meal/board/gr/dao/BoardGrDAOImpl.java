@@ -42,8 +42,8 @@ public class BoardGrDAOImpl implements BoardGrDAO {
 	}
 	@Override
 	public BoardGrVO selectBoardGrDetail(int b_gr_id) throws DataAccessException{
-		BoardGrVO boardGrVO=(BoardGrVO)sqlSession.selectOne("mapper.boardGr.selectBoardGrDetail",b_gr_id);
-		return boardGrVO;
+		BoardGrVO goodsVO=(BoardGrVO)sqlSession.selectOne("mapper.boardGr.selectBoardGrDetail",b_gr_id);
+		return goodsVO;
 	}
 	
 	@Override
@@ -80,6 +80,23 @@ public class BoardGrDAOImpl implements BoardGrDAO {
 	@Override
 	public BoardGrVO findb_gr_id() throws DataAccessException {
 		return (BoardGrVO) sqlSession.selectOne("mapper.boardGr.findb_gr_id");
+	}
+
+	@Override
+	public List<BoardGrVO> selectMyBoardGrallList(String u_id) throws DataAccessException {
+		List<BoardGrVO> boardInfo = (List<BoardGrVO>) sqlSession.selectList("mapper.boardGr.selectMyBoardGrallList",u_id);
+		return boardInfo;
+	}
+
+	@Override
+	public List<BoardGrVO> selectMyBoardGrList(HashMap<String, Object> map) throws DataAccessException {
+		List<BoardGrVO> boardInfo = (List<BoardGrVO>) sqlSession.selectList("mapper.boardGr.MyboardGrPage", map);
+		return boardInfo;
+	}
+
+	@Override
+	public BoardGrVO grdownload(int b_gr_id) {
+		return (BoardGrVO) sqlSession.selectOne("mapper.boardGr.boardgr_download",b_gr_id);
 	}
 
 }

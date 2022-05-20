@@ -64,11 +64,13 @@ public class BoardGrControllerImpl extends BaseController implements BoardGrCont
 
 		List<HashMap<String, Object>> imageFileList = (List<HashMap<String, Object>>) upload(multipartRequest);
 		
+		//a
 		BoardGrVO boardInfo = (BoardGrVO)boardGrService.findb_gr_id();
-		  int b_gr_id = (Integer) boardInfo.getB_gr_id();
-		  int g_id = (Integer) boardInfo.getG_id();
-		  MemberVO memberVO = (MemberVO) session.getAttribute("memberInfo");
-		  String reg_id = memberVO.getU_id();
+		int b_gr_id = (Integer) boardInfo.getB_gr_id();
+		int g_id = (Integer) boardInfo.getG_id();
+		MemberVO memberVO = (MemberVO) session.getAttribute("memberInfo");
+		SellerVO sellerVO = (SellerVO) session.getAttribute("sellerInfo");
+		
 
 		// 이미지 이동을 위한 메소드
 		try {
@@ -76,7 +78,13 @@ public class BoardGrControllerImpl extends BaseController implements BoardGrCont
 				for (HashMap<String, Object> item : imageFileList) {
 					// 이미지 리스트에 관하여 파일정보 MAP에 판매자 아이디를 추가시킴
 					item.put("b_gr_id", b_gr_id);
+					if (memberVO != null) {
+						String reg_id = memberVO.getU_id();
 					item.put("reg_id", reg_id);
+					}else {
+						String reg_id = sellerVO.getS_id();
+						item.put("reg_id", reg_id);	
+					}
 					
 					// 이미지 파일네임을통해 파일경로 설정
 					imageFileName = (String) item.get("fileName");
@@ -92,6 +100,7 @@ public class BoardGrControllerImpl extends BaseController implements BoardGrCont
 					}
 				}
 			}
+			
 			// 결과창에 출력해주기 위해 판매자 정보를 저장해줌
 			MemberVO memberInfo = (MemberVO) session.getAttribute("memberInfo");
 			mav.addObject("memberInfo", memberInfo);
@@ -121,9 +130,7 @@ public class BoardGrControllerImpl extends BaseController implements BoardGrCont
 			HttpServletResponse response) throws Exception {
 		ModelAndView mav = new ModelAndView();
 		String viewName = request.getParameter("viewName");
-		//이미지 + 게시판
 		Map boardGrMap = boardGrService.boardGrView(b_gr_id);
-		
 		BoardGrVO boardGrVO = (BoardGrVO)boardGrMap.get("boardGrVO");
 		HttpSession session = request.getSession();
 		MemberVO memberVO = (MemberVO) session.getAttribute("memberInfo");
@@ -132,7 +139,6 @@ public class BoardGrControllerImpl extends BaseController implements BoardGrCont
 		String u_id1 = boardGrVO.getU_id();
 		System.out.println(u_id);
 		System.out.println(u_id1);
-		//추후 어드민추가
 		try {
 			if (memberVO.getU_id().equals(boardGrVO.getU_id())) {
 				mav.addObject("boardGrVO", boardGrVO);
@@ -248,6 +254,77 @@ public class BoardGrControllerImpl extends BaseController implements BoardGrCont
 		mav.addObject("boardGr", boardGr);
 		return mav;
 	}
+	
+	@Override
+	@RequestMapping(value = "/selectMyBoardGrList.do", method = { RequestMethod.POST, RequestMethod.GET })
+	public ModelAndView selectMyBoardGrList(
+			@RequestParam(value = "dateMap", required = false) Map<String, Object> dateMap,
+			@RequestParam(value = "section", required = false) String section,
+			@RequestParam(value = "pageNum", required = false) String pageNum, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		String viewName = (String) request.getAttribute("viewName");
+		ModelAndView mav = new ModelAndView(viewName);
+		HttpSession session = request.getSession();
+		MemberVO memberVO = (MemberVO) session.getAttribute("memberInfo");
+		String u_id = memberVO.getU_id();
+		String message = (String) request.getAttribute("message");
+		if (message != null) {
+			mav.addObject("message", message);
+		}
+		
+		HashMap<String, Object> pagingMap = new HashMap<String, Object>();
+		Integer page = 1;
+		Integer index = 0;
+		if (pageNum != null) {
+
+			if (section != null) {
+				Integer page1 = Integer.parseInt((String) pageNum);
+				Integer index1 = Integer.parseInt((String) section);
+
+				System.out.println("인덱스" + index);
+				Integer start = (page1 - 1) * 10 + index1 * 100;
+				Integer end = 10;
+				// Integer end = (page1) * 10 + index1 * 100; 출력개수를 정함.
+				pagingMap.put("start", start);
+				pagingMap.put("end", end);
+				System.out.println(start);
+				System.out.println(end);
+			} else {
+				Integer page1 = Integer.parseInt((String) pageNum);
+
+				Integer start = (page1 - 1) * 10 + index * 100;
+				Integer end = (page1) * 10 + index * 100;
+				pagingMap.put("start", start);
+				pagingMap.put("end", end);
+			}
+		} else {
+			Integer start = (page - 1) * 10 + index * 100;
+			Integer end = (page) * 10 + index * 100;
+			pagingMap.put("start", start);
+			pagingMap.put("end", end);
+		}
+		pagingMap.put("u_id", u_id);
+
+		List<BoardGrVO> boardGr = boardGrService.selectMyBoardGrList(pagingMap);
+		List<BoardGrVO> board2 = boardGrService.selectMyBoardGrallList(u_id);
+
+		for (BoardGrVO item : boardGr) {
+			for (BoardGrVO j : board2) {
+				if (!((int) item.getB_gr_id() == (int) j.getParentNo())) {
+					String compare = "N";
+					item.setCompare(compare);
+				} else {
+					String compare = "Y";
+					item.setCompare(compare);
+					System.out.println("BoardCompare" + item.getB_gr_id());
+					break;
+				}
+			}
+		}
+		mav.addObject("boardGr", boardGr);
+		return mav;
+	}
+
 
 	@Override
 	@RequestMapping(value = "/bGrDetail.do", method = { RequestMethod.POST, RequestMethod.GET })
@@ -259,11 +336,16 @@ public class BoardGrControllerImpl extends BaseController implements BoardGrCont
 		if (message != null) {
 			mav.addObject("message", message);
 		}
+		HttpSession session = request.getSession();
+		MemberVO memberVO = (MemberVO) session.getAttribute("memberInfo");
+		SellerVO sellerVO = (SellerVO) session.getAttribute("sellerInfo");
 		Map boardGrMap = boardGrService.boardGrView(b_gr_id);
 		BoardGrVO boardGrVO = (BoardGrVO) boardGrMap.get("boardGrVO");
 		List<Img_grVO> imageList = (List<Img_grVO>) boardGrMap.get("imageList");
 		mav.addObject("boardGrInfo", boardGrVO);
 		mav.addObject("imageList", imageList);
+		mav.addObject("memberInfo", memberVO);
+		mav.addObject("sellerInfo", sellerVO);
 
 		mav.setViewName(viewName);
 
@@ -299,6 +381,7 @@ public class BoardGrControllerImpl extends BaseController implements BoardGrCont
 
 	}
 
+	/* 답글 form */
 	@RequestMapping(value = "/boardGrreviewForm.do", method = { RequestMethod.POST, RequestMethod.GET })
 	public ModelAndView reviewForm(@ModelAttribute("b_gr_id") Integer b_gr_id, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
@@ -309,6 +392,11 @@ public class BoardGrControllerImpl extends BaseController implements BoardGrCont
 		// 받지않음
 		SellerVO sellerInfo = (SellerVO) session.getAttribute("sellerInfo");
 		AdminVO adminInfo = (AdminVO) session.getAttribute("AdminVO");
+
+		// 추가 리스트 들고올 것
+		List<BoardGrVO> boardList = boardGrService.boardGrViewReview(b_gr_id);
+
+		mav.addObject("ReviewList", boardList);
 
 		// if (memberInfo == null && sellerInfo == null && adminInfo == null) { 멤버의 권한은
 		// 받지 않음
@@ -340,6 +428,9 @@ public class BoardGrControllerImpl extends BaseController implements BoardGrCont
 		String viewName = request.getParameter("viewName");
 		Map boardGrMap = boardGrService.boardGrView(b_gr_id);
 		BoardGrVO boardGrVO = (BoardGrVO) boardGrMap.get("boardGrVO");
+		List<Img_grVO> imageList = (List<Img_grVO>) boardGrMap.get("imageList");
+		mav.addObject("boardGrInfo", boardGrVO);
+		mav.addObject("imageList", imageList);
 		HttpSession session = request.getSession();
 		MemberVO memberVO = (MemberVO) session.getAttribute("memberInfo");
 		SellerVO sellerVO = (SellerVO) session.getAttribute("sellerInfo");
