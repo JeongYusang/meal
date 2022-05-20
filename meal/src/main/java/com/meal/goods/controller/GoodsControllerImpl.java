@@ -46,6 +46,7 @@ public class GoodsControllerImpl extends BaseController implements GoodsControll
 	@Autowired
 	private SellerService sellerService;
 
+	//상품등록창
 	@RequestMapping(value = "/goodsForm.do", method = { RequestMethod.POST, RequestMethod.GET })
 	protected ModelAndView viewForm(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String viewName = (String) request.getAttribute("viewName");// 인터셉터있을때 없으면주석
@@ -171,8 +172,8 @@ public class GoodsControllerImpl extends BaseController implements GoodsControll
 		
 		return mav;
 		
-		
 	}
+	
 	
 
 
