@@ -230,7 +230,7 @@ tr.border-bottom td {
    </script>
    <div id="main-wrap">
       <div class="container">
-         <img src="${contextPath}/resources/image/new4.PNG" width="500px"
+         <img src="${contextPath}/goods/thumbnails.do?g_id=${goodsList.g_id}&cate=main" width="500px"
             height="500px" />
          <div style="display: block; vertical-align: top;">
             <br> <br> <br> <b style="font-size: 52px">포크찹스테이크</b>
@@ -245,23 +245,21 @@ tr.border-bottom td {
                src="${contextPath}/resources/image/mini4.PNG" width="50px"
                height="50px" /> <br>
             <div id="text">
-               <h4>간편하게 집에서 찹스테이크를 해먹을 수 있습니다</h4>
+               <h4>${goodsList.g_detail1 }</h4>
                <h4>
-                  <b>유통기한</b> : 수령일 포함 2일 이상 남은 제품을 보내드립니다
+                  <b>유통기한</b> ${goodsList.g_time }
                </h4>
-               <h4>판매단위 : 3~4인분</h4>
+               <h4>판매단위 : ${goodsList.g_inbun }</h4>
                <h4>알레르기 정보 : 우유,대두,돼지고기,토마토,쇠고기 함유</h4>
             </div>
             <div id="price">
                <form name="form" method="get">
 
-                  <b>수량 : &nbsp;<input type="button" value=" + "
-                     onclick="add();"> <input type=hidden name="sell_price"
-                     value="10000"> <input type="text" name="amount" value="1"
-                     size="1" onchange="change();"> <input type="button"
-                     value=" - " onclick="del();"><br> <br> 금액 : <input
-                     type="text" name="sum" size="8"
-                     style="width: 100px; height: 30px; font-size: 30px; border: none; border-right: 0px; border-top: 0px; boder-left: 0px; boder-bottom: 0px;">원
+                  <b>수량 : &nbsp;<input type="button" value=" + " onclick="add();"> <input type=hidden name="sell_price" value="10000"> 
+                  <input type="text" name="amount" value="1" size="1" onchange="change();"> 
+                  <input type="button" value=" - " onclick="del();"><br> 
+                  <br> 금액 : <input type="text" name="sum" size="8" 
+                  			  style="width: 100px; height: 30px; font-size: 30px; border: none; border-right: 0px; border-top: 0px; boder-left: 0px; boder-bottom: 0px;">원
                   </b>
                </form>
             </div>
