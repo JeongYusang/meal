@@ -14,5 +14,5 @@ public interface MemberService {
 	public void updateMember(MemberVO memberVO) throws Exception;
 	public void delMember(MemberVO memberVO) throws Exception;
 	public MemberVO decode(String u_id) throws Exception;
-	public void logout(String u_id) throws Exception;
+	public void lastLog(String u_id) throws Exception;
 }

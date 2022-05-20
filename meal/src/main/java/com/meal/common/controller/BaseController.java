@@ -132,6 +132,8 @@ public class BaseController {
 			if (passwordEncode.matches(u_pw, memberInfo.getU_pw())) {
 				memberInfo.setU_pw(u_pw);
 				session = request.getSession();
+				//회원 마지막 접속일 기입
+				memberService.lastLog(u_id);
 				session.setAttribute("isLogOn", true);
 				session.setAttribute("memberInfo", memberInfo);
 				session.setAttribute("side_menu", "user_mode");
@@ -143,6 +145,8 @@ public class BaseController {
 		if (sellerInfo != null) {
 			if (passwordEncode.matches(u_pw, sellerInfo.getS_pw())) {
 				sellerInfo.setS_pw(u_pw);
+				//판매자 마지막 접속일 기입
+				sellerService.lastLog(u_id);
 				session.setAttribute("isLogOn", true);
 				session.setAttribute("sellerInfo", sellerInfo);
 				session.setAttribute("side_menu", "seller_mode");
@@ -154,6 +158,7 @@ public class BaseController {
 		}
 		if (adminInfo != null) {
 			if (passwordEncode.matches(u_pw, adminInfo.getA_pw())) {
+				//어드민의 경우 최종 접속일을 기입하지 않는다.
 				session.setAttribute("isLogOn", true);
 				session.setAttribute("adminInfo", adminInfo);
 				System.out.println(u_pw);

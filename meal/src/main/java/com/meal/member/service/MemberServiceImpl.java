@@ -62,8 +62,8 @@ public class MemberServiceImpl implements MemberService {
 
 
 	@Override
-	public void logout(String u_id) throws Exception {
-		memberDAO.logout(u_id);
+	public void lastLog(String u_id) throws Exception {
+		memberDAO.lastLog(u_id);
 	}
 
 }

@@ -58,7 +58,11 @@ public class SellerServiceImpl implements SellerService {
 	public void updateSellerImg(HashMap<String, Object> map) throws Exception {
 		SellerDAO.updateSellerImg(map);
 	}
-
+	
+	@Override
+	public void lastLog(String s_id) throws Exception{
+		SellerDAO.lastLog(s_id);
+	}
 
 }
 

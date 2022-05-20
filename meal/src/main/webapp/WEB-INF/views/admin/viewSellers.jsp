@@ -204,7 +204,7 @@ color: white;
 					<td>판매수량</td>
 					<td>매출액</td>
 					<td>${item.s_cate}</td>
-					<td>${item.s_lastlog}</td>
+					<td>${item.s_lastLog}</td>
 				</tr>
 			</c:forEach>
             </c:otherwise> 

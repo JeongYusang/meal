@@ -16,5 +16,5 @@ public interface MemberDAO {
 	public void delMember(MemberVO memberVO) throws DataAccessException;
 	public void updateMember(MemberVO memberVO) throws DataAccessException;
 	public MemberVO decode(String u_id) throws DataAccessException;
-	public void logout(String u_id);
+	public void lastLog(String u_id) throws DataAccessException;
 }

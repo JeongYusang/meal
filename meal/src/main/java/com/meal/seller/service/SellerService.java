@@ -26,4 +26,5 @@ public interface SellerService {
 
 	public void updateSellerImg(HashMap<String, Object> map) throws Exception;
 
+	public void lastLog(String s_id) throws Exception;
 }

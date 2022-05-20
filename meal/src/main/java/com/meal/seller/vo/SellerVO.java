@@ -24,6 +24,7 @@ public class SellerVO {
 	private String delDate;
 	private String s_cate;
 	private String s_lastLog;
+	
 	public String getS_lastLog() {
 		return s_lastLog;
 	}

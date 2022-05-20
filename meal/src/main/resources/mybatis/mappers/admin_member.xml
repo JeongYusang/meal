@@ -49,7 +49,7 @@
 		<result property="s_del" column="s_del" />
 		<result property="delDate" column="delDate" />
 		<result property="s_cate" column="s_cate" />
-		<result property="s_lastlog" column="s_lastlog" />
+		<result property="s_lastLog" column="s_lastLog" />
 
 	</resultMap>
 	<resultMap id="img_sResult" type="Img_sVO">
@@ -68,7 +68,8 @@
 	   select R1.* from (select * from user_tb order by u_name) R1 order by u_name asc limit #{start} , #{end} 
 	   ]]>
 	</select>
-		<select id="sellerPage" resultMap="sellerResult" parameterType="Map">
+	<select id="sellerPage" resultMap="sellerResult"
+		parameterType="Map">
    <![CDATA[
 	   select R1.* from (select * from seller_tb order by s_id) R1 order by s_id asc limit #{start} , #{end} 
 	   ]]>

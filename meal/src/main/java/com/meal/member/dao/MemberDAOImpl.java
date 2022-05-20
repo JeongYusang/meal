@@ -53,8 +53,8 @@ public class MemberDAOImpl  implements MemberDAO{
 
 	
 	@Override
-	public void logout(String u_id) throws DataAccessException {
-		sqlSession.update("mapper.user.logout",u_id);
+	public void lastLog(String u_id) throws DataAccessException {
+		sqlSession.update("mapper.user.lastLog",u_id);
 	}
 	
 }
