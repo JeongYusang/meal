@@ -9,7 +9,14 @@ public class Img_grVO {
 	public String fileName;
 	public String creDate;
 	public int b_gr_id;
+	public int g_id;
 	
+	public int getG_id() {
+		return g_id;
+	}
+	public void setG_id(int g_id) {
+		this.g_id = g_id;
+	}
 	public int getIb_gr_id() {
 		return ib_gr_id;
 	}

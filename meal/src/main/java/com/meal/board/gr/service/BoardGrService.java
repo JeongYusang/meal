@@ -27,5 +27,15 @@ public interface BoardGrService {
 	public void addImg(HashMap<String, Object> item) throws Exception;
 
 	public BoardGrVO findb_gr_id()throws Exception;
+	
+	public List<BoardGrVO> selectMyBoardGrallList(String u_id) throws Exception;
+
+	public List<BoardGrVO> selectMyBoardGrList(HashMap<String, Object> Map) throws Exception;
+
+	public BoardGrVO grdownload(int b_gr_id);
+
+	public List<BoardGrVO> selectSellerBoardGrallList(String s_id);
+
+	public List<BoardGrVO> selectSellerBoardGrList(HashMap<String, Object> pagingMap);
 
 }

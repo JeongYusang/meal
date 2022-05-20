@@ -43,6 +43,8 @@ public class BoardGrControllerImpl extends BaseController implements BoardGrCont
 	private MemberVO memberVO;
 	@Autowired
 	private SellerVO sellerVO;
+	@Autowired
+	private AdminVO adminVO;
 
 	@Override
 	@RequestMapping(value = "/boardGrinsert.do", method = { RequestMethod.POST, RequestMethod.GET })
@@ -89,7 +91,7 @@ public class BoardGrControllerImpl extends BaseController implements BoardGrCont
 					// 이미지 파일네임을통해 파일경로 설정
 					imageFileName = (String) item.get("fileName");
 					if (!(imageFileName.equals("") || imageFileName == null)) {
-						// 이미지에 해당하는 정보를 DB에 저장 s_id | cate = fileName |fileName = originalfileName
+						// 이미지에 해당하는 정보를 DB에 저장 g_id | fileName = originalfileName
 						boardGrService.addImg(item);
 						// temp에 있는 이미지파일경로 설정
 						File srcFile = new File(CURR_IMAGE_UPLOAD_PATH + "\\" + "temp" + "\\" + imageFileName);
@@ -132,21 +134,21 @@ public class BoardGrControllerImpl extends BaseController implements BoardGrCont
 		String viewName = request.getParameter("viewName");
 		Map boardGrMap = boardGrService.boardGrView(b_gr_id);
 		BoardGrVO boardGrVO = (BoardGrVO)boardGrMap.get("boardGrVO");
+		List<Img_grVO> imageList = (List<Img_grVO>) boardGrMap.get("imageList");
 		HttpSession session = request.getSession();
 		MemberVO memberVO = (MemberVO) session.getAttribute("memberInfo");
 		SellerVO sellerVO = (SellerVO) session.getAttribute("sellerInfo");
-		String u_id = memberVO.getU_id();
-		String u_id1 = boardGrVO.getU_id();
-		System.out.println(u_id);
-		System.out.println(u_id1);
 		try {
+			if(memberVO != null)
 			if (memberVO.getU_id().equals(boardGrVO.getU_id())) {
 				mav.addObject("boardGrVO", boardGrVO);
+				mav.addObject("imageList", imageList);
 				mav.setViewName(viewName);
-			} else if (sellerVO.getS_id().equals(boardGrVO.getS_id())) {
+			}else if (adminVO != null) {
 				mav.addObject("boardGrVO", boardGrVO);
+				mav.addObject("imageList", imageList);
 				mav.setViewName(viewName);
-			} else {
+			}else {
 				String message = "회원정보가 일치하지 않습니다.";
 				mav.addObject("message", message);
 				mav.addObject("b_gr_id", b_gr_id);
@@ -174,10 +176,18 @@ public class BoardGrControllerImpl extends BaseController implements BoardGrCont
 		String viewName = request.getParameter("viewName");
 		try {
 			boardGrService.boardGrUpdate(boardGrVO);
+			if (boardGrVO.getParentNo() == 0) {
 			viewName = "redirect:/boardGr/bGrDetail.do";
 			int b_gr_id = boardGrVO.getB_gr_id();
 			mav.addObject("b_gr_id", b_gr_id);
 			mav.setViewName(viewName);
+			} else {
+				viewName = "redirect:/boardGr/bGrDetail.do";
+				int ParentNO = boardGrVO.getParentNo();
+				mav.addObject("b_gr_id", ParentNO);
+				mav.setViewName(viewName);
+				
+			}
 		} catch (Exception e) {
 			int b_gr_id = (Integer) boardGrVO.getB_gr_id();
 			mav.addObject("b_gr_id", b_gr_id);
@@ -271,40 +281,12 @@ public class BoardGrControllerImpl extends BaseController implements BoardGrCont
 		if (message != null) {
 			mav.addObject("message", message);
 		}
-		
-		HashMap<String, Object> pagingMap = new HashMap<String, Object>();
-		Integer page = 1;
-		Integer index = 0;
-		if (pageNum != null) {
-
-			if (section != null) {
-				Integer page1 = Integer.parseInt((String) pageNum);
-				Integer index1 = Integer.parseInt((String) section);
-
-				System.out.println("인덱스" + index);
-				Integer start = (page1 - 1) * 10 + index1 * 100;
-				Integer end = 10;
-				// Integer end = (page1) * 10 + index1 * 100; 출력개수를 정함.
-				pagingMap.put("start", start);
-				pagingMap.put("end", end);
-				System.out.println(start);
-				System.out.println(end);
-			} else {
-				Integer page1 = Integer.parseInt((String) pageNum);
-
-				Integer start = (page1 - 1) * 10 + index * 100;
-				Integer end = (page1) * 10 + index * 100;
-				pagingMap.put("start", start);
-				pagingMap.put("end", end);
-			}
-		} else {
-			Integer start = (page - 1) * 10 + index * 100;
-			Integer end = (page) * 10 + index * 100;
-			pagingMap.put("start", start);
-			pagingMap.put("end", end);
-		}
+		HashMap<String, Object> Map = new HashMap<String, Object>();
+		Map.put("pageNum", pageNum);
+		Map.put("section", section);
+		HashMap<String, Object> pagingMap =(HashMap<String, Object>) paging(Map);
 		pagingMap.put("u_id", u_id);
-
+		
 		List<BoardGrVO> boardGr = boardGrService.selectMyBoardGrList(pagingMap);
 		List<BoardGrVO> board2 = boardGrService.selectMyBoardGrallList(u_id);
 
@@ -321,7 +303,51 @@ public class BoardGrControllerImpl extends BaseController implements BoardGrCont
 				}
 			}
 		}
+		mav.addObject("memberVO", memberVO);
 		mav.addObject("boardGr", boardGr);
+		return mav;
+	}
+	
+	@Override
+	@RequestMapping(value = "/selectSellerBoardGrList.do", method = { RequestMethod.POST, RequestMethod.GET })
+	public ModelAndView selectSMyBoardGrList(
+			@RequestParam(value = "dateMap", required = false) Map<String, Object> dateMap,
+			@RequestParam(value = "section", required = false) String section,
+			@RequestParam(value = "pageNum", required = false) String pageNum, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		String viewName = (String) request.getAttribute("viewName");
+		ModelAndView mav = new ModelAndView(viewName);
+		HttpSession session = request.getSession();
+		SellerVO sellerVO = (SellerVO) session.getAttribute("sellerInfo");
+		String s_id = sellerVO.getS_id();
+		String message = (String) request.getAttribute("message");
+		if (message != null) {
+			mav.addObject("message", message);
+		}
+		HashMap<String, Object> Map = new HashMap<String, Object>();
+		Map.put("pageNum", pageNum);
+		Map.put("section", section);
+		HashMap<String, Object> pagingMap =(HashMap<String, Object>) paging(Map);
+		pagingMap.put("s_id", s_id);
+
+		List<BoardGrVO> boardGr = boardGrService.selectSellerBoardGrList(pagingMap);
+		List<BoardGrVO> board2 = boardGrService.selectSellerBoardGrallList(s_id);
+
+		for (BoardGrVO item : boardGr) {
+			for (BoardGrVO j : board2) {
+				if (!((int) item.getB_gr_id() == (int) j.getParentNo())) {
+					String compare = "N";
+					item.setCompare(compare);
+				} else {
+					String compare = "Y";
+					item.setCompare(compare);
+					System.out.println("BoardCompare" + item.getB_gr_id());
+					break;
+				}
+			}
+		}
+		mav.addObject("boardGr", boardGr);
+		mav.addObject("sellerVO", sellerVO);
 		return mav;
 	}
 
@@ -336,16 +362,11 @@ public class BoardGrControllerImpl extends BaseController implements BoardGrCont
 		if (message != null) {
 			mav.addObject("message", message);
 		}
-		HttpSession session = request.getSession();
-		MemberVO memberVO = (MemberVO) session.getAttribute("memberInfo");
-		SellerVO sellerVO = (SellerVO) session.getAttribute("sellerInfo");
 		Map boardGrMap = boardGrService.boardGrView(b_gr_id);
 		BoardGrVO boardGrVO = (BoardGrVO) boardGrMap.get("boardGrVO");
 		List<Img_grVO> imageList = (List<Img_grVO>) boardGrMap.get("imageList");
 		mav.addObject("boardGrInfo", boardGrVO);
 		mav.addObject("imageList", imageList);
-		mav.addObject("memberInfo", memberVO);
-		mav.addObject("sellerInfo", sellerVO);
 
 		mav.setViewName(viewName);
 
@@ -356,6 +377,8 @@ public class BoardGrControllerImpl extends BaseController implements BoardGrCont
 
 		return mav;
 	}
+	
+
 
 	@Override
 	@RequestMapping(value = "/boardGrWrite.do", method = { RequestMethod.POST, RequestMethod.GET })
@@ -381,45 +404,6 @@ public class BoardGrControllerImpl extends BaseController implements BoardGrCont
 
 	}
 
-	/* 답글 form */
-	@RequestMapping(value = "/boardGrreviewForm.do", method = { RequestMethod.POST, RequestMethod.GET })
-	public ModelAndView reviewForm(@ModelAttribute("b_gr_id") Integer b_gr_id, HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
-		ModelAndView mav = new ModelAndView();
-
-		HttpSession session = request.getSession();
-		// MemberVO memberInfo = (MemberVO) session.getAttribute("memberInfo"); 멤버의 권한은
-		// 받지않음
-		SellerVO sellerInfo = (SellerVO) session.getAttribute("sellerInfo");
-		AdminVO adminInfo = (AdminVO) session.getAttribute("AdminVO");
-
-		// 추가 리스트 들고올 것
-		List<BoardGrVO> boardList = boardGrService.boardGrViewReview(b_gr_id);
-
-		mav.addObject("ReviewList", boardList);
-
-		// if (memberInfo == null && sellerInfo == null && adminInfo == null) { 멤버의 권한은
-		// 받지 않음
-		if (sellerInfo == null && adminInfo == null) { // 로그인이 아닐경우 창으로 반송
-			String viewName = "/boardGr/boardGrReviewForm";
-			Map boardGrMap = boardGrService.boardGrView(b_gr_id);
-			BoardGrVO boardGrVO = (BoardGrVO) boardGrMap.get("boardGrVO");
-			// 여기작성중 답글창에 해당게시글 내용 기재할예정
-			mav.addObject("boardGrInfo", boardGrVO);
-
-			mav.setViewName(viewName);
-			return mav;
-		} else { // 로그인하고 어드민일경우
-
-			String viewName1 = "redirect:/boardGr/selectBoardGrList.do";
-			String message = "로그인을 해주세요.";
-			mav.addObject("message", message);
-			mav.setViewName(viewName1);
-			return mav;
-		}
-
-	}
-
 	@Override
 	@RequestMapping(value = "/boardGrReviewform.do", method = { RequestMethod.POST, RequestMethod.GET })
 	public ModelAndView boardGrReviewForm(@RequestParam(value = "b_gr_id", required = false) Integer b_gr_id,
@@ -429,18 +413,62 @@ public class BoardGrControllerImpl extends BaseController implements BoardGrCont
 		Map boardGrMap = boardGrService.boardGrView(b_gr_id);
 		BoardGrVO boardGrVO = (BoardGrVO) boardGrMap.get("boardGrVO");
 		List<Img_grVO> imageList = (List<Img_grVO>) boardGrMap.get("imageList");
-		mav.addObject("boardGrInfo", boardGrVO);
-		mav.addObject("imageList", imageList);
 		HttpSession session = request.getSession();
-		MemberVO memberVO = (MemberVO) session.getAttribute("memberInfo");
 		SellerVO sellerVO = (SellerVO) session.getAttribute("sellerInfo");
 		AdminVO adminVO = (AdminVO) session.getAttribute("adminInfo");
 		try {
-			if (sellerVO != null && memberVO == null) {
+			if (sellerVO != null) {
 				mav.addObject("boardGrVO", boardGrVO);
+				mav.addObject("imageList", imageList);
 				mav.setViewName(viewName);
-			} else if (adminVO != null && memberVO == null) {
+			} else if (adminVO != null) {
 				mav.addObject("boardGrVO", boardGrVO);
+				mav.addObject("imageList", imageList);
+				mav.setViewName(viewName);
+			} else {
+				String message = "리뷰에 대한 권한이없습니다.";
+				mav.addObject("message", message);
+				mav.addObject("b_gr_id", b_gr_id);
+				viewName = "redirect:/boardGr/bGrDetail.do";
+				mav.setViewName(viewName);
+
+			}
+			return mav;
+		} catch (Exception e) {
+			mav.addObject("boardGrVO", boardGrVO);
+			String message = "회원정보가 일치하지 않습니다.";
+			mav.addObject("message", message);
+			mav.addObject("b_gr_id", b_gr_id);
+			viewName = "redirect:/boardGr/bGrDetail.do";
+			mav.setViewName(viewName);
+			return mav;
+		}
+	}
+	
+	@Override
+	@RequestMapping(value = "/boardGrReviewUpdateform.do", method = { RequestMethod.POST, RequestMethod.GET })
+	public ModelAndView boardGrReviewUpdateForm(@RequestParam(value = "b_gr_id", required = false) Integer b_gr_id,
+			HttpServletRequest request, HttpServletResponse response) throws Exception {
+		ModelAndView mav = new ModelAndView();
+		String viewName = request.getParameter("viewName");
+		Map boardGrMap = boardGrService.boardGrView(b_gr_id);
+		BoardGrVO boardGrVO = (BoardGrVO) boardGrMap.get("boardGrVO");
+		List<Img_grVO> imageList = (List<Img_grVO>) boardGrMap.get("imageList");
+		HttpSession session = request.getSession();
+		SellerVO sellerVO = (SellerVO) session.getAttribute("sellerInfo");
+		AdminVO adminVO = (AdminVO) session.getAttribute("adminInfo");
+		List<BoardGrVO> boardList = boardGrService.boardGrViewReview(b_gr_id);
+		try {
+			if (sellerVO != null) {
+				mav.addObject("sellerVO", sellerVO);
+				mav.addObject("ReviewList", boardList);
+				mav.addObject("boardGrVO", boardGrVO);
+				mav.addObject("imageList", imageList);
+				mav.setViewName(viewName);
+			} else if (adminVO != null) {
+				mav.addObject("ReviewList", boardList);
+				mav.addObject("boardGrInfo", boardGrVO);
+				mav.addObject("imageList", imageList);
 				mav.setViewName(viewName);
 			} else {
 				String message = "리뷰에 대한 권한이없습니다.";
@@ -474,12 +502,13 @@ public class BoardGrControllerImpl extends BaseController implements BoardGrCont
 		HttpSession session = request.getSession();
 		MemberVO memberVO = (MemberVO) session.getAttribute("memberInfo");
 		SellerVO sellerVO = (SellerVO) session.getAttribute("sellerInfo");
-		System.out.println("sellerInfo : " + sellerVO);
+		System.out.println("sellerInfo : " + sellerVO + "1" + boardGrVO.getS_id());
 		AdminVO adminVO = (AdminVO) session.getAttribute("adminInfo");
 		try {
 			if (memberVO != null) {
 
 				if (memberVO.getU_id().equals(boardGrVO.getU_id())) {
+					
 					boardGrService.boardGrDelete(b_gr_id);
 					String viewName1 = "redirect:/boardGr/selectBoardGrList.do";
 					String message = "게시글이 삭제 되었습니다";
@@ -489,7 +518,6 @@ public class BoardGrControllerImpl extends BaseController implements BoardGrCont
 				}
 
 			} else if (sellerVO != null) {
-
 				if (sellerVO.getS_id().equals(boardGrVO.getS_id())) {
 					boardGrService.boardGrDelete(b_gr_id);
 					String viewName1 = "redirect:/boardGr/selectBoardGrList.do";
