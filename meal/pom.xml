@@ -153,7 +153,13 @@
 			<version>4.7</version>
 			<scope>test</scope>
 		</dependency>
-
+		<!-- Spring Test -->
+		<dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>${org.springframework-version}</version>
+            <scope>test</scope>
+        </dependency>
 		<!-- JDBC 설정하기 -->
 		<dependency>
 			<groupId>commons-beanutils</groupId>
