@@ -153,25 +153,6 @@
 			<version>4.7</version>
 			<scope>test</scope>
 		</dependency>
-		<!-- 배치 -->
-		<dependency>
-			<groupId>org.springframework.batch</groupId>
-			<artifactId>spring-batch-core</artifactId>
-			<version>4.3.5</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.batch</groupId>
-			<artifactId>spring-batch-infrastructure</artifactId>
-			<version>4.3.5</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.retry</groupId>
-			<artifactId>spring-retry</artifactId>
-			<version>1.3.2</version>
-		</dependency>
-
 
 		<!-- JDBC 설정하기 -->
 		<dependency>
