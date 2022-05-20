@@ -41,6 +41,9 @@
 	<logger name="com.meal.meal">
 		<level value="console" />
 	</logger>
+   	<logger name="com.cristoval.web">
+       	<level value="trace" />
+   	</logger>
 
 	<!-- 3rdparty Loggers -->
 	<logger name="org.springframework.core">
