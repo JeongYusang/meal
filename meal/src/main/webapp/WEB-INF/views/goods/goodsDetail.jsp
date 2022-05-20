@@ -234,7 +234,7 @@ tr.border-bottom td {
             height="500px" />
          <div style="display: block; vertical-align: top;">
             <br> <br> <br> 
-            <b style="font-size: 52px">${goodsInfo.g_name}</b>
+            ${goodsInfo.g_name}
 
             <h1>10000원</h1>
             <br> <img src="${contextPath}/resources/image/mini1.PNG"
