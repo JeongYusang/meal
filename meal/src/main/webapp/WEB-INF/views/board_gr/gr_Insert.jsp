@@ -178,8 +178,8 @@
 				<table>
 					<tr>
 						<th class="td1">상품</th>
-						<td><input type="hidden" name ="g_id" value="1" />
-						<input type="hidden" name="s_id" value="2323" /></td>
+						<td><input type="hidden" name="g_id" value="1" /> <input
+							type="hidden" name="s_id" value="2323" /></td>
 					</tr>
 					<tr>
 						<th class="td1">작성자 아이디</th>
@@ -188,7 +188,7 @@
 							type="hidden" value="${memberInfo.u_id }" name="u_id"> <input
 							type="hidden" value="user" name="reg_id">
 							<div class="secret-wrap">
-								<input class="B_Uid1" type="checkbox" value="Y" name="secret">비밀글입니다.</input>
+								<input class="B_Uid1" type="checkbox" value="Y" name="secret">비밀글입니다
 							</div></td>
 					</tr>
 					<tr>
@@ -236,4 +236,3 @@
 
 </html>
 </body>
-</html>

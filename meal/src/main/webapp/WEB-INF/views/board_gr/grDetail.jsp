@@ -3,6 +3,7 @@
 	pageEncoding="utf-8" isELIgnored="false"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+
 <c:set var="contextPath" value="${pageContext.request.contextPath}" />
 <c:set var="result" value="${param.result }" />
 
@@ -141,6 +142,7 @@ function fn_review(url,b_gr_id){
 	width: 800px;
 	height: 400px;
 	font-size: 20px;
+	resize: none;
 }
 
 #in_title input {
@@ -185,22 +187,6 @@ function fn_review(url,b_gr_id){
 	margin: 0px;
 }
 
-.board-r-wrap>input {
-	float: right;
-	display: inline-block;
-	background-color: #ffc0cf;
-	border-radius: 5px;
-	border: 4px #cccccc;
-	color: black;
-	font-size: 8px;
-	padding: 0;
-	width: 35px;
-	height: 20px;
-	transition: all 0.5s;
-	cursor: pointer;
-	margin: 5px;
-}
-/*  */
 .check-context {
 	z-index: 50;
 	position: fixed;
@@ -271,9 +257,18 @@ function fn_review(url,b_gr_id){
 }
 
 #g_image {
-	margin: 10px;
+	margin: 60px;
 	width: 300px;
 	height: 300px;
+}
+
+/* .board_main {
+	border: 1px solid black;
+} */
+#content {
+	margin-left: 30px;
+	font-size: 16px;
+	color: black;
 }
 </style>
 
@@ -312,80 +307,95 @@ function fn_review(url,b_gr_id){
 			</div>
 		</div>
 	</div>
+
+
 	<div class='board-wrap'>
 		<div class="board-b-wrap">
-
 			<h1>리뷰 상세</h1>
-			<input type=button value="수정"
-				onClick="fn_update('${contextPath}/boardGr/boardGrUpdateform.do',${boardGrInfo.b_gr_id })" />
-			<input type=button value="삭제"
-				onClick="fn_remove_board('${contextPath}/boardGr/boardGrDelete.do',${boardGrInfo.b_gr_id })" />
+			<c:choose>
+				<c:when test="${memberInfo.u_id eq boardGrInfo.u_id}">
+					<input type=button value="수정"
+						onClick="fn_update('${contextPath}/boardGr/boardGrUpdateform.do',${boardGrInfo.b_gr_id })" />
+					<input type=button value="삭제"
+						onClick="fn_remove_board('${contextPath}/boardGr/boardGrDelete.do',${boardGrInfo.b_gr_id })" />
+				</c:when>
 
-			<input type=button value="목록"
-				onClick="fn_return('${contextPath}/boardGr/selectBoard1List.do')" />
-			<input type=button value="답글"
-				onClick="fn_review('${contextPath}/boardGr/boardGrReviewform.do', ${boardGrInfo.b_gr_id})" />
+
+
+				<c:when test="${sellerInfo.s_id eq boardGrInfo.s_id}">
+					<input type=button value="답글"
+						onClick="fn_review('${contextPath}/boardGr/boardGrReviewform.do', ${boardGrInfo.b_gr_id})" />
+					<input type=button value="목록"
+						onClick="fn_return('${contextPath}/boardGr/selectBoardGrList.do')" />
+
+				</c:when>
+				<c:otherwise>
+					<input type=button value="목록"
+						onClick="fn_return('${contextPath}/boardGr/selectBoardGrList.do')" />
+				</c:otherwise>
+			</c:choose>
+
 		</div>
-		<div id="board_write">
-			<div id="goods-info">
-				<br> <img class="imagegoods"
-					src="${contextPath}/resources/image/new1.png" />
-				<div id="goodstext">
-					<h3>${boardGrInfo.s_id}</h3>
-					<h3>${boardGrInfo.g_name}</h3>
-					<c:choose>
-						<c:when test="${boardGrInfo.star == 5}">
-							<span class="fa fa-star checked"></span>
-							<span class="fa fa-star checked"></span>
-							<span class="fa fa-star checked"></span>
-							<span class="fa fa-star checked"></span>
-							<span class="fa fa-star checked"></span>
-						</c:when>
-						<c:when test="${boardGrInfo.star == 4}">
-							<span class="fa fa-star checked"></span>
-							<span class="fa fa-star checked"></span>
-							<span class="fa fa-star checked"></span>
-							<span class="fa fa-star checked"></span>
-							<span class="fa fa-star"></span>
-						</c:when>
-						<c:when test="${boardGrInfo.star == 3}">
-							<span class="fa fa-star checked"></span>
-							<span class="fa fa-star checked"></span>
-							<span class="fa fa-star checked"></span>
-							<span class="fa fa-star"></span>
-							<span class="fa fa-star"></span>
-						</c:when>
-						<c:when test="${boardGrInfo.star == 2}">
-							<span class="fa fa-star checked"></span>
-							<span class="fa fa-star checked"></span>
-							<span class="fa fa-star"></span>
-							<span class="fa fa-star"></span>
-							<span class="fa fa-star"></span>
-						</c:when>
-						<c:otherwise>
-							<span class="fa fa-star checked"></span>
-							<span class="fa fa-star"></span>
-							<span class="fa fa-star"></span>
-							<span class="fa fa-star"></span>
-							<span class="fa fa-star"></span>
-						</c:otherwise>
-					</c:choose>
-				</div>
+
+		<div id="goods-info">
+			<br> <img
+				class="${contextPath}/thumbnails.do?g_id=${boardGrInfo.g_id}" />
+			<div id="goodstext">
+				<h3>${boardGrInfo.s_id}</h3>
+				<h3>${boardGrInfo.g_name}</h3>
+				<c:choose>
+					<c:when test="${boardGrInfo.star == 5}">
+						<span class="fa fa-star checked"></span>
+						<span class="fa fa-star checked"></span>
+						<span class="fa fa-star checked"></span>
+						<span class="fa fa-star checked"></span>
+						<span class="fa fa-star checked"></span>
+					</c:when>
+					<c:when test="${boardGrInfo.star == 4}">
+						<span class="fa fa-star checked"></span>
+						<span class="fa fa-star checked"></span>
+						<span class="fa fa-star checked"></span>
+						<span class="fa fa-star checked"></span>
+						<span class="fa fa-star"></span>
+					</c:when>
+					<c:when test="${boardGrInfo.star == 3}">
+						<span class="fa fa-star checked"></span>
+						<span class="fa fa-star checked"></span>
+						<span class="fa fa-star checked"></span>
+						<span class="fa fa-star"></span>
+						<span class="fa fa-star"></span>
+					</c:when>
+					<c:when test="${boardGrInfo.star == 2}">
+						<span class="fa fa-star checked"></span>
+						<span class="fa fa-star checked"></span>
+						<span class="fa fa-star"></span>
+						<span class="fa fa-star"></span>
+						<span class="fa fa-star"></span>
+					</c:when>
+					<c:otherwise>
+						<span class="fa fa-star checked"></span>
+						<span class="fa fa-star"></span>
+						<span class="fa fa-star"></span>
+						<span class="fa fa-star"></span>
+						<span class="fa fa-star"></span>
+					</c:otherwise>
+				</c:choose>
 			</div>
-			<br>
-
-			<div id="grHead">
-				<div id="title">${boardGrInfo.title}</div>
-				<div id="date">${boardGrInfo.creDate}</div>
-				<div id="id">작성자:${boardGrInfo.u_id}</div>
-			</div>
-
-
+		</div>
+		<br>
+		<div id="grHead">
+			<div id="title">${boardGrInfo.title}</div>
+			<div id="date">${boardGrInfo.creDate}</div>
+			<div id="id">작성자:${boardGrInfo.u_id}</div>
+		</div>
+		<br>
+		<br>
+		<div class="board_main">
 			<br>
 			<div id="content">
 				<c:forEach var="imageList" items="${imageList}">
 					<img id="g_image" width="300px" height="300px"
-						src="${contextPath}/thumbnails.do?g_id=${boardGrInfo.g_id}&b_gr_id=${imageList.b_gr_id}&fileName=${imageList.fileName}">
+						src="${contextPath}/thumbnails.do?b_gr_id=${imageList.b_gr_id}&${imageList.fileName}">
 				</c:forEach>
 				<br> ${boardGrInfo.content}
 			</div>
@@ -393,38 +403,34 @@ function fn_review(url,b_gr_id){
 		</div>
 
 		<c:choose>
-			<c:when test="${not empty ReviewList }">
-
+			<c:when test="${not empty ReviewList}">
 				<c:forEach var="review" items="${ReviewList}">
-					<div class="board-r-wrap">
+					<div class="board-b-wrap">
+						<h1>리뷰 수정</h1>
+						<c:if test="${sellerInfo.s_id eq boardGrInfo.s_id}">
+							<input type=button value="수정"
+								onClick="fn_update('${contextPath}/boardGr/boardGrReviewUpdateform.do',${review.b_gr_id})" />
+							<input type=button value="삭제"
+								onClick="fn_remove_board('${contextPath}/boardGr/boardGrDelete.do',${review.b_gr_id })" />
+						</c:if>
 
-						<h1>답글입니다</h1>
-						<input type=button value="수정"
-							onClick="fn_update('${contextPath}/boardGr/boardGrUpdateform.do',${review.b_gr_id })" />
-						<input type=button value="삭제"
-							onClick="fn_remove_board('${contextPath}/boardGr/boardGrDelete.do',${review.b_gr_id })" />
 
-						<input type=button value="목록"
-							onClick="fn_return('${contextPath}/boardGr/selectBoardGrList.do')" />
-						<input type=button value="답글"
-							onClick="fn_review('${contextPath}/boardGr/boardGrReviewform.do', ${boardGrInfo.b_gr_id})" />
+					</div>
+					<div id="grHead">
+						<div id="title">${review.title}</div>
+						<div id="date">${review.creDate}</div>
+						<div id="id">작성자:${review.s_id}</div>
 					</div>
 
-					<div class='table-wrap1'>
-						<table>
-
-
-							<tr>
-								<th class="td1">제목</th>
-								<td class="td2"><input type=text value="${review.title }"
-									name="title" id="i_title" disabled /></td>
-							</tr>
-							<tr>
-								<th class="td1">내용</th>
-								<td class="td2"><textarea rows="20" cols="70"
-										name="content" id="i_content" disabled> ${review.content }</textarea></td>
-							</tr>
-						</table>
+					<div class="board_main">
+						<div id="content">
+							<c:forEach var="imageList" items="${imageList}">
+								<<img id="g_image" width="300px" height="300px"
+									src="${contextPath}/thumbnails.do?b_gr_id=${review.b_gr_id}&${imageList.fileName}">
+							</c:forEach>
+							<br> ${review.content}
+						</div>
+						<br>
 					</div>
 				</c:forEach>
 			</c:when>

@@ -156,10 +156,20 @@ request.setCharacterEncoding("UTF-8");
 				<table>
 					<tr>
 						<th class="td1">작성자 아이디</th>
-						<td class="td3"><input class="B_Uid" type=text
-							value="${ memberInfo.u_id}" name="_u_id" disabled /> <input
-							type="hidden" value="${memberInfo.u_id }" name="u_id"> <input
-							type="hidden" value="user" name="reg_id"> <c:choose>
+						<td class="td3"><c:choose>
+								<c:when test="${not empty boardGrVO}">
+									<input class="B_Uid" type=text value="${boardGrVO.u_id}"
+										name="_u_id" disabled />
+									<input type="hidden" value="${boardGrVO.u_id }" name="u_id">
+									<input type="hidden" value="user" name="reg_id">
+								</c:when>
+								<c:when test="${not empty boardGrVO }">
+									<input class="B_Uid" type=text value="${boardGrVO.u_id}"
+										name="_u_id" disabled />
+									<input type="hidden" value="${boardGrVO.u_id }" name="u_id">
+									<input type="hidden" value="user" name="reg_id">
+								</c:when>
+							</c:choose> <c:choose>
 								<c:when test="${not empty boardGrVO.secret }">
 									<div class="secret-wrap">
 										<input class="B_Uid1" type="checkbox" value="Y" name="secret"
@@ -226,7 +236,16 @@ request.setCharacterEncoding("UTF-8");
 						<td class="td2"><textarea rows="20" cols="70" name="content"
 								id="i_content"> ${boardGrVO.content } </textarea></td>
 					</tr>
+					<tr>
+						<th class="td1">사진</th>
+						<td class="td2"><c:forEach var="imageList"
+								items="${imageList}">
+								<img id="g_image" width="300px" height="300px"
+									src="${contextPath}/thumbnails.do?b_gr_id=${imageList.b_gr_id}&${imageList.fileName}">
+							</c:forEach></td>
+					</tr>
 					<tr height="200px">
+
 						<th class="td1">이미지파일 첨부 <input class="filecss" type="file"
 							name="imageFileName" onchange="readURL(this);" /></th>
 						<td class='td2'><input type="image" id="preview" src="#"

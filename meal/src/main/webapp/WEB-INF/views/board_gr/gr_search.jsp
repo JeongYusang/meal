@@ -153,7 +153,6 @@ tr.border-bottom td {
 	color: #ffc0cb;
 }
 
-
 #page {
 	font-size: 24px;
 	margin: 10px;
@@ -179,6 +178,7 @@ tr.border-bottom td {
 					<th onclick="sortTable(2)" width="300px">제목</th>
 					<th onclick="sortTable(3)" width="100px">작성자</th>
 					<th onclick="sortTable(4)" width="150px">날짜</th>
+					<th onclick="sortTable(4)" width="150px">답변여부</th>
 				</tr>
 			</thead>
 			<c:choose>
@@ -193,7 +193,7 @@ tr.border-bottom td {
 						<tr class="item">
 							<c:choose>
 								<c:when test="${not empty item.u_id and empty item.secret }">
-								<td>${item.b_gr_id }</td>
+									<td>${item.b_gr_id }</td>
 									<td><c:choose>
 											<c:when test="${item.star == 5}">
 												<span class="fa fa-star checked"></span>
@@ -233,8 +233,9 @@ tr.border-bottom td {
 										</c:choose></td>
 									<td><a
 										href="${contextPath}/boardGr/bGrDetail.do?b_gr_id=${item.b_gr_id}">${item.title}</a></td>
-										<td>${item.u_id}</td>
+									<td>${item.u_id}</td>
 									<td>${item.creDate}</td>
+									<td>${item.compare}</td>
 								</c:when>
 								<c:when test="${not empty item.u_id and not empty item.secret }">
 									<td>${item.b_gr_id }</td>
@@ -278,6 +279,7 @@ tr.border-bottom td {
 									<td>비밀글입니다</td>
 									<td>****</td>
 									<td>${item.creDate}</td>
+									<td>${item.compare}</td>
 								</c:when>
 							</c:choose>
 						</tr>
@@ -291,30 +293,62 @@ tr.border-bottom td {
 		</table>
 		<center>
 			<div id="page">
-				<c:forEach var="page" begin="1" end="9" step="1">
-					<c:if test="${section >0 && page==1 }">
-						<a
-							href="${contextPath}/boardGr/selectBoardGrList.do?section=${section}-1&pageNum=${(section-1)*10+1 }">preview</a>
-					</c:if>
-					<a
-						href="${contextPath}/boardGr/selectBoardGrList.do?section=${section}&pageNum=${page}">${(section)*10 +page}
-					</a>
-					<c:if test="${page ==10 }">
-						<a
-							href="${contextPath}/boardGr/selectBoardGrList.do?section=${section}+1&pageNum=${section*10}+1">next</a>
-					</c:if>
-				</c:forEach>
-			</div>
+				<c:choose>
+					<c:when test="${memberVO != null }">
+						<c:forEach var="page" begin="1" end="9" step="1">
+							<c:if test="${section >0 && page==1 }">
+								<a
+									href="${contextPath}/boardGr/selectMyBoardGrList.do?section=${section}-1&pageNum=${(section-1)*10+1 }">preview</a>
+							</c:if>
+							<a
+								href="${contextPath}/boardGr/selectMyBoardGrList.do?section=${section}&pageNum=${page}">${(section)*10 +page}
+							</a>
+							<c:if test="${page ==10 }">
+								<a
+									href="${contextPath}/boardGr/selectMyBoardGrList.do?section=${section}+1&pageNum=${section*10}+1">next</a>
+							</c:if>
+						</c:forEach>
+					</c:when>
+					<c:when test="${sellerVO != null }">
+						<c:forEach var="page" begin="1" end="9" step="1">
+							<c:if test="${section >0 && page==1 }">
+								<a
+									href="${contextPath}/boardGr/selectSellerBoardGrList.do?section=${section}-1&pageNum=${(section-1)*10+1 }">preview</a>
+							</c:if>
+							<a
+								href="${contextPath}/boardGr/selectSellerBoardGrList.do?section=${section}&pageNum=${page}">${(section)*10 +page}
+							</a>
+							<c:if test="${page ==10 }">
+								<a
+									href="${contextPath}/boardGr/selectSellerBoardGrList.do?section=${section}+1&pageNum=${section*10}+1">next</a>
+							</c:if>
+						</c:forEach>
+					</c:when>
+					<c:otherwise>
+						<c:forEach var="page" begin="1" end="9" step="1">
+							<c:if test="${section >0 && page==1 }">
+								<a
+									href="${contextPath}/boardGr/selectBoardGrList.do?section=${section}-1&pageNum=${(section-1)*10+1 }">preview</a>
+							</c:if>
+							<a
+								href="${contextPath}/boardGr/selectBoardGrList.do?section=${section}&pageNum=${page}">${(section)*10 +page}
+							</a>
+							<c:if test="${page ==10 }">
+								<a
+									href="${contextPath}/boardGr/selectBoardGrList.do?section=${section}+1&pageNum=${section*10}+1">next</a>
+							</c:if>
+						</c:forEach>
+
+					</c:otherwise>
+				</c:choose>
 		</center>
-
-
-
+		<hr>
+		<br>
+		<div id="write">
+			<a href="${contextPath }/boardGr/boardGrWrite.do">글쓰기</a>
+		</div>
 	</div>
 
-	<hr>
-	<br>
-	<div id="write">
-		<a href="${contextPath }/boardGr/boardGrWrite.do">글쓰기</a>
-	</div>
+
 </body>
 </html>
