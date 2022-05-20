@@ -187,7 +187,11 @@ public class BaseController {
 		HttpSession session = request.getSession();
 		MemberVO memberInfo = (MemberVO) session.getAttribute("memberInfo");
 		SellerVO sellerInfo = (SellerVO) session.getAttribute("sellerInfo");
-
+		
+		//어드민 폼 새로 만들예정
+		//AdminVO adminInfo = (AdminVO) session.getAttribute("adminInfo");
+		
+		
 		if (memberInfo != null) {
 			String id = (String) memberInfo.getU_id();
 			MemberVO mem = (MemberVO) memberService.decode(id);
@@ -227,6 +231,9 @@ public class BaseController {
 		}
 	}
 
+	
+	
+	
 	// 해당하는것은 모달창에서 삭제 창으로 이동하는것.
 	@RequestMapping(value = "/deleteForm.do", method = RequestMethod.POST)
 	public ModelAndView deleteForm(@RequestParam("pw2") String pw2, HttpServletRequest request,
@@ -275,8 +282,12 @@ public class BaseController {
 		}
 	}
 
+	
+	
+	
+	
 	// 폴더 삭제에 관한 메소드
-	public static void deleteFolder(String path) {
+	protected static void deleteFolder(String path) {
 
 		File folder = new File(path);
 		try {

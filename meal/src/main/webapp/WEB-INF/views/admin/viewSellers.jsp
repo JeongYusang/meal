@@ -181,8 +181,9 @@ color: white;
 					<th onclick="sortTable(2)" width="100px">등록된 상품수</th>
 					<th onclick="sortTable(3)" width="100px">판매수량</th>
 					<th onclick="sortTable(4)" width="100px">매출액</th>
-					<th onclick="sortTable(5)" width="100px">업종</th>
+					<th onclick="sortTable(5)" width="30px">업종</th>
 					<th onclick="sortTable(6)" width="100px">마지막 접속</th>
+					<th onclick="sortTable(7)" width="50px">수정</th>
 				</tr>
 			</thead>
 			 <c:choose>
@@ -205,6 +206,7 @@ color: white;
 					<td>매출액</td>
 					<td>${item.s_cate}</td>
 					<td>${item.s_lastLog}</td>
+					<!-- <td><a href ="${contextPath }/updateForm" -->
 				</tr>
 			</c:forEach>
             </c:otherwise> 

@@ -4,11 +4,24 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <c:set var="contextPath" value="${pageContext.request.contextPath}" />
 <c:set var="section" value="0" />
+
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>회원 조회하기</title>
+<c:if test='${not empty message }'>
+<script>
+window.onload=function()
+{
+  result();
+}
+
+function result(){
+	alert(});
+}
+</script>
+</c:if>
 <script>
 	function sortTable(n) {
 		var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;

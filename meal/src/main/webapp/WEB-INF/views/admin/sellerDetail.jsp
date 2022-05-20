@@ -139,6 +139,12 @@
 							구매액
 					</label>
 						<div class="tabCon">내용물3</div></li>
+							<div class="tabCon">내용물2</div></li>
+					<li id="tab3" class="btnCon"><input type="radio"
+						name="tabmenu" id="tabmenu4"> <label for="tabmenu4">price<br>총
+							구매액
+					</label>
+						<div class="tabCon">내용물3</div></li>
 				</ul>
 			</div>
 		</div>
