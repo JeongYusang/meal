@@ -43,11 +43,6 @@ public class GoodsServiceImpl implements GoodsService {
 	}
 
 	@Override
-	public String goodsoverlapped(String g_name) throws Exception {
-		String result = goodsDAO.selectOverlappedG_NAME(g_name);
-		return result;
-	}
-	@Override
 	public List<Img_gVO> selectImgList(int g_id)throws Exception{
 		List<Img_gVO> list = (List<Img_gVO>)goodsDAO.selectImgList(g_id);
 		return list;
