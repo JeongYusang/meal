@@ -87,7 +87,6 @@ public class Board1ControllerImpl extends BaseController implements Board1Contro
 		AdminVO adminVO = (AdminVO) session.getAttribute("adminInfo");
 		try {
 			if (memberVO.getU_id().equals(board1VO.getU_id())) {
-
 				mav.addObject("board1VO", board1VO);
 				mav.setViewName(viewName);
 			} else if (sellerVO.getS_id().equals(board1VO.getS_id())) {

@@ -109,7 +109,7 @@
 			complete : function(data, textStatus) {
 				//alert("작업을완료 했습니다");
 			}
-		}); //end ajax  	
+		});  	
 	}
 	/* 
 	 function chkPW() {

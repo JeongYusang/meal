@@ -49,9 +49,7 @@ public class OrderControllerImpl extends BaseController implements OrderControll
 				String message = "주문중 오류가 발생 하였습니다. 다시 주문해주시길 바랍니다";
 				mav.addObject(message);
 				return mav;
-			}
-			/* ㅎㅇ */
-				
+			}	
 		}
 }
 

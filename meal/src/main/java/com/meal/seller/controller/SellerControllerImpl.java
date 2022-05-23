@@ -124,7 +124,6 @@ public class SellerControllerImpl extends BaseController implements SellerContro
 					srcFile.delete();
 				}
 			}
-
 			String viewName1 = "/seller/sellerForm";
 			mav.setViewName(viewName1);
 			return mav;

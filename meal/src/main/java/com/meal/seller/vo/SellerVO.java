@@ -13,12 +13,6 @@ public class SellerVO {
 	private String s_email2;
 	private String s_BL_Num;
 	private String s_GR_Num;
-	public String getS_cate() {
-		return s_cate;
-	}
-	public void setS_cate(String s_cate) {
-		this.s_cate = s_cate;
-	}
 	private String s_HACCP_Num;
 	private String s_Waddr1;
 	private String s_Waddr2;
@@ -28,6 +22,13 @@ public class SellerVO {
 	private String s_del;
 	private String delDate;
 	private String s_cate;
+	
+	public String getS_cate() {
+		return s_cate;
+	}
+	public void setS_cate(String s_cate) {
+		this.s_cate = s_cate;
+	}
 	
 	public String getS_id() {
 		return s_id;

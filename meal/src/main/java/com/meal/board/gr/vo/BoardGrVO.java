@@ -17,7 +17,28 @@ public class BoardGrVO {
 	public String o_fileName;
 	public String compare;
 	public String secret;
+	public String g_name;
+	public int ib_gr_id;
+	public String fileName;
 	
+	public int getIb_gr_id() {
+		return ib_gr_id;
+	}
+	public void setIb_gr_id(int ib_gr_id) {
+		this.ib_gr_id = ib_gr_id;
+	}
+	public String getFileName() {
+		return fileName;
+	}
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+	public String getG_name() {
+		return g_name;
+	}
+	public void setG_name(String g_name) {
+		this.g_name = g_name;
+	}
 	public int getG_id() {
 		return g_id;
 	}

@@ -1,343 +1,142 @@
-<%@ page language="java" contentType="text/html; charset=utf-8"
-	pageEncoding="utf-8" isELIgnored="false"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8" isELIgnored="false"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-
+<%
+request.setCharacterEncoding("UTF-8");
+%>
 <c:set var="contextPath" value="${pageContext.request.contextPath}" />
-<c:if test='${not empty message  }'>
-	<script>
-		window.onload = function() {
-			result();
-		}
-
-		function result() {
-			alert(message);
-		}
-	</script>
-</c:if>
-<!DOCTYPE html >
-<html>
+<c:set var="result" value="${param.result }" />
 <head>
-
-<meta charset="utf-8">
-<title>너도 요리할 수 있어!</title>
-<script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
-<script>
-	function execDaumPostcode() {
-		new daum.Postcode(
-				{
-					oncomplete : function(data) {
-						// 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
-
-						// 도로명 주소의 노출 규칙에 따라 주소를 조합한다.
-						// 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
-						var ftrlRoadAddr = data.roadAddress; // 도로명 주소 변수
-						var extraRoadAddr = ''; // 도로명 조합형 주소 변수
-
-						// 법정동명이 있을 경우 추가한다. (법정리는 제외)
-						// 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
-						if (data.bname !== '' && /[동|로|가]$/g.test(data.bname)) {
-							extraRoadAddr += data.bname;
-						}
-						// 건물명이 있고, 공동주택일 경우 추가한다.
-						if (data.buildingName !== '' && data.apartment === 'Y') {
-							extraRoadAddr += (extraRoadAddr !== '' ? ', '
-									+ data.buildingName : data.buildingName);
-						}
-						// 도로명, 지번 조합형 주소가 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
-						if (extraRoadAddr !== '') {
-							extraRoadAddr = ' (' + extraRoadAddr + ')';
-						}
-						// 도로명, 지번 주소의 유무에 따라 해당 조합형 주소를 추가한다.
-						if (ftrlRoadAddr !== '') {
-							ftrlRoadAddr += extraRoadAddr;
-						}
-
-						// 우편번호와 주소 정보를 해당 필드에 넣는다.
-						document.getElementById('zipcode').value = data.zonecode; //5자리 새우편번호 사용
-						document.getElementById('roadAddress').value = ftrlRoadAddr;
-						document.getElementById('jibunAddress').value = data.jibunAddress;
-
-						// 사용자가 '선택 안함'을 클릭한 경우, 예상 주소라는 표시를 해준다.
-						if (data.autoRoadAddress) {
-							//예상되는 도로명 주소에 조합형 주소를 추가한다.
-							var expRoadAddr = data.autoRoadAddress
-									+ extraRoadAddr;
-							document.getElementById('guide').innerHTML = '(예상 도로명 주소 : '
-									+ expRoadAddr + ')';
-
-						} else if (data.autoJibunAddress) {
-							var expJibunAddr = data.autoJibunAddress;
-							document.getElementById('guide').innerHTML = '(예상 지번 주소 : '
-									+ expJibunAddr + ')';
-						} else {
-							document.getElementById('guide').innerHTML = '';
-						}
-
-					}
-				}).open();
-	}
-
-	function fn_overlapped() {
-		var _id = $("#_u_id").val();
-		if (_id == '') {
-			alert("ID를 입력하세요");
-			return;
-		}
-		$.ajax({
-			type : "post",
-			async : false,
-			url : "${contextPath}/member/overlapped.do",
-			dataType : "text",
-			data : {
-				id : _id
-			},
-			success : function(data, textStatus) {
-				if (data == 'false') {
-					alert("사용할 수 있는 ID입니다.");
-					$('#btnOverlapped').prop("disabled", true);
-					$('#_u_id').prop("disabled", true);
-					$('#addmember').prop("disabled", false);
-					$('#u_id').val(_id);
-				} else {
-					alert("사용할 수 없는 ID입니다.");
-				}
-			},
-			error : function(data, textStatus) {
-				alert("에러가 발생했습니다.");
-				ㅣ
-			},
-			complete : function(data, textStatus) {
-				//alert("작업을완료 했습니다");
+<meta charset="UTF-8">
+<title>글쓰기창</title>
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script type="text/javascript">
+if(document.getElementById("input_check").checked) {
+    document.getElementById("input_check_hidden").disabled = true;
+}
+function readURL(input) {
+		if (input.files && input.files[0]) {
+			var reader = new FileReader();
+			reader.onload = function(e) {
+				$('#preview').attr('src', e.target.result);
 			}
-		}); //end ajax  	
-	}
-/* 
-	function chkPW() {
-
-		var pw = $("#pwd").val();
-		var id = $("#u_id").val();
-		var checkNumber = pw.search(/[0-9]/g);
-		var checkEnglish = pw.search(/[a-z]/ig);
-
-		if (!/^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,25}$/.test(pw)) {
-			alert('숫자+영문자+특수문자 조합으로 8자리 이상 사용해야 합니다.');
-			return false;
-		} else if (checkNumber < 0 || checkEnglish < 0) {
-			alert("숫자와 영문자를 혼용하여야 합니다.");
-			return false;
-		} else if (/(\w)\1\1\1/.test(pw)) {
-			alert('같은 문자를 4번 이상 사용하실 수 없습니다.');
-			return false;
-		} else if (pw.search(id) > -1) {
-			alert("비밀번호에 아이디가 포함되었습니다.");
-			return false;
-		} else {
-
-			console.log("통과");
-
+			reader.readAsDataURL(input.files[0]);
 		}
-
-	} */
+	}
+	function backToList(obj) {
+		obj.action = "${contextPath}/board/listArticles.do";
+		obj.submit();
+	}
 </script>
+<title>새글 쓰기 창</title>
 <style>
-#container {
-	display: flex;
-	clear: both;
-	max-width: 1280px;
-	height: 3000px;
-	align-items: flex-start;
-	width: 100%;
-	height: 100%;
-	flex-direction: row-reverse;
-	justify-content: space-around;
-	font-size: x-large;
+.board-wrap {
+	width: 1000px;
+	margin-left: 50px;
 }
 
-.any {
-	border-collapse: collapse;
+.table-wrap table {
+	width: 100%;
+}
+
+.board-wrap>tr {
+	width: 100%;
+}
+
+.td2>input {
+	width: 100%;
+	padding: 0;
+	border-radius: 4px;
+}
+
+.board-b-wrap {
+	height: 40px;
+	border-bottom: 3px solid #ffc0cf;
+}
+
+.board-b-wrap>input {
+	float: right;
+	display: inline-block;
+	background-color: #ffc0cf;
+	border-radius: 5px;
+	border: 4px #cccccc;
+	color: black;
+	font-size: 8px;
+	padding: 0;
+	width: 35px;
+	height: 20px;
+	transition: all 0.5s;
+	cursor: pointer;
+	margin: 5px;
+}
+
+#in_content textarea {
 	width: 800px;
-	font-size: inherit;
-}
-
-.any h1 {
-	text-align: center;
-}
-
-.any input {
-	border-collapse: collapse;
-	font-size: smaller;
-	border-radius: 4px;
-	font-size: smaller;
-}
-
-tr.box {
-	border-bottom: 1px solid rgba(255, 192, 207, 1);
-}
-
-.box td {
-	padding-left: 5%;
-	height: 50px;
-}
-
-.box th {
-	background-color: rgba(255, 192, 207, 0.7);
-	border: 1px solid rgba(255, 192, 207, 1);
-	border-left: none;
-	text-align: left;
-}
-
-.box11 th {
-	background-color: #d7d7d7;
-	border: 1px solid #939393;
-	border-left: none;
-	border-right: none;
-	text-align: left;
-}
-
-.box13 td {
-	text-align: center;
-	border: none;
-	height: 50px;
-}
-
-.any td#zipcode {
-	border-bottom: none;
-	padding-top: 1%;
-	padding-left: 5%;
-}
-
-.any td#road {
-	border: none;
-	padding-left: 5%;
-	padding-bottom: 1%;
-}
-
-.any td#detailzip {
-	padding-left: 5%;
-	padding-bottom: 1%;
-}
-
-#frmMem h1 {
-	text-align: center;
-	color: #939393;
-	font-weight: bold;
-}
-
-#frmMem input#btnOverlapped {
-	background-color: rgba(255, 192, 207, 0.7);
-	border: 1px solid rgba(255, 192, 207, 1);
-	border-radius: 3px;
-	font-size: 15px;
-	font-weight: bold;
-	color: black;
-	width: 100%;
-	height: 50px;
-}
-
-#frmMem input#hp2 {
-	background-color: rgba(255, 192, 207, 0.7);
-	border: 1px solid rgba(255, 192, 207, 1);
-	border-radius: 3px;
-	font-size: 15px;
-	font-weight: bold;
-	color: black;
-	width: 100%;
-	height: 50px;
-}
-
-#frmMem input#hpA1 {
-	background-color: rgba(255, 192, 207, 0.7);
-	border: 1px solid rgba(255, 192, 207, 1);
-	border-radius: 3px;
-	font-size: 15px;
-	font-weight: bold;
-	color: black;
-	width: 100%;
-	height: 50px;
-}
-
-#frmMem select#email3 {
-	width: 175px;
-	border-radius: 4px;
-	height: 26px;
-}
-
-#frmMem input#zipcode1 {
-	background-color: rgba(255, 192, 207, 0.7);
-	border: 1px solid rgba(255, 192, 207, 1);
-	border-radius: 3px;
-	font-size: 15px;
-	font-weight: bold;
-	color: black;
-	width: 100%;
-	height: 50px;
-}
-
-#frmMem select#email3 {
-	width: 170px;
-	border-radius: 4px;
-	font-size: smaller;
-}
-
-#frmMem input#addmember {
-	background-color: rgba(255, 192, 207, 0.7);
-	border: 1px solid rgba(255, 192, 207, 1);
-	border-radius: 3px;
-	height: 60px;
-	width: 250px;
+	height: 400px;
 	font-size: 20px;
-	font-weight: bold;
-	color: #666666;
-	display: block;
-	margin-top: 15px;
-	margin-bottom: 15px;
-	font-size: x-large;
 }
 
-#frmMem input#back {
-	background-color: rgba(255, 192, 207, 0.7);
-	border: 1px solid rgba(255, 192, 207, 1);
-	border-radius: 3px;
-	height: 60px;
-	width: 250px;
-	font-size: 20px;
-	font-weight: bold;
-	color: #666666;
-	display: block;
-	margin-bottom: 15px;
-	font-size: x-large;
+#in_title input {
+	width: 100%;
+	height: 30px;
+	width: 800px;
+	border: none;
+	resize: none;
+	border: 1px solid;
 }
 
-#frmMem td.righttd {
-	padding-left: 0;
+#board_write {
+	margin-left: 50px;
+	width: 810px;
 }
 
-#frmMem td#zipcode22 {
-	padding-left: 0;
+.bt button {
+	float: right;
 }
 
-#frmMem a#agree3 {
-	font-size: medium;
+#text h4 {
+	margin: 0;
 }
 
-#frmMem a#agree2 {
-	font-size: medium;
+#goods-info {
+	margin-bottom: 30px;
 }
 
-#frmMem input#u_sex {
-	margin-left: 60px;
+#goods-info .imagegoods {
+	float: left;
+	height: 70px;
+	width: 70px;
+	height: 70px;
+	margin-right: 10px;
 }
 
-#frmMem input#roadAddress {
-	width: 400px;
+#goodstext h3 {
+	margin: 0px;
 }
 
-#frmMem input.detail {
-	width: 400px;
+#goodstext p {
+	margin: 0px;
 }
 
-/*약관동의1  */
-.agree-context {
+.board-r-wrap>input {
+	float: right;
+	display: inline-block;
+	background-color: #ffc0cf;
+	border-radius: 5px;
+	border: 4px #cccccc;
+	color: black;
+	font-size: 8px;
+	padding: 0;
+	width: 35px;
+	height: 20px;
+	transition: all 0.5s;
+	cursor: pointer;
+	margin: 5px;
+}
+/*  */
+.check-context {
+	z-index: 50;
 	position: fixed;
 	width: 100%;
 	height: 100%;
@@ -348,7 +147,7 @@ tr.box {
 	display: none;
 }
 
-.agree-context .agree-inner {
+.check-context .check-inner {
 	width: 80%;
 	height: 80%;
 	background: #ffc0cf;
@@ -362,7 +161,8 @@ tr.box {
 	font-size: 20px;
 }
 
-.agree-context .agree-inner .agree-close {
+.check-context .check-inner>btn {
+	z-index: 300px;
 	width: 30px;
 	height: 27px;
 	border: 0;
@@ -373,122 +173,320 @@ tr.box {
 	/* 백그라운드는 이너와 맞춰줄것 */
 }
 
-.agree-context .agree-inner .agree-close img {
-	width: 100%;
-	height: 100%;
+.check-context .check-inner {
+	width: 40%;
+	height: 40%;
+	top: 150px;
 	position: absolute;
 }
 
-.agree-context1 {
-	position: fixed;
-	width: 100%;
-	height: 100%;
-	top: 0;
-	left: 0;
-	background: rgba(0, 0, 0, 0.7);
-	z-index: 500;
-	display: none;
+.checked {
+	color: #ffc0cb;
+	font-size: 60px;
 }
 
-.agree-context1 .agree-inner1 {
-	width: 80%;
-	height: 80%;
-	background: #ffc0cf;
-	top: 30px;
-	left: 50%;
-	transform: translateX(-50%);
-	position: absolute;
-	text-align: center;
-	box-sizing: border-box;
-	padding: 20px;
+#grHead {
+	margin: 10px;
+}
+
+#grHead #title {
 	font-size: 20px;
+	float: left;
 }
 
-.agree-context1 .agree-inner1 .agree-close1 {
-	width: 30px;
-	height: 27px;
-	border: 0;
-	position: absolute;
-	right: 35%;
-	top: 10px;
+#grHead #date {
+	float: right;
+	margin: 5px;
+}
+
+#grHead #id {
+	margin: 5px;
+	float: right
+}
+
+#g_image {
+	margin: 0 auto;
+	width: 300px;
+	height: 300px;
+}
+
+.board_main {
+	border: 1px solid black;
+}
+
+#content {
+	margin-left: 30px;
+	font-size: 16px;
+	color: black;
+}
+
+.board-wrap {
+	width: 800px;
+}
+
+.table-wrap table {
+	width: 100%;
+}
+
+.board-wrap>tr {
+	width: 100%;
+}
+
+.td2>input {
+	width: 100%;
+	padding: 0;
+	border-radius: 4px;
+}
+
+.board-b-wrap {
+	height: 30px;
+}
+
+.board-b-wrap>input {
+	float: right;
+	display: inline-block;
+	background-color: #ffc0cf;
+	border-radius: 5px;
+	border: 4px #cccccc;
+	color: black;
+	font-size: 15px;
+	padding: 0;
+	width: 80px;
+	height: 40px;
+	transition: all 0.5s;
+	cursor: pointer;
+	margin: 5px;
+}
+
+.table-wrap th.td1 {
+	border-radius: 4px;
+	width: 150px;
+	align: center;
 	background: #ffc0cf;
-	/* 백그라운드는 이너와 맞춰줄것 */
 }
 
-.agree-context1 .agree-inner1 .agree-close1 img {
+.table-wrap td.td2 {
+	border-radius: 4px;
+	border: 1px solid black;
+}
+
+.table-wrap textarea {
+	width: 100%;
+	border-radius: 4px;
+}
+
+.filecss {
+	align: center;
+}
+
+#preview {
 	width: 100%;
 	height: 100%;
-	position: absolute;
+	border: 0;
+}
+
+.board-title>h1 {
+	border-bottom: 3px solid #ffc0cf;
+}
+
+.table-wrap td.td2>.B_Uid {
+	padding: 0;
+	border-radius: 4px;
+	display: inline-block;
+	width: 350px;
+}
+
+.table-wrap td.td2>.B_Uid1 {
+	padding: 0;
+	border-radius: 4px;
+	display: inline-block;
+	float: right;
+}
+
+.table-wrap td.td3 {
+	border-radius: 4px;
+	border: 1px solid black;
+}
+
+.B.Uid1, .B.Uid2, .secret-wrap {
+	display: inline-block;
 }
 </style>
 </head>
-	
-	<section>
-		<div id="container">
-			<form id="frm" name="frmM"
-				action="${contextPath}/admin/addadmin.do" method="post">
-				<table class="any">
-					<h1 style="text-align: center">일반고객 회원가입</h1>
-					<tr class="box">
-						<th>아이디*</th>
-						<td><input type="text" name="_u_id" id="_u_id"
-							placeholder="아이디" required="required" /> <input type="hidden"
-							name="u_id" id="u_id" />
-						<td colspan="2" class="righttd"><input type="button"
-							id="btnOverlapped" value="중복확인" onClick="fn_overlapped()" /></td>
-					</tr>
-		<tr class="box">
-						<th>비밀번호*</th>
-						<td colspan="3"><input name="u_pw" id="pwd" type="password"
-							placeholder="비밀번호" required="required"  /></td>
-					</tr>
-					</tr>
-					<tr class="box">
-						<th>이름*</th>
-						<td colspan="3"><input name="u_name" id="name" type="text"
-							required="required" /></td>
-					</tr>
-					<tr class="box">
-						<th>생년월일*</th>
-						<td colspan="3"><input name="u_birth" id="YMD" type="date"
-							value="submit" required="required" /></td>
-					</tr>
-					<tr class="box">
-						<th>휴대폰*</th>
-						<td><input type="tel" name="u_hp1" id="hp1"
-							required="required" /></td>
-						<td colspan="2" class="righttd"><input type="button" id="hp2"
-							value="인증 전송" /></td>
-					</tr>
-					<tr class="box">
-						<th>email*</th>
-						<td><input type="text" name="u_email1" id="email"
-							required="required" /></td>
-						<td class="righttd"><select name="u_email2" id="email3"
-							onChange="" title="직접입력">
-								<option value="naver.com">선택하세요</option>
-								<option value="naver.com">@naver.com</option>
-								<option value="yahoo.co.kr">@yahoo.co.kr</option>
-								<option value="hotmail.com">@hotmail.com</option>
-								<option value="paran.com">@paran.com</option>
-								<option value="nate.com">@nate.com</option>
-								<option value="gmail.com">@gmail.com</option>
-						</select></td>
-					</tr>
-					<!-- 	이부분이 유효성검사가능
-		<tr class="box13">
-				<td colspan="4"><input type="submit" class="addmember" id="addmember" value="회원 가입"></td> colspan=3
-			</tr> -->
-				</table>
-				<center>
-					<input type="submit" value="회원가입" id="addmember" disabled="true">
-					<input type="button" value="뒤로가기" id="back">
-				</center>
-			</form>
-		</div>
-	</section>
-</body>
-<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
-<script src="${contextPath }/resources/js/memberForm.js">
+
+<body>
+	<c:if test='${not empty message }'>
+		<script>
+window.onload=function()
+{
+  result();
+}
+
+function result(){
+	alert('${message}');
+}
 </script>
+	</c:if>
+	<div class='board-wrap'>
+		<div class="board-b-wrap">
+
+			<h1>리뷰 상세</h1>
+		</div>
+		<div id="goods-info">
+			<br> <img class="imagegoods"
+				src="${contextPath}/resources/image/new1.png" />
+			<div id="goodstext">
+				<h3>${boardGrVO.s_id}</h3>
+				<h3>${boardGrVO.g_name}</h3>
+				<c:choose>
+					<c:when test="${boardGrVO.star == 5}">
+						<span class="fa fa-star checked"></span>
+						<span class="fa fa-star checked"></span>
+						<span class="fa fa-star checked"></span>
+						<span class="fa fa-star checked"></span>
+						<span class="fa fa-star checked"></span>
+					</c:when>
+					<c:when test="${boardGrVO.star == 4}">
+						<span class="fa fa-star checked"></span>
+						<span class="fa fa-star checked"></span>
+						<span class="fa fa-star checked"></span>
+						<span class="fa fa-star checked"></span>
+						<span class="fa fa-star"></span>
+					</c:when>
+					<c:when test="${boardGrVO.star == 3}">
+						<span class="fa fa-star checked"></span>
+						<span class="fa fa-star checked"></span>
+						<span class="fa fa-star checked"></span>
+						<span class="fa fa-star"></span>
+						<span class="fa fa-star"></span>
+					</c:when>
+					<c:when test="${boardGrVO.star == 2}">
+						<span class="fa fa-star checked"></span>
+						<span class="fa fa-star checked"></span>
+						<span class="fa fa-star"></span>
+						<span class="fa fa-star"></span>
+						<span class="fa fa-star"></span>
+					</c:when>
+					<c:otherwise>
+						<span class="fa fa-star checked"></span>
+						<span class="fa fa-star"></span>
+						<span class="fa fa-star"></span>
+						<span class="fa fa-star"></span>
+						<span class="fa fa-star"></span>
+					</c:otherwise>
+				</c:choose>
+			</div>
+		</div>
+		<br>
+		<div class="board_main">
+			<div id="grHead">
+				<div id="title">${boardGrVO.title}</div>
+				<div id="date">${boardGrVO.creDate}</div>
+				<div id="id">작성자:${boardGrVO.u_id}</div>
+			</div>
+			<br>
+			<div id="content">
+				<c:forEach var="imageList" items="${imageList}">
+					<img id="g_image" width="300px" height="300px"
+						src="${contextPath}/thumbnails.do?b_gr_id=${imageList.b_gr_id}">
+				</c:forEach>
+				<br> ${boardGrVO.content}
+			</div>
+			<br>
+		</div>
+
+		<c:choose>
+			<c:when test="${not empty ReviewList }">
+
+				<c:forEach var="review" items="${ReviewList}">
+					<div class="board-r-wrap">
+
+						<h1>답글입니다</h1>
+						<input type=button value="수정"
+							onClick="fn_update('${contextPath}/boardGr/boardGrUpdateform.do',${review.b_gr_id })" />
+						<input type=button value="삭제"
+							onClick="fn_remove_board('${contextPath}/boardGr/boardGrDelete.do',${review.b_gr_id })" />
+						<input type=button value="목록"
+							onClick="fn_return('${contextPath}/boardGr/selectBoardGrList.do')" />
+						<input type=button value="답글"
+							onClick="fn_review('${contextPath}/boardGr/boardGrReviewform.do', ${boardGrVO.b_gr_id})" />
+					</div>
+
+					<div class='table-wrap1'>
+						<table>
+
+
+							<tr>
+								<th class="td1">제목</th>
+								<td class="td2"><input type=text value="" name="title"
+									id="i_title" disabled /></td>
+							</tr>
+							<tr>
+								<th class="td1">내용</th>
+								<td class="td2"><textarea rows="20" cols="70"
+										name="content" id="i_content" disabled></textarea></td>
+							</tr>
+						</table>
+					</div>
+				</c:forEach>
+			</c:when>
+		</c:choose>
+	</div>
+	<div class='board-wrap'>
+		<div class='board-title'>
+			<h1>답변쓰기</h1>
+		</div>
+		<form name="frmArticle" method="post"
+			action="${contextPath}/boardGr/boardGrinsert.do"
+			enctype="multipart/form-data">
+			<div class='table-wrap'>
+				<c:forEach var="review" items="${ReviewList}">
+					<table>
+
+						<tr>
+							<th class="td1">작성자 아이디</th>
+							<td class="td3"><input class="B_Uid" type=hidden
+								value="${boardGrVO.g_id}" name="g_id" /> <input class="B_Uid"
+								type=text value="${boardGrVO.s_id }" name="_s_id" disabled /> <input
+								type="hidden" value="${boardGrVO.s_id }" name="s_id"> <input
+								type="hidden" value="seller" name="reg_id">
+								<div class="secret-wrap">
+									<input class="B_Uid1" type="checkbox" name="secret" value="Y"
+										onclick="#">비밀글입니다.
+								</div></td>
+						</tr>
+						<tr>
+							<th class="td1">제목</th>
+							<td class="td2"><input type=text value="타이틀필드" name="title"
+								id="i_title" /><input type="hidden" value="${review.parentNo}"
+								name="parentNo"></td>
+						</tr>
+						<tr>
+							<th class="td1">내용</th>
+							<td class="td2"><textarea rows="20" cols="70" name="content"
+									id="i_content">${review.content}</textarea></td>
+						</tr>
+						<tr height="200px">
+							<th class="td1">이미지파일 첨부 <input class="filecss" type="file"
+								name="imageFileName" onchange="readURL(this);" /></th>
+							<td class='td2'><input type="image" id="preview" src="#"
+								alt="이미지 출력창 입니다." /> <c:forEach var="imageList"
+									items="${imageList}">
+									<img id="g_image"
+										src="${contextPath}/thumbnails.do?b_gr_id=${review.b_gr_id}&=fileName=${review.fileName}">
+								</c:forEach></td>
+						</tr>
+					</table>
+				</c:forEach>;,
+			</div>
+			<div class="board-b-wrap">
+				<input type='submit' value="글쓰기" /> <input type=button value="목록"
+					onClick="backToList(this.form)" />
+
+			</div>
+		</form>
+	</div>
+</body>
+</html>
+</body>
 </html>

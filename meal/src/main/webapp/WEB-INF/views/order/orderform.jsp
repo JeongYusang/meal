@@ -20,6 +20,7 @@
 <script type="text/javascript"
 	src="https://cdn.iamport.kr/js/iamport.payment-1.1.5.js"></script>
 <script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
+﻿<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <script>
     function execDaumPostcode() {
         new daum.Postcode({
@@ -74,8 +75,48 @@
   {
     init();
   }
+  
+  $(".order_point_input").on("propertychange change keyup paste input", function(){
 
-  function init(){
+		const maxPoint = parseInt('${memberInfo.u_mile}');	
+		
+		var inputValue = parseInt($(this).val());	
+		
+		if(inputValue < 0){
+			$(this).val(0);
+		} else if(inputValue > maxPoint){
+			$(this).val(maxPoint);
+		}	
+		
+	});
+  
+  $(".order_point_input_btn").on("click", function(){
+
+		const maxPoint = parseInt('${memberInfo.u_mile}');	
+		
+		var state = $(this).data("state");	
+		
+		if(state == 'N'){
+			console.log("n동작");
+			/* 모두사용 */
+			//값 변경
+			$(".order_point_input").val(maxPoint);
+			//글 변경
+			$(".order_point_input_btn_Y").css("display", "inline-block");
+			$(".order_point_input_btn_N").css("display", "none");
+		} else if(state == 'Y'){
+			console.log("y동작");
+			/* 취소 */
+			//값 변경
+			$(".order_point_input").val(0);
+			//글 변경
+			$(".order_point_input_btn_Y").css("display", "none");
+			$(".order_point_input_btn_N").css("display", "inline-block");		
+		}		
+		
+	});
+
+  /* function init(){
   	var form_order=document.form_order;
   	var h_tel1=form_order.h_tel1;
   	var h_hp1=form_order.h_hp1;
@@ -85,7 +126,7 @@
   	var select_hp1=form_order.hp1;
   	select_tel1.value=tel1;
   	select_hp1.value=hp1;
-  }
+  } */
   
 /*   $(function () {
 	  $("#o_useMile").keydown(function () {
@@ -247,21 +288,32 @@
 }
 
 input.underline {
-	　border-left-width:0;
-　border-right-width:0;
-　border-top-width:0;
-　border-bottom-width:1;
+	　border-left-width: 0;
+	　border-right-width: 0;
+	　border-top-width: 0;
+	　border-bottom-width: 1;
 }
-//숫자 인풋박스 화살표 없애기
-input[type="number"]::-webkit-outer-spin-button,
-input[type="number"]::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
+.order_point_input_btn{
+	vertical-align: middle;
+    display: inline-block;
+    border: 1px solid #aaa;
+    width: 60px;
+    text-align: center;
+    height: 20px;
+    line-height: 20px;
+    color: #555;
+    cursor: pointer;
+    font-size: 12px;
 }
- input::-webkit-outer-spin-button,
-    input::-webkit-inner-spin-button {
-        -webkit-appearance: none;
-    }
+
+//
+숫자 인풋박스 화살표 없애기
+input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-inner-spin-button
+	{
+	-webkit-appearance: none;
+	margin: 0;
+}
+
 </style>
 <c:if test='${not empty message}'>
 	<script>
@@ -375,10 +427,9 @@ input[type="number"]::-webkit-inner-spin-button {
 									href="javascript:execDaumPostcode()">우편번호검색</a> <br> 도로명
 									주소:<br> <input type="text" id="roadAddress"
 									name="roadAddress" size="50" value="${orderer.roadAddress }" />
-									
-									<br>
-								<br> 나머지 주소: <input type="text" id="namujiAddress"
-									name="namujiAddress" size="50" value="" /> 
+
+									<br> <br> 나머지 주소: <input type="text"
+									id="namujiAddress" name="namujiAddress" size="50" value="" />
 									<!-- <input
 									type="hidden" id="h_zipcode" name="h_zipcode" value="" /> <input
 									type="hidden" id="h_roadAddress" name="h_roadAddress" value="" />
@@ -392,10 +443,11 @@ input[type="number"]::-webkit-inner-spin-button {
 								type="text" size="50" placeholder="택배 기사님께 전달할 메시지를 남겨주세요." /></td>
 						</tr>
 						<tr>
-						<input type="radio" id="deliver_method" name="deliver_method"/>
-					 새벽배송
-					 <input type="radio" id="deliver_method" name="deliver_method"/>
-					일반택배
+							<input type="radio" id="deliver_method" name="deliver_method" value="새벽배송" />
+							새벽배송
+							<input type="radio" id="deliver_method" name="deliver_method" value="일반택배"/>
+							일반택배
+							
 						</tr>
 						</tboby>
 				</table>
@@ -431,12 +483,18 @@ input[type="number"]::-webkit-inner-spin-button {
 				<table>
 					<tbody>
 						<tr class="line">
-							<td><h3>보유 마일리지 ${memberInfo.u_mile}원</h3></td>
+							<td>
+								<%-- <h3>보유 마일리지 ${memberInfo.u_mile}원</h3>${memberInfo.point} |  --%>
+								<input class="order_point_input" value="0">원 
+								<a class="order_point_input_btn order_point_input_btn_N" data-state="N">모두사용</a> 
+								<a class="order_point_input_btn order_point_input_btn_Y" data-state="Y" style="display: none;">사용취소</a>
+							</td>
 						</tr>
 						<tr>
 							<td>마일리지 사용</td>
-							<td><input class="underline" id="o_useMile" name="o_useMile" type="number"
-								size="10" min = "0" max="${memberInfo.u_mile}"oninput="MaxInput()"/>원&nbsp;&nbsp;
+							<td><input class="underline" id="o_useMile" name="o_useMile"
+								type="number" size="10" min="0" max="${memberInfo.u_mile}"
+								oninput="MaxInput()" />원&nbsp;&nbsp;
 								<button>모두 사용하기</button></td>
 						</tr>
 					</tbody>
@@ -471,8 +529,7 @@ input[type="number"]::-webkit-inner-spin-button {
 						</td>
 						<td>
 							<p id="p_totalSalesPrice">${total_mileage_use}원</p> <input
-							id="total_mileage_use" type="hidden"
-							value="${total_mileage_use}" />
+							id="total_mileage_use" type="hidden" value="${total_mileage_use}" />
 						</td>
 						<td>
 							<p id="p_final_totalPrice">

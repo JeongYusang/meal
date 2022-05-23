@@ -67,4 +67,5 @@ public class MemberServiceImpl implements MemberService {
 		 String pw = memberDAO.checkpw(id);
 		 return pw;
 	}
+
 }

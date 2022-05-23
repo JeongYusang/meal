@@ -289,5 +289,44 @@ public class BaseController {
 			e.getStackTrace();
 		}
 	}
+	protected Map<String, Object> paging(Map<String, Object> map) {
+
+		String pageNum = (String) map.get("pageNum");
+		String section = (String) map.get("section");
+
+		HashMap<String, Object> pagingMap = new HashMap<String, Object>();
+		Integer page = 1;
+		Integer index = 0;
+		if (pageNum != null) {
+
+			if (section != null) {
+				Integer page1 = Integer.parseInt((String) pageNum);
+				Integer index1 = Integer.parseInt((String) section);
+
+				System.out.println("인덱스" + index);
+				Integer start = (page1 - 1) * 10 + index1 * 100;
+				Integer end = 10;
+				// Integer end = (page1) * 10 + index1 * 100; 출력개수를 정함.
+				pagingMap.put("start", start);
+				pagingMap.put("end", end);
+				System.out.println(start);
+				System.out.println(end);
+				System.out.println(pagingMap);
+			} else {
+				Integer page1 = Integer.parseInt((String) pageNum);
+
+				Integer start = (page1 - 1) * 10 + index * 100;
+				Integer end = (page1) * 10 + index * 100;
+				pagingMap.put("start", start);
+				pagingMap.put("end", end);
+			}
+		} else {
+			Integer start = (page - 1) * 10 + index * 100;
+			Integer end = (page) * 10 + index * 100;
+			pagingMap.put("start", start);
+			pagingMap.put("end", end);
+		}
+		return pagingMap;
+	}
 
 }

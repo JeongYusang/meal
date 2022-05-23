@@ -24,8 +24,6 @@ public class MemberVO {
 	private String u_delDate;
 	private String u_lastlog;
 	
-	
-	
 	public String getU_lastlog() {
 		return u_lastlog;
 	}

@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8" isELIgnored="false"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
 <c:set var="contextPath" value="${pageContext.request.contextPath}" />
 <c:set var="result" value="${param.result }" />
 <c:set var="section" value="0" />
@@ -81,7 +82,6 @@
 
 <style>
 #stable-striped {
-	width: 100%;
 	margin: 0 auto; /* 가로로 중앙에 배치 */
 	text-align: center;
 	background-color: white;
@@ -156,7 +156,6 @@ tr.border-bottom td {
 #page {
 	font-size: 24px;
 	margin: 10px;
-
 }
 </style>
 <link rel="stylesheet"
@@ -173,137 +172,15 @@ tr.border-bottom td {
 	<div class="table-container">
 		<table id="stable-striped">
 			<thead>
-				<tr id="top-table">
-					<th onclick="sortTable(0)" width="200px">별점</th>
-					<th onclick="sortTable(1)" width="200px">작성자</th>
-					<th onclick="sortTable(2)" width="500px">제목</th>
-					<th onclick="sortTable(3)" width="200px">날짜</th>
+				<tr class="stable-striped">
+					<th onclick="sortTable(0)" width="50px">번호</th>
+					<th onclick="sortTable(1)" width="150px">별점</th>
+					<th onclick="sortTable(2)" width="300px">제목</th>
+					<th onclick="sortTable(3)" width="100px">작성자</th>
+					<th onclick="sortTable(4)" width="150px">날짜</th>
+					<th onclick="sortTable(4)" width="150px">답변여부</th>
 				</tr>
 			</thead>
-			<%-- 			<c:choose>
-				<c:when test="${empty boardGr}">
-					<tr>
-						<td colspan=5 class="fixed"><strong>작성된 글이 없습니다.</strong></td>
-					</tr>
-				</c:when>
-				<c:otherwise>
-					<c:forEach var="item" items="${boardGr}">
-						<label for="border-bottom"></label>
-						<tr class="border-bottom">
-							<c:choose>
-								<c:when test="${not empty item.u_id and not empty item.secret }">
-									<td><c:choose>
-											<c:when test="${item.star == 5}">
-												<span class="fa fa-star checked"></span>
-												<span class="fa fa-star checked"></span>
-												<span class="fa fa-star checked"></span>
-												<span class="fa fa-star checked"></span>
-												<span class="fa fa-star checked"></span>
-											</c:when>
-											<c:when test="${item.star == 4}">
-												<span class="fa fa-star checked"></span>
-												<span class="fa fa-star checked"></span>
-												<span class="fa fa-star checked"></span>
-												<span class="fa fa-star checked"></span>
-												<span class="fa fa-star"></span>
-											</c:when>
-											<c:when test="${item.star == 3}">
-												<span class="fa fa-star checked"></span>
-												<span class="fa fa-star checked"></span>
-												<span class="fa fa-star checked"></span>
-												<span class="fa fa-star"></span>
-												<span class="fa fa-star"></span>
-											</c:when>
-											<c:when test="${item.star == 2}">
-												<span class="fa fa-star checked"></span>
-												<span class="fa fa-star checked"></span>
-												<span class="fa fa-star"></span>
-												<span class="fa fa-star"></span>
-												<span class="fa fa-star"></span>
-											</c:when>
-											<c:otherwise>
-												<span class="fa fa-star checked"></span>
-												<span class="fa fa-star"></span>
-												<span class="fa fa-star"></span>
-												<span class="fa fa-star"></span>
-												<span class="fa fa-star"></span>
-											</c:otherwise>
-										</c:choose></td>
-									<td>${item.u_id}</td>
-									<td><a
-										href="${contextPath}/board_gr/b_grDetail.do?b_gr_id=${item.b_gr_id}">${item.title}</a></td>
-									<td>${item.creDate}</td>
-								</c:when>
-								<c:when test="${not empty item.u_id and not empty item.secret }">
-									<td><c:choose>
-											<c:when test="${item.star == 5}">
-												<span class="fa fa-star checked"></span>
-												<span class="fa fa-star checked"></span>
-												<span class="fa fa-star checked"></span>
-												<span class="fa fa-star checked"></span>
-												<span class="fa fa-star checked"></span>
-											</c:when>
-											<c:when test="${item.star == 4}">
-												<span class="fa fa-star checked"></span>
-												<span class="fa fa-star checked"></span>
-												<span class="fa fa-star checked"></span>
-												<span class="fa fa-star checked"></span>
-												<span class="fa fa-star"></span>
-											</c:when>
-											<c:when test="${item.star == 3}">
-												<span class="fa fa-star checked"></span>
-												<span class="fa fa-star checked"></span>
-												<span class="fa fa-star checked"></span>
-												<span class="fa fa-star"></span>
-												<span class="fa fa-star"></span>
-											</c:when>
-											<c:when test="${item.star == 2}">
-												<span class="fa fa-star checked"></span>
-												<span class="fa fa-star checked"></span>
-												<span class="fa fa-star"></span>
-												<span class="fa fa-star"></span>
-												<span class="fa fa-star"></span>
-											</c:when>
-											<c:otherwise>
-												<span class="fa fa-star checked"></span>
-												<span class="fa fa-star"></span>
-												<span class="fa fa-star"></span>
-												<span class="fa fa-star"></span>
-												<span class="fa fa-star"></span>
-											</c:otherwise>
-										</c:choose></td>
-									<td>****</td>
-									<td>비밀글입니다</td>
-									<td>${item.creDate}</td>
-								</c:when>
-							</c:choose>
-						</tr>
-						</c:forEach>
-						</c:otherwise>
-						</c:choose>
-
-
-			<tr>
-				<td colspan=8 class="fixed"><c:forEach var="page" begin="1"
-						end="9" step="1">
-						<c:if test="${section >0 && page==1 }">
-							<a
-								href="${contextPath}/board_gr/selectBoardGr_gr.do?section=${section}-1&pageNum=${(section-1)*10+1 }">preview</a>
-						</c:if>
-						<a
-							href="${contextPath}/board_gr/selectBoard_grList.do?section=${section}&pageNum=${page}">${(section)*10 +page}
-						</a>
-						<c:if test="${page ==10 }">
-							<a
-								href="${contextPath}/board_gr/selectBoard_grList.do?section=${section}+1&pageNum=${section*10}+1">next</a>
-						</c:if>
-					</c:forEach></td>
-			</tr>
-
-			</tbody>
-		</table> --%>
-
-
 			<c:choose>
 				<c:when test="${empty boardGr}">
 					<tr>
@@ -313,9 +190,10 @@ tr.border-bottom td {
 				<c:otherwise>
 					<c:forEach var="item" items="${boardGr}">
 						<label for="border-bottom"></label>
-						<tr class="border-bottom">
+						<tr class="item">
 							<c:choose>
 								<c:when test="${not empty item.u_id and empty item.secret }">
+									<td>${item.b_gr_id }</td>
 									<td><c:choose>
 											<c:when test="${item.star == 5}">
 												<span class="fa fa-star checked"></span>
@@ -353,12 +231,14 @@ tr.border-bottom td {
 												<span class="fa fa-star"></span>
 											</c:otherwise>
 										</c:choose></td>
-									<td>${item.u_id}</td>
 									<td><a
-										href="${contextPath}/board_gr/b_grDetail.do?b_gr_id=${item.b_gr_id}">${item.title}</a></td>
+										href="${contextPath}/boardGr/gr_detail.do?b_gr_id=${item.b_gr_id}">${item.title}</a></td>
+									<td>${item.u_id}</td>
 									<td>${item.creDate}</td>
+									<td>${item.compare}</td>
 								</c:when>
 								<c:when test="${not empty item.u_id and not empty item.secret }">
+									<td>${item.b_gr_id }</td>
 									<td><c:choose>
 											<c:when test="${item.star == 5}">
 												<span class="fa fa-star checked"></span>
@@ -396,45 +276,45 @@ tr.border-bottom td {
 												<span class="fa fa-star"></span>
 											</c:otherwise>
 										</c:choose></td>
-									<td>****</td>
 									<td>비밀글입니다</td>
+									<td>****</td>
 									<td>${item.creDate}</td>
+									<td>${item.compare}</td>
 								</c:when>
 							</c:choose>
 						</tr>
-
 					</c:forEach>
 				</c:otherwise>
 			</c:choose>
 
+
+
 			</tbody>
 		</table>
 		<center>
-		<div id="page">
-			<c:forEach var="page" begin="1" end="9" step="1">
-				<c:if test="${section >0 && page==1 }">
+			<div id="page">
+
+				<c:forEach var="page" begin="1" end="9" step="1">
+					<c:if test="${section >0 && page==1 }">
+						<a
+							href="${contextPath}/boardGr/selectBoardGrList.do?section=${section}-1&pageNum=${(section-1)*10+1 }">preview</a>
+					</c:if>
 					<a
-						href="${contextPath}/boardGr/selectBoardGrList.do?section=${section}-1&pageNum=${(section-1)*10+1 }">preview</a>
-				</c:if>
-				<a
-					href="${contextPath}/boardGr/selectBoardGrList.do?section=${section}&pageNum=${page}">${(section)*10 +page}
-				</a>
-				<c:if test="${page ==10 }">
-					<a
-						href="${contextPath}/boardGr/selectBoardGrList.do?section=${section}+1&pageNum=${section*10}+1">next</a>
-				</c:if>
-			</c:forEach>
-		</div>
+						href="${contextPath}/boardGr/selectBoardGrList.do?section=${section}&pageNum=${page}">${(section)*10 +page}
+					</a>
+					<c:if test="${page ==10 }">
+						<a
+							href="${contextPath}/boardGr/selectBoardGrList.do?section=${section}+1&pageNum=${section*10}+1">next</a>
+					</c:if>
+				</c:forEach>
 		</center>
-
-
-
+		<hr>
+		<br>
+		<div id="write">
+			<a href="${contextPath }/boardGr/boardGrWrite.do">글쓰기</a>
+		</div>
 	</div>
 
-	<hr>
-	<br>
-	<div id="write">
-		<a href="${contextPath }/boardGr/boardGrWrite.do">글쓰기</a>
-	</div>
+
 </body>
 </html>
