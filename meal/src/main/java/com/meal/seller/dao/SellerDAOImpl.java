@@ -73,5 +73,9 @@ public class SellerDAOImpl implements SellerDAO {
 			sqlSession.update("mapper.seller.updateSellerImg", map);
 			
 		}
+		@Override
+		public void lastLog(String s_id) throws DataAccessException{
+			sqlSession.update("mapper.seller.lastLog",s_id);
+		}
 
 }

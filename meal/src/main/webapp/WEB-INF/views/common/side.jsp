@@ -142,7 +142,8 @@
 						<tr>
 							<th><h1>비밀번호</h1></th>
 							<td><input type="password" name="pw1" class="pw"
-								style="height: 22px; margin-top: 10px; margin-left: 10px;" /></td>
+								style="height: 22px; margin-top: 10px; margin-left: 10px;" />
+								</td>
 						</tr>
 					</table>
 					<center>
@@ -191,9 +192,9 @@
 					<li class="side-list">
 						<H2>주요기능</H2> <br>
 						<ul class="sidebar-content">
-							<li><a href="${contextPath}/admin/goods/adminGoodsMain.do">상품관리</a></li>
-							<li><a href="${contextPath}/admin/order/adminOrderMain.do">주문관리</a></li>
-							<li><a href="${contextPath}/admin/member/adminMemberMain.do">회원관리</a></li>
+							<li><a href="${contextPath }/goods/selectGoodsPage.do">상품관리</a></li>
+							<li><a href="$#">주문관리</a></li>
+							<li><a href="#">회원관리</a></li>
 							<li><a href="#">배송관리</a></li>
 							<li><a href="#">게시판관리</a></li>
 						</ul>

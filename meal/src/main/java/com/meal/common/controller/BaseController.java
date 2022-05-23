@@ -25,6 +25,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.meal.admin.service.AdminService;
 import com.meal.admin.vo.AdminVO;
+import com.meal.goods.service.GoodsService;
+import com.meal.goods.vo.GoodsVO;
 import com.meal.member.service.MemberService;
 import com.meal.member.vo.MemberVO;
 import com.meal.seller.service.SellerService;
@@ -42,6 +44,8 @@ public class BaseController {
 	@Autowired
 	private AdminService adminService;
 	@Autowired
+	private GoodsService goodsService;
+	@Autowired
 	private MemberVO memberVO;
 	@Autowired
 	private SellerVO sellerVO;
@@ -52,20 +56,23 @@ public class BaseController {
 
 	@RequestMapping(value = "/main/main.do", method = { RequestMethod.POST, RequestMethod.GET })
 	public ModelAndView main(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		/* String viewName = (String)request.getAttribute("viewName"); */
 		String viewName = (String) request.getAttribute("viewName");
-
-		ModelAndView mav = new ModelAndView(viewName);
+		//메인창에 띄워줄 상품 정보를 저장 추후 쿼리를 바꿔줄 예정이긴함
+		Map<String,List<GoodsVO>> goodsMap = (Map<String,List<GoodsVO>>) goodsService.selectAllGoods();
+		System.out.println("베이스컨트롤러 메인 메소드");
+		ModelAndView mav = new ModelAndView();
+		mav.addObject("goodsMap", goodsMap);
+		mav.setViewName(viewName);
 		return mav;
 	}
 
-	@RequestMapping(value = "/*/*.do", method = { RequestMethod.POST, RequestMethod.GET })
-	protected ModelAndView viewForm(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		String viewName = (String) request.getAttribute("viewName");// 인터셉터있을때 없으면주석
-		/* String viewName = (String)request.getAttribute("viewName"); 인터셉터없을때 */
-		ModelAndView mav = new ModelAndView(viewName);
-		return mav;
-	}
+	   @RequestMapping(value = "/*/*.do", method = { RequestMethod.POST, RequestMethod.GET })
+	   protected ModelAndView viewForm(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	      String viewName = (String) request.getAttribute("viewName");// 인터셉터있을때 없으면주석
+	      /* String viewName = (String)request.getAttribute("viewName"); 인터셉터없을때 */
+	      ModelAndView mav = new ModelAndView(viewName);
+	      return mav;
+	   }
 
 	@RequestMapping(value = "/err/error.do", method = { RequestMethod.POST, RequestMethod.GET })
 	protected ModelAndView errForm(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -125,10 +132,12 @@ public class BaseController {
 			if (passwordEncode.matches(u_pw, memberInfo.getU_pw())) {
 				memberInfo.setU_pw(u_pw);
 				session = request.getSession();
+				//회원 마지막 접속일 기입
+				memberService.lastLog(u_id);
 				session.setAttribute("isLogOn", true);
 				session.setAttribute("memberInfo", memberInfo);
-				session.setAttribute("side_menu","user_mode");
-				String viewName = "/main/main";
+				session.setAttribute("side_menu", "user_mode");
+				String viewName = "redirect:/main/main.do";
 				mav.setViewName(viewName);
 				return mav;
 			}
@@ -136,34 +145,36 @@ public class BaseController {
 		if (sellerInfo != null) {
 			if (passwordEncode.matches(u_pw, sellerInfo.getS_pw())) {
 				sellerInfo.setS_pw(u_pw);
+				//판매자 마지막 접속일 기입
+				sellerService.lastLog(u_id);
 				session.setAttribute("isLogOn", true);
 				session.setAttribute("sellerInfo", sellerInfo);
 				session.setAttribute("side_menu", "seller_mode");
 				System.out.println(sellerVO);
-				String viewName = "/main/main";
+				String viewName = "redirect:/main/main.do";
 				mav.setViewName(viewName);
 				return mav;
 			}
 		}
 		if (adminInfo != null) {
-				if (passwordEncode.matches(u_pw, adminInfo.getA_pw())) {
-					session.setAttribute("isLogOn", true);
-					session.setAttribute("adminInfo", adminInfo);
-					System.out.println(u_pw);
-					session.setAttribute("side_menu", "admin_mode");
-					System.out.println(adminVO);
-					String viewName = "/main/main";
-					mav.setViewName(viewName);
-					return mav;
+			if (passwordEncode.matches(u_pw, adminInfo.getA_pw())) {
+				//어드민의 경우 최종 접속일을 기입하지 않는다.
+				session.setAttribute("isLogOn", true);
+				session.setAttribute("adminInfo", adminInfo);
+				System.out.println(u_pw);
+				session.setAttribute("side_menu", "admin_mode");
+				System.out.println(adminVO);
+				String viewName = "redirect:/main/main.do";
+				mav.setViewName(viewName);
+				return mav;
 			}
-		}
-		else {
+		} else {
 			String message = "로그인정보가 일치하지 않습니다.";
 			mav.addObject("message", message);
 			mav.setViewName("/main/loginForm");
 			return mav;
 		}
-		
+
 		return mav;
 	}
 
@@ -176,7 +187,11 @@ public class BaseController {
 		HttpSession session = request.getSession();
 		MemberVO memberInfo = (MemberVO) session.getAttribute("memberInfo");
 		SellerVO sellerInfo = (SellerVO) session.getAttribute("sellerInfo");
-
+		
+		//어드민 폼 새로 만들예정
+		//AdminVO adminInfo = (AdminVO) session.getAttribute("adminInfo");
+		
+		
 		if (memberInfo != null) {
 			String id = (String) memberInfo.getU_id();
 			MemberVO mem = (MemberVO) memberService.decode(id);
@@ -187,7 +202,7 @@ public class BaseController {
 			} else {
 				String message = "회원정보가 일치하지 않습니다.";
 				mav.addObject("message", message);
-				String viewName = "/main/main";
+				String viewName = "redirect:/main/main.do";
 				mav.setViewName(viewName);
 				return mav;
 			}
@@ -202,7 +217,7 @@ public class BaseController {
 			} else {
 				String message = "회원정보가 일치하지 않습니다.";
 				mav.addObject("message", message);
-				String viewName = "/main/main";
+				String viewName = "redirect:/main/main.do";
 				mav.setViewName(viewName);
 				return mav;
 			}
@@ -216,6 +231,9 @@ public class BaseController {
 		}
 	}
 
+	
+	
+	
 	// 해당하는것은 모달창에서 삭제 창으로 이동하는것.
 	@RequestMapping(value = "/deleteForm.do", method = RequestMethod.POST)
 	public ModelAndView deleteForm(@RequestParam("pw2") String pw2, HttpServletRequest request,
@@ -236,7 +254,7 @@ public class BaseController {
 			} else {
 				String message = "회원정보가 일치하지 않습니다.";
 				mav.addObject("message", message);
-				viewName = "/main/main";
+				viewName = "redirect:/main/main.do";
 				mav.setViewName(viewName);
 				return mav;
 			}
@@ -250,7 +268,7 @@ public class BaseController {
 			} else {
 				String message = "회원정보가 일치하지 않습니다.";
 				mav.addObject("message", message);
-				viewName = "/main/main";
+				viewName = "redirect:/main/main.do";
 				mav.setViewName(viewName);
 				return mav;
 			}
@@ -264,8 +282,12 @@ public class BaseController {
 		}
 	}
 
+	
+	
+	
+	
 	// 폴더 삭제에 관한 메소드
-	public static void deleteFolder(String path) {
+	protected static void deleteFolder(String path) {
 
 		File folder = new File(path);
 		try {
@@ -288,6 +310,47 @@ public class BaseController {
 		} catch (Exception e) {
 			e.getStackTrace();
 		}
+	}
+
+	// 페이징에 관한 컨트롤러
+	protected Map<String, Object> paging(Map<String, Object> map) {
+
+		String pageNum = (String) map.get("pageNum");
+		String section = (String) map.get("section");
+
+		HashMap<String, Object> pagingMap = new HashMap<String, Object>();
+		Integer page = 1;
+		Integer index = 0;
+		if (pageNum != null) {
+
+			if (section != null) {
+				Integer page1 = Integer.parseInt((String) pageNum);
+				Integer index1 = Integer.parseInt((String) section);
+
+				System.out.println("인덱스" + index);
+				Integer start = (page1 - 1) * 10 + index1 * 100;
+				Integer end = 10;
+				// Integer end = (page1) * 10 + index1 * 100; 출력개수를 정함.
+				pagingMap.put("start", start);
+				pagingMap.put("end", end);
+				System.out.println(start);
+				System.out.println(end);
+				System.out.println(pagingMap);
+			} else {
+				Integer page1 = Integer.parseInt((String) pageNum);
+
+				Integer start = (page1 - 1) * 10 + index * 100;
+				Integer end = (page1) * 10 + index * 100;
+				pagingMap.put("start", start);
+				pagingMap.put("end", end);
+			}
+		} else {
+			Integer start = (page - 1) * 10 + index * 100;
+			Integer end = (page) * 10 + index * 100;
+			pagingMap.put("start", start);
+			pagingMap.put("end", end);
+		}
+		return pagingMap;
 	}
 
 }

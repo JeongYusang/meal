@@ -23,8 +23,9 @@
 		<result property="s_del" column="s_del" />
 		<result property="delDate" column="delDate" />
 		<result property="s_cate" column="s_cate" />
-
+		<result property="s_lastLog" column="s_lastLog" />
 	</resultMap>
+	
 	<resultMap id="img_sResult" type="Img_sVO">
 		<result property="is_id" column="is_id" />
 		<result property="fileName" column="fileName" />
@@ -32,6 +33,7 @@
 		<result property="s_id" column="s_id" />
 		<result property="cate" column="cate" />
 	</resultMap>
+
 
 	<select id="decode" resultType="sellerVO"
 		parameterType="java.util.Map">
@@ -89,20 +91,37 @@ s_cate)
 	</insert>
 
 	<update id="updateSeller" parameterType="sellerVO">
-  <![CDATA[
-    	update  seller_tb set 
-s_pw = #{s_pw}, 
-s_name = #{s_name}, 
-s_hp1 = #{s_hp1},
-s_email1 = #{s_email1}, 
-s_GR_Num = #{s_GR_Num}, 
-s_HACCP_Num = #{s_HACCP_Num}, 
-s_Waddr1 = #{s_Waddr1},
-s_Waddr2 = #{s_Waddr2},
-s_Waddr3 = #{s_Waddr3}, 
-s_Wname = #{s_Wname}
- where s_id =#{s_id}
-]]>
+
+		update seller_tb set
+		s_pw = #{s_pw},
+		s_name = #{s_name},
+		s_hp1 = #{s_hp1}
+		<if test="s_email1 != null or s_email1 != ''">
+			,s_email1 = #{s_email1}
+		</if>
+
+		<if test="s_GR_Num != null or s_GR_Num != ''">
+			,s_GR_Num = #{s_GR_Num}
+		</if>
+		<if test="s_HACCP_Num != null or s_HACCP_Num != ''">
+			,s_HACCP_Num = #{s_HACCP_Num}
+		</if>
+
+		<if test="s_Waddr1 != null or s_Waddr1 != ''">
+			,s_Waddr1 = #{s_Waddr1}
+		</if>
+
+		<if test="s_Waddr2 != null or s_Waddr2 != ''">
+			,s_Waddr2 = #{s_Waddr2}
+		</if>
+
+		<if test="s_Waddr3 != null or s_Waddr3 !=''">
+			,s_Waddr3 = #{s_Waddr3}
+		</if>
+		,s_Wname = #{s_Wname}
+
+		where s_id =#{s_id}
+
 
 	</update>
 
@@ -114,13 +133,7 @@ delete from seller_tb where s_id = #{s_id} and s_name = #{s_name}
 
 	</delete>
 
-	<delete id="deleteSellerImg" parameterType="sellerVO">
 
-<![CDATA[
-delete from img_s where s_id = #{s_id} and  cate=#{cate}
-]]>
-
-	</delete>
 
 	<insert id="insertNewSellerImg" parameterType="Map">
 <![CDATA[
@@ -128,23 +141,28 @@ insert into img_s(fileName,s_id, cate) values (#{fileName}, #{s_id}, #{cate})
 ]]>
 	</insert>
 
-
-
 	<select id="selectSellerImg" parameterType="String"
 		resultMap="img_sResult">
+		<![CDATA[
 		select * from img_s where s_id = #{s_id}
+		]]>
 	</select>
 
 
-	<select id="selectSellerImg" parameterType="String"
-		resultMap="img_sResult">
-		select * from img_s where s_id = #{s_id}
-	</select>
 	<update id="updateSellerImg" parameterType="Map">
 <![CDATA[
 update img_s set fileName = #{fileName}  where s_id=#{s_id} and cate=#{cate}
 ]]>
 	</update>
+	<delete id="deleteSellerImg" parameterType="sellerVO">
+<![CDATA[
+delete from img_s where s_id = #{s_id} and  cate=#{cate}
+]]>
 
-
+	</delete>
+	<update id="lastLog" parameterType="String">
+  <![CDATA[
+		update seller_tb set s_lastLog = current_timestamp() where s_id = #{s_id};
+			]]>
+	</update>
 </mapper>

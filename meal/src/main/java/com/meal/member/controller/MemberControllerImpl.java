@@ -57,7 +57,7 @@ public class MemberControllerImpl extends BaseController implements MemberContro
 		HttpSession session = request.getSession();
 		MemberVO memberInfo = (MemberVO) session.getAttribute("memberInfo");
 		String u_id = memberInfo.getU_id();
-		memberService.logout(u_id);
+	
 		session.setAttribute("isLogOn", false);
 		session.removeAttribute("memberInfo");
 		mav.setViewName("redirect:/main/main.do");
@@ -189,96 +189,7 @@ public class MemberControllerImpl extends BaseController implements MemberContro
 		ResponseEntity resEntity = new ResponseEntity(message, responseHeaders, HttpStatus.OK);
 		return resEntity;
 	}
-	/*
-	@RequestMapping(value = "/checkpw.do", method = { RequestMethod.POST, RequestMethod.GET })
-	public ResponseEntity checkpw(@RequestParam("_u_pw") String _u_pw, HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
-		response.setContentType("text/html; charset=UTF-8");
-		request.setCharacterEncoding("utf-8");
-		HttpSession session = request.getSession();
-		
-		
-		
-		String _message = "";
-		HttpHeaders _responseHeaders = new HttpHeaders();
-		if ((SellerVO) session.getAttribute("sellerInfo") != null) {
-			SellerVO sellerInfo = (SellerVO) session.getAttribute("sellerInfo");
-			String id = sellerInfo.getS_id();
-			String pw = sellerService.checkpw(id);
-			String message = "";
-			HttpHeaders responseHeaders = new HttpHeaders();
-			responseHeaders.add("Content-Type", "text/html; charset=utf-8");
-			try {
-				if (passwordEncode.matches(_u_pw, pw)) {
-					message = "<script>";
-					message += "location.href='" + request.getContextPath() + "/user/userUpdate.do';";
-					message += "</script>";
-				} else {
-					message = "<script>";
-					message += "alert('비밀번호가 동일하지 않습니다.');";
-					message += "location.href='" + request.getContextPath() + "/user/checkpw.do';";
-					message += "</script>";
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			ResponseEntity resEntity = new ResponseEntity(message, responseHeaders, HttpStatus.OK);
-			return resEntity;
-		}
-		else if ((MemberVO) session.getAttribute("memberInfo") != null) {
-			MemberVO memberInfo = (MemberVO) session.getAttribute("memberInfo");
-			String id = memberInfo.getU_id();
-			String pw = memberService.checkpw(id);
-			String message = "";
-			HttpHeaders responseHeaders = new HttpHeaders();
-			responseHeaders.add("Content-Type", "text/html; charset=utf-8");
-			try {
-				if (passwordEncode.matches(_u_pw, pw)) {
-					message = "<script>";
-					message += "location.href='" + request.getContextPath() + "/user/userUpdate.do';";
-					message += "</script>";
-				} else {
-					message = "<script>";
-					message += "alert('비밀번호가 동일하지 않습니다.');";
-					message += "location.href='" + request.getContextPath() + "/user/checkpw.do';";
-					message += "</script>";
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			ResponseEntity resEntity = new ResponseEntity(message, responseHeaders, HttpStatus.OK);
-			return resEntity;
-			
-		}else if ((AdminVO) session.getAttribute("adminInfo") != null){
-			AdminVO adminInfo = (AdminVO) session.getAttribute("adminInfo");
-			String id = adminInfo.getA_id();
-			String pw = adminService.checkpw(id);
-			String message = "";
-			HttpHeaders responseHeaders = new HttpHeaders();
-			responseHeaders.add("Content-Type", "text/html; charset=utf-8");
-			try {
-				if (passwordEncode.matches(_u_pw, pw)) {
-					message = "<script>";
-					message += "location.href='" + request.getContextPath() + "/user/userUpdate.do';";
-					message += "</script>";
-				} else {
-					message = "<script>";
-					message += "alert('비밀번호가 동일하지 않습니다.');";
-					message += "location.href='" + request.getContextPath() + "/user/checkpw.do';";
-					message += "</script>";
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			ResponseEntity resEntity = new ResponseEntity(message, responseHeaders, HttpStatus.OK);
-			return resEntity;
-			
-		}
-		return null;
-			
-		
-
-}*/
+	
 
 
 }

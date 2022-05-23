@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.meal.admin.dao.AdminDAO;
 import com.meal.member.dao.MemberDAO;
 import com.meal.member.vo.MemberVO;
 import com.meal.seller.dao.SellerDAO;
@@ -18,10 +19,13 @@ public class MemberServiceImpl implements MemberService {
 	private MemberDAO memberDAO;
 	@Autowired
 	private SellerDAO sellerDAO;
-
+	@Autowired
+	private AdminDAO adminDAO;
+	
 	@Override
-	public MemberVO login(Map loginMap) throws Exception {
-		return memberDAO.login(loginMap);
+	public MemberVO decode(String u_id) throws Exception{
+		MemberVO mem =(MemberVO)memberDAO.decode(u_id);
+		return mem;
 	}
 
 	@Override
@@ -37,8 +41,11 @@ public class MemberServiceImpl implements MemberService {
 			return result;
 
 
-		} else {
+		} else if (result !="true") {
 			result = sellerDAO.selectOverlappedID(id);
+			return result;
+		} else {
+			result = adminDAO.selectOverlappedId(id);
 			return result;
 		}
 	}
@@ -52,19 +59,11 @@ public class MemberServiceImpl implements MemberService {
 	public void delMember(MemberVO memberVO) throws Exception {
 		memberDAO.delMember(memberVO);
 	}
-	@Override
-	public MemberVO decode(String u_id) throws Exception{
-		MemberVO mem =(MemberVO)memberDAO.decode(u_id);
-		return mem;
-	}
+
 
 	@Override
-	public void logout(String u_id) throws Exception {
-		memberDAO.logout(u_id);
+	public void lastLog(String u_id) throws Exception {
+		memberDAO.lastLog(u_id);
 	}
-	@Override
-	public String checkpw(String id) throws Exception {
-		 String pw = memberDAO.checkpw(id);
-		 return pw;
-	}
+
 }

@@ -345,15 +345,16 @@
 							<li><c:out value="${sellerInfo.s_name}님 반갑습니다" /></li>
 							<li><a href="${contextPath }/goods/goodsForm.do">상품등록 |
 							</a></li>
+							<li><a href="${contextPath }/goods/selectGoodsPage.do">상품관리</a></li>
 							<li><a href="${contextPath }/seller/logout.do">로그아웃 |</a></li>
 							<li><a href="${contextPath }/user/mypagehome.do">마이페이지 |
 							</a></li>
 						</c:when>
-							<c:when test="${isLogOn==true and not empty adminInfo }">
+						<c:when test="${isLogOn==true and not empty adminInfo }">
 							<li><c:out value=" 어드민 ${adminInfo.a_name}님 반갑습니다" /></li>
 							<li><a href="${contextPath }/admin/logout.do">로그아웃 |</a></li>
-							<li><a href="${contextPath }/user/mypagehome.do">관리페이지 |
-							</a></li>
+							<li><a href="${contextPath}/admin/selectAllMembers.do">관리페이지
+									| </a></li>
 						</c:when>
 						<c:otherwise>
 							<li><a href="${contextPath }/main/loginForm.do">로그인 | </a></li>

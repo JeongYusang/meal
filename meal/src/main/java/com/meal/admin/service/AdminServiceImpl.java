@@ -28,11 +28,7 @@ public class AdminServiceImpl implements AdminService {
 		adminDAO.addAdmin(adminVO);
 	}
 
-	@Override
-	public String checkpw(String id) throws Exception {
-		String pw = adminDAO.checkpw(id);
-		return pw;
-	}
+
 	@Override
 	public List<MemberVO> selectAllMembers(HashMap<String, Object> pagingMap) throws Exception {
 		 List<MemberVO> listInfo = (List<MemberVO>) adminDAO.selectAllMembers(pagingMap);
@@ -47,4 +43,5 @@ public class AdminServiceImpl implements AdminService {
 	public void insertReason(HashMap<String, Object> map) throws Exception{
 	adminDAO.insertReason(map);
 	}
+	
 }

@@ -4,7 +4,7 @@
        "http://tiles.apache.org/dtds/tiles-config_2_0.dtd">
 <tiles-definitions>
 
-   <definition name="/main/goodsDetail" extends="baseLayout">
+   <definition name="/goods/goodsDetail" extends="baseLayout">
       <put-attribute name="title" value="상품페이지" />
       <put-attribute name="body"
          value="/WEB-INF/views/goods/goodsDetail.jsp" />
@@ -19,10 +19,16 @@
       <put-attribute name="body"
          value="/WEB-INF/views/goods/goodsForm.jsp" />
    </definition>
-   <!-- 임시 -->
-   <definition name="/goods/addNewGoods" extends="baseLayout">
-      <put-attribute name="title" value="상품등록창" />
-      <put-attribute name="body"
-         value="/WEB-INF/views/main/main.jsp" />
-   </definition>
+
+     	<definition name="/goods/selectGoodsPage" extends="baseLayout2">
+		<put-attribute name="title" value="상품 관리창" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/goods/viewGoods.jsp" />
+	</definition>
+	
+	<definition name="/goods/goodsUpdateForm" extends="baseLayout2">
+		<put-attribute name="title" value="상품 수정창" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/goods/goodsUpdateForm.jsp" />
+	</definition>
 </tiles-definitions>

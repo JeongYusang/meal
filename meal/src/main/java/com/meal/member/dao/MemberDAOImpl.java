@@ -17,11 +17,12 @@ public class MemberDAOImpl  implements MemberDAO{
 	@Autowired
 	private SqlSession sqlSession;	
 	
+	
 	@Override
-	public MemberVO login(Map loginMap) throws DataAccessException{
-		MemberVO member=(MemberVO)sqlSession.selectOne("mapper.user.login",loginMap);
-	   return member;
+	public MemberVO decode(String u_id) throws DataAccessException{
+		return (MemberVO)sqlSession.selectOne("mapper.user.decode",u_id);
 	}
+
 	
 	@Override
 	public void insertNewMember(MemberVO memberVO) throws DataAccessException{
@@ -48,20 +49,12 @@ public class MemberDAOImpl  implements MemberDAO{
 	public void delMember(MemberVO memberVO) throws DataAccessException {
 	sqlSession.delete("mapper.user.deleteMember",memberVO);
 	}
-	@Override
+	
 
-	public MemberVO decode(String u_id) throws DataAccessException{
-		return (MemberVO)sqlSession.selectOne("mapper.user.decode",u_id);
-	}
 	
 	@Override
-	public void logout(String u_id) throws DataAccessException {
-		sqlSession.update("mapper.user.logout",u_id);
-	}
-	@Override
-	public String checkpw(String id) throws DataAccessException {
-		String pw =(String) sqlSession.selectOne("mapper.user.checkpw",id);
-		return pw;
+	public void lastLog(String u_id) throws DataAccessException {
+		sqlSession.update("mapper.user.lastLog",u_id);
 	}
 	
 }

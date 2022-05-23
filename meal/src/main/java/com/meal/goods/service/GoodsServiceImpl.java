@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -42,26 +43,40 @@ public class GoodsServiceImpl implements GoodsService {
 	}
 
 	@Override
-	public String goodsoverlapped(String g_name) throws Exception {
-		String result = goodsDAO.selectOverlappedG_NAME(g_name);
-		return result;
+	public List<Img_gVO> selectImgList(int g_id)throws Exception{
+		List<Img_gVO> list = (List<Img_gVO>)goodsDAO.selectImgList(g_id);
+		return list;
+	}
+	public Map<String, List<GoodsVO>> selectAllGoods() throws Exception{
+		Map <String, List<GoodsVO>> goodsCateMap = new HashMap<String, List<GoodsVO>>();
+		String cate1 = "NEW_GOODS";
+		List<GoodsVO> NewG = (List<GoodsVO>) goodsDAO.selectAllGoods(cate1);
+		goodsCateMap.put("NewG", NewG);
+		cate1 = "Nomal";
+		List<GoodsVO> NomalG = (List<GoodsVO>) goodsDAO.selectAllGoods(cate1);
+		goodsCateMap.put("NomalG", NomalG);
+		cate1 = "Best";
+		List<GoodsVO> bestG = (List<GoodsVO>) goodsDAO.selectAllGoods(cate1);
+		goodsCateMap.put("bestG", bestG);
+		
+		
+		
+		return goodsCateMap;
+	}
+	public Img_gVO selectOneImg(HashMap<String,Object> map) throws Exception{
+		Img_gVO vo = (Img_gVO)goodsDAO.selectOneImg(map);
+		return vo;
 	}
 	
-	/*
-	 * public Map<String,List<GoodsVO>> listGoods() throws Exception {
-	 * Map<String,List<GoodsVO>> goodsMap=new HashMap<String,List<GoodsVO>>();
-	 * List<GoodsVO> goodsList=goodsDAO.selectGoodsList("NewGoods");
-	 * goodsMap.put("bestseller",goodsList);
-	 * goodsList=goodsDAO.selectGoodsList("newbook");
-	 * goodsMap.put("newbook",goodsList);
-	 * 
-	 * goodsList=goodsDAO.selectGoodsList("steadyseller");
-	 * goodsMap.put("steadyseller",goodsList); return goodsMap; }
-	 * 
-	 * @Override public HashMap<String, Object> goodsDetail(int g_id) throws
-	 * Exception { HashMap<String, Object> goodsMap=new HashMap<String, Object>();
-	 * GoodsVO goodsVO = goodsDAO.selectGoodsDetail(g_id); goodsMap.put("goodsVO",
-	 * goodsVO); List<Img_gVO> imageList =goodsDAO.selectGoodsDetailImage(g_id);
-	 * goodsMap.put("imageList", imageList); return goodsMap; }
-	 */
+	
+	public GoodsVO selectGoodsDetail(int g_id) throws Exception{
+		GoodsVO goodsInfo = (GoodsVO)goodsDAO.selectGoodsDetail(g_id);
+		return goodsInfo;
+	}
+	
+	@Override
+	public List<GoodsVO> selectGoodsPage(HashMap<String, Object> pgMap) throws Exception {
+		 List<GoodsVO> listInfo = (List<GoodsVO>) goodsDAO.selectGoodsPage(pgMap);
+		 return listInfo;
+	}
 }

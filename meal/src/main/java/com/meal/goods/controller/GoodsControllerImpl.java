@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -46,6 +47,7 @@ public class GoodsControllerImpl extends BaseController implements GoodsControll
 	@Autowired
 	private SellerService sellerService;
 
+	//상품등록창
 	@RequestMapping(value = "/goodsForm.do", method = { RequestMethod.POST, RequestMethod.GET })
 	protected ModelAndView viewForm(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String viewName = (String) request.getAttribute("viewName");// 인터셉터있을때 없으면주석
@@ -102,13 +104,14 @@ public class GoodsControllerImpl extends BaseController implements GoodsControll
 					item.put("g_id", g_id);
 					goodsService.addGoodsImg(item);
 					imageFileName = (String) item.get("fileName");
+					String cate = (String) item.get("cate");
 					if (!(imageFileName.equals("fileName") || imageFileName == null)) {
 						// 이미지에 해당하는 정보를 DB에 저장 s_id | cate = fileName |fileName = originalfileName
 						// temp에 있는 이미지파일경로 설정
 						File srcFile = new File(CURR_IMAGE_UPLOAD_PATH + "\\" + "temp" + "\\" + imageFileName);
 						// 이동하고자 하는 이미지 파일경로 설정
 						File destDir = new File(
-								CURR_IMAGE_UPLOAD_PATH + "\\" + "goods" + "\\" + g_id + "\\" + imageFileName);
+								CURR_IMAGE_UPLOAD_PATH + "\\" + "goods" + "\\" + g_id + "\\" + cate);
 						// 경로 추가? 해야할 것
 						// 이동
 						FileUtils.moveFileToDirectory(srcFile, destDir, true);
@@ -117,7 +120,7 @@ public class GoodsControllerImpl extends BaseController implements GoodsControll
 			}
 			// 결과창에 출력해주기 위해 판매자 정보를 저장해줌
 			mav.addObject("goodsInfo", goodsInfo);
-			String viewName = (String) multipartRequest.getAttribute("viewName");
+			String viewName= "redirect:/main/main.do";
 			mav.setViewName(viewName);
 			return mav;
 		} catch (Exception e) {
@@ -153,16 +156,73 @@ public class GoodsControllerImpl extends BaseController implements GoodsControll
 		return resEntity;
 	}
 
-	/*
-	 * @RequestMapping(value="/goodsDetail.do" ,method = RequestMethod.GET) public
-	 * ModelAndView goodsDetail(@RequestParam("g_id") int g_id, HttpServletRequest
-	 * request, HttpServletResponse response) throws Exception { String
-	 * viewName=(String)request.getAttribute("viewName"); HttpSession
-	 * session=request.getSession(); HashMap<String, Object>
-	 * goodsMap=(HashMap<String, Object>)goodsService.goodsDetail(g_id);
-	 * ModelAndView mav = new ModelAndView(viewName); mav.addObject("goodsMap",
-	 * goodsMap); GoodsVO goodsVO=(GoodsVO)goodsMap.get("goodsVO");
-	 * addGoodsInQuick(goods_id,goodsVO,session); return mav; }
-	 */
+
+	@RequestMapping(value = "/goodsDetail.do", method = RequestMethod.GET)
+	public ModelAndView goodsDetail(@RequestParam("g_id") int g_id, HttpServletRequest request, HttpServletResponse response) throws Exception{
+		ModelAndView mav = new ModelAndView();
+
+		//int _g_id = Integer.parseInt(g_id);
+		String viewName = (String) request.getAttribute("viewName");
+		GoodsVO goodsInfo = (GoodsVO)goodsService.selectGoodsDetail(g_id);
+		System.out.println("goodsInfo" + goodsInfo);
+		List<Img_gVO> imgList = (List<Img_gVO>)goodsService.selectImgList(g_id);
+		mav.setViewName(viewName);
+		mav.addObject("goodsInfo", goodsInfo);
+		mav.addObject("ImgList", imgList);
+
+		//상품 후기에 관한 게시판 조회또한 등록할 것
+
+		return mav;
+
+	}
+	//상품 관리에 관한 메소드
+	@RequestMapping(value = "/selectGoodsPage.do", method = { RequestMethod.POST, RequestMethod.GET })
+	public ModelAndView selectAllGoods(@RequestParam(value = "dateMap", required = false) Map<String, Object> dateMap,
+			@RequestParam(value = "section1", required = false) String section1,
+			@RequestParam(value = "pgNum", required = false) String pgNum, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		String viewName = (String) request.getAttribute("viewName");
+		ModelAndView mav = new ModelAndView(viewName);
+		HashMap<String, Object> pgMap = new HashMap<String, Object>();
+		Integer pg = 1;
+		Integer index1 = 0;
+		
+		if (pgNum != null) {
+
+			if (section1 != null) {
+				Integer pg1 = Integer.parseInt((String) pgNum);
+				Integer index2 = Integer.parseInt((String) section1);
+
+				System.out.println("인덱스" + index1);
+				Integer start = (pg1 - 1) * 10 + index2 * 100;
+				Integer end = 10;
+				//Integer end = (pg1) * 10 + index1 * 100; 출력개수를 정함.
+				pgMap.put("start", start);
+				pgMap.put("end", end);
+				System.out.println(start);
+				System.out.println(end);
+				System.out.println(pgMap);
+			} else {
+				Integer pg1 = Integer.parseInt((String) pgNum);
+
+				Integer start = (pg1 - 1) * 10 + index1 * 100;
+				Integer end = (pg1) * 10 + index1 * 100;
+				pgMap.put("start", start);
+				pgMap.put("end", end);
+			}
+		} else {
+			Integer start = (pg - 1) * 10 + index1 * 100;
+			Integer end = (pg) * 10 + index1 * 100;
+			pgMap.put("start", start);
+			pgMap.put("end", end);
+		}
+		System.out.println(pgMap);
+		List<GoodsVO> goodsList = goodsService.selectGoodsPage(pgMap);
+		mav.addObject("goodsList", goodsList);
+
+		
+		return mav;
+}
+
 
 }
